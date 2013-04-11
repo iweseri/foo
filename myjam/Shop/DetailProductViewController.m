@@ -32,6 +32,14 @@
     return self;
 }
 
+- (void)setNSNCNotify:(NSNotification *)notification
+{
+    if ([[notification name] isEqualToString:@"notifyClose"])
+    {
+        [self dismissPopupViewControllerWithanimationType:MJPopupViewAnimationFade];
+    }
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -40,6 +48,8 @@
                                              selector:@selector(receiveTestNotification:)
                                                  name:@"reloadCartViewNotif"
                                                object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setNSNCNotify:) name:@"notifyClose" object:nil];
     
     [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     tempColorsForSize = [[NSMutableArray alloc] init];
@@ -161,6 +171,7 @@
     [self setSizeView:nil];
     [self setColorSelectView:nil];
     [self setTableView:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -309,7 +320,13 @@
     [self shareImageOnEmailWithId:[productInfo valueForKey:@"qrcode_id"] withImage:[aImages lastObject]];
 }
 
-
+- (IBAction)favProdBtn:(id)sender
+{
+    FavFolderViewController *favFolderVC = [[FavFolderViewController alloc]init];
+    
+    favFolderVC.qrcodeId = [productInfo valueForKey:@"qrcode_id"];
+    [self presentPopupViewController:favFolderVC animationType:MJPopupViewAnimationFade];
+}
 
 -(IBAction)readReviews{
 //    ProductRatingListViewController *detailViewController = [[ProductRatingListViewController alloc] initWithNibName:@"ProductRatingListViewController" bundle:nil];
@@ -889,6 +906,7 @@
     [_colorSelectView release];
     [_tableView release];
     [buyButton release];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super dealloc];
 }

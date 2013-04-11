@@ -25,6 +25,8 @@
 #import "ProductReportViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ReportSpamViewController.h"
+#import "FavFolderViewController.h"
+#import "UIViewController+MJPopupViewController.h"
 
 @interface DetailProductViewController : CoreViewController<ImageSliderDelegate, SizeSelectViewDelegate,ColorSelectViewDelegate,UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate,UIWebViewDelegate,UIWebViewDelegate>
 {
@@ -54,10 +56,12 @@
 @property (retain, nonatomic) NSString *purchasedString;
 @property (retain, nonatomic) IBOutlet UILabel *descLabel;
 @property (retain, nonatomic) IBOutlet UIView *bottomView;
+
+
 - (IBAction)facebookPressed:(id)sender;
 - (IBAction)twitterPressed:(id)sender;
 - (IBAction)emailPressed:(id)sender;
-
+- (IBAction)favProdBtn:(id)sender;
 -(IBAction)readReviews;
 - (IBAction)reportProduct:(id)sender;
 
