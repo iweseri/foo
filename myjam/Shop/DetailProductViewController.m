@@ -133,6 +133,8 @@
     [label setNumberOfLines:0];
     [label sizeToFit];
     
+    label.frame = CGRectMake(label.frame.origin.x, label.frame.origin.y, 250, label.frame.size.height);
+    
     currentHeight += label.frame.size.height + 10;
     
     //setup descView
