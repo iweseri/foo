@@ -38,13 +38,57 @@
 #pragma mark -
 #pragma mark didSelectRow extended action
 
+- (NSString *)checkQRCodeType:(NSString *)qrcodeid
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/qrcode_type.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"qrcode_id\":%@}",qrcodeid];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    //NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    //NSLog(@"dict %@",resultsDictionary);
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        if ([status isEqualToString:@"ok"])
+        {
+            NSString *type = [resultsDictionary objectForKey:@"qrcode_type"];
+            
+            if ([type isEqualToString:@"Product"]) {
+                NSString *productid = [resultsDictionary objectForKey:@"product_id"];
+                return productid;
+            }
+            
+        }
+    }
+    
+    return @"0"; // normal qrcode, other than product
+}
+
+
 - (void)processRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MoreViewController *detailView = [[MoreViewController alloc] init];
-    detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
-    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.boxNavController pushViewController:detailView animated:YES];
-    [detailView release];
+    NSString *productId = [self checkQRCodeType:[[self.tableData objectAtIndex:indexPath.row] qrcodeId]];
+    
+    if ([productId intValue] > 0)
+    {
+        // type of product
+        DetailProductViewController *detailViewController = [[DetailProductViewController alloc] initWithNibName:@"DetailProductViewController" bundle:nil];
+        //        NSString *prodId = productId;
+        detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:productId];
+        detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
+        detailViewController.productId = [productId mutableCopy];
+        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [mydelegate.boxNavController pushViewController:detailViewController animated:YES];
+    }
+    else{
+        MoreViewController *detailView = [[MoreViewController alloc] init];
+        detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
+        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [mydelegate.boxNavController pushViewController:detailView animated:YES];
+        [detailView release];
+    }
 }
 
 - (void) refreshTableItemsWithFilter:(NSString *)str andSearchedText:(NSString *)pattern
