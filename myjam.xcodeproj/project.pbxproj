@@ -32,6 +32,18 @@
 		213AF72516DAFCBF00798CB7 /* CustomAddress.xib in Resources */ = {isa = PBXBuildFile; fileRef = 213AF72016DAFCBF00798CB7 /* CustomAddress.xib */; };
 		213AF72B16DAFCCD00798CB7 /* UJliteProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AF72916DAFCCD00798CB7 /* UJliteProfileViewController.m */; };
 		213AF72C16DAFCCD00798CB7 /* UJliteProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 213AF72A16DAFCCD00798CB7 /* UJliteProfileViewController.xib */; };
+		21426EE717179AD500B766BE /* JambuCellNML.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426ED517179AD500B766BE /* JambuCellNML.m */; };
+		21426EE817179AD500B766BE /* JambuCellNML.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21426ED617179AD500B766BE /* JambuCellNML.xib */; };
+		21426EE917179AD500B766BE /* NearMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426ED817179AD500B766BE /* NearMeViewController.m */; };
+		21426EEA17179AD500B766BE /* NearMeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21426ED917179AD500B766BE /* NearMeViewController.xib */; };
+		21426EEB17179AD500B766BE /* NMProductListsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426EDB17179AD500B766BE /* NMProductListsViewController.m */; };
+		21426EEC17179AD500B766BE /* NMTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426EDD17179AD500B766BE /* NMTabViewController.m */; };
+		21426EED17179AD500B766BE /* NMTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21426EDE17179AD500B766BE /* NMTabViewController.xib */; };
+		21426EEE17179AD500B766BE /* PrevMapNMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426EE017179AD500B766BE /* PrevMapNMViewController.m */; };
+		21426EEF17179AD500B766BE /* PrevMapNMViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21426EE117179AD500B766BE /* PrevMapNMViewController.xib */; };
+		21426EF017179AD500B766BE /* ShopInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426EE317179AD500B766BE /* ShopInfoViewController.m */; };
+		21426EF117179AD500B766BE /* ShopInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21426EE417179AD500B766BE /* ShopInfoViewController.xib */; };
+		21426EF217179AD500B766BE /* UIImage-Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 21426EE617179AD500B766BE /* UIImage-Extensions.m */; };
 		21735ADC16CC9641001C789A /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21735ACE16CC9641001C789A /* AboutViewController.m */; };
 		21735ADD16CC9641001C789A /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21735ACF16CC9641001C789A /* AboutViewController.xib */; };
 		21735ADE16CC9641001C789A /* FAQViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 21735AD116CC9641001C789A /* FAQViewController.m */; };
@@ -526,6 +538,25 @@
 		213AF72816DAFCCD00798CB7 /* UJliteProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UJliteProfileViewController.h; path = "SV-Settings/UJliteProfileViewController.h"; sourceTree = "<group>"; };
 		213AF72916DAFCCD00798CB7 /* UJliteProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UJliteProfileViewController.m; path = "SV-Settings/UJliteProfileViewController.m"; sourceTree = "<group>"; };
 		213AF72A16DAFCCD00798CB7 /* UJliteProfileViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UJliteProfileViewController.xib; path = "SV-Settings/UJliteProfileViewController.xib"; sourceTree = "<group>"; };
+		21426ED417179AD500B766BE /* JambuCellNML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JambuCellNML.h; sourceTree = "<group>"; };
+		21426ED517179AD500B766BE /* JambuCellNML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JambuCellNML.m; sourceTree = "<group>"; };
+		21426ED617179AD500B766BE /* JambuCellNML.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JambuCellNML.xib; sourceTree = "<group>"; };
+		21426ED717179AD500B766BE /* NearMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NearMeViewController.h; sourceTree = "<group>"; };
+		21426ED817179AD500B766BE /* NearMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NearMeViewController.m; sourceTree = "<group>"; };
+		21426ED917179AD500B766BE /* NearMeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NearMeViewController.xib; sourceTree = "<group>"; };
+		21426EDA17179AD500B766BE /* NMProductListsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMProductListsViewController.h; sourceTree = "<group>"; };
+		21426EDB17179AD500B766BE /* NMProductListsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMProductListsViewController.m; sourceTree = "<group>"; };
+		21426EDC17179AD500B766BE /* NMTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NMTabViewController.h; sourceTree = "<group>"; };
+		21426EDD17179AD500B766BE /* NMTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NMTabViewController.m; sourceTree = "<group>"; };
+		21426EDE17179AD500B766BE /* NMTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NMTabViewController.xib; sourceTree = "<group>"; };
+		21426EDF17179AD500B766BE /* PrevMapNMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrevMapNMViewController.h; sourceTree = "<group>"; };
+		21426EE017179AD500B766BE /* PrevMapNMViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PrevMapNMViewController.m; sourceTree = "<group>"; };
+		21426EE117179AD500B766BE /* PrevMapNMViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PrevMapNMViewController.xib; sourceTree = "<group>"; };
+		21426EE217179AD500B766BE /* ShopInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopInfoViewController.h; sourceTree = "<group>"; };
+		21426EE317179AD500B766BE /* ShopInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopInfoViewController.m; sourceTree = "<group>"; };
+		21426EE417179AD500B766BE /* ShopInfoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShopInfoViewController.xib; sourceTree = "<group>"; };
+		21426EE517179AD500B766BE /* UIImage-Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage-Extensions.h"; sourceTree = "<group>"; };
+		21426EE617179AD500B766BE /* UIImage-Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage-Extensions.m"; sourceTree = "<group>"; };
 		21735ACD16CC9641001C789A /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
 		21735ACE16CC9641001C789A /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		21735ACF16CC9641001C789A /* AboutViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
@@ -1182,6 +1213,33 @@
 			);
 			name = MJPopupViewController;
 			path = myjam/MJPopupViewController;
+			sourceTree = "<group>";
+		};
+		21426ED317179AD500B766BE /* Shop > NearMe */ = {
+			isa = PBXGroup;
+			children = (
+				21426ED417179AD500B766BE /* JambuCellNML.h */,
+				21426ED517179AD500B766BE /* JambuCellNML.m */,
+				21426ED617179AD500B766BE /* JambuCellNML.xib */,
+				21426ED717179AD500B766BE /* NearMeViewController.h */,
+				21426ED817179AD500B766BE /* NearMeViewController.m */,
+				21426ED917179AD500B766BE /* NearMeViewController.xib */,
+				21426EDA17179AD500B766BE /* NMProductListsViewController.h */,
+				21426EDB17179AD500B766BE /* NMProductListsViewController.m */,
+				21426EDC17179AD500B766BE /* NMTabViewController.h */,
+				21426EDD17179AD500B766BE /* NMTabViewController.m */,
+				21426EDE17179AD500B766BE /* NMTabViewController.xib */,
+				21426EDF17179AD500B766BE /* PrevMapNMViewController.h */,
+				21426EE017179AD500B766BE /* PrevMapNMViewController.m */,
+				21426EE117179AD500B766BE /* PrevMapNMViewController.xib */,
+				21426EE217179AD500B766BE /* ShopInfoViewController.h */,
+				21426EE317179AD500B766BE /* ShopInfoViewController.m */,
+				21426EE417179AD500B766BE /* ShopInfoViewController.xib */,
+				21426EE517179AD500B766BE /* UIImage-Extensions.h */,
+				21426EE617179AD500B766BE /* UIImage-Extensions.m */,
+			);
+			name = "Shop > NearMe";
+			path = NearMe;
 			sourceTree = "<group>";
 		};
 		21735ACC16CC9641001C789A /* Info */ = {
@@ -1868,6 +1926,7 @@
 		6180D8481649F24600D9C74D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				21426ED317179AD500B766BE /* Shop > NearMe */,
 				6139632616EF8EFF0056B314 /* Shop */,
 				61A183F616E658B4006C6F31 /* Gallery */,
 				21735AEE16CCAE7E001C789A /* SV-Settings */,
@@ -2613,6 +2672,11 @@
 				61C42BF01716958B001C2E57 /* btn-follow-hr.png in Resources */,
 				61C42BF11716958B001C2E57 /* btn-follow-unfollow-hr.png in Resources */,
 				61C42BF21716958B001C2E57 /* btn-report-hr.png in Resources */,
+				21426EE817179AD500B766BE /* JambuCellNML.xib in Resources */,
+				21426EEA17179AD500B766BE /* NearMeViewController.xib in Resources */,
+				21426EED17179AD500B766BE /* NMTabViewController.xib in Resources */,
+				21426EEF17179AD500B766BE /* PrevMapNMViewController.xib in Resources */,
+				21426EF117179AD500B766BE /* ShopInfoViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2796,6 +2860,13 @@
 				61B0DD3816FB196200FDEDED /* DeliverySelSavAddrViewController.m in Sources */,
 				61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */,
 				61C42BD717169102001C2E57 /* ProductHeaderViewCell.m in Sources */,
+				21426EE717179AD500B766BE /* JambuCellNML.m in Sources */,
+				21426EE917179AD500B766BE /* NearMeViewController.m in Sources */,
+				21426EEB17179AD500B766BE /* NMProductListsViewController.m in Sources */,
+				21426EEC17179AD500B766BE /* NMTabViewController.m in Sources */,
+				21426EEE17179AD500B766BE /* PrevMapNMViewController.m in Sources */,
+				21426EF017179AD500B766BE /* ShopInfoViewController.m in Sources */,
+				21426EF217179AD500B766BE /* UIImage-Extensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -22,7 +22,9 @@
 #import "Banner.h"
 #import "CustomBadge.h"
 #import "TutorialView.h"
+#import "NMTabViewController.h"
 //#import "ContactViewController.h"
+
 @class SidebarView;
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate> {
     UIWindow *window;
@@ -56,6 +58,13 @@
 @property (nonatomic, retain) NSString *swipeOptionString;
 @property (nonatomic, retain) NSMutableArray *arrayTemp;
 @property (nonatomic, retain) CustomBadge *cartCounter;
+@property (nonatomic, retain) UIButton *nearMeBtn;
+
+//For Near Me Use
+@property (nonatomic) double currentLat;
+@property (nonatomic) double currentLong;
+@property (nonatomic) NSInteger withRadius;
+@property (nonatomic) NSInteger currentDecDegree;
 
 @property int indexTemp;
 @property int swipeController;

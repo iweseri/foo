@@ -148,6 +148,36 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         
         [localData setObject:@"YES" forKey:@"noConnection"];
     }
+    
+    UIImage *nearMeIco = [UIImage imageNamed:@"near_me_icon.png"];
+    self.nearMeBtn = [[UIButton alloc]initWithFrame:CGRectMake(280, 28, nearMeIco.size.width-2, nearMeIco.size.height-2)];
+    [self.nearMeBtn setBackgroundImage:nearMeIco forState:UIControlStateNormal];
+    [self.nearMeBtn addTarget:self action:@selector(gotoNM) forControlEvents:UIControlEventTouchUpInside];
+    
+    //UIBarButtonItem *nearMeBarBtnItem = [[UIBarButtonItem alloc]initWithCustomView:nearMeBtn];
+    [self.window addSubview:self.nearMeBtn];
+    [self.nearMeBtn release];
+}
+
+- (void)gotoNM //NEAR ME VC
+{
+    NSLog(@"Goto NM");
+    
+    NMTabViewController *nearMeVC = [[NMTabViewController alloc] init];
+    
+    [self.otherNavController popToRootViewControllerAnimated:YES];
+    [self.otherNavController pushViewController:nearMeVC animated:YES];
+    [self.tabView activateController:4];
+    
+    
+    // Manually change the selected tabButton
+    for (int i = 0; i < [self.tabView.tabItemsArray count]; i++) {
+        if (i == 4) {
+            [[self.tabView.tabItemsArray objectAtIndex:i] toggleOn:YES];
+        } else {
+            [[self.tabView.tabItemsArray objectAtIndex:i] toggleOn:NO];
+        }
+    }
 }
 
 - (void)clearViews
