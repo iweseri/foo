@@ -69,5 +69,7 @@
 @property (nonatomic, retain) NSString *aBody;
 @property (nonatomic, retain) NSString *aQRdesc;
 
+// Nearme
+@property (nonatomic) NSInteger degreeDecimal;
 
 @end

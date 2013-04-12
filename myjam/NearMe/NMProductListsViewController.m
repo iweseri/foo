@@ -10,6 +10,7 @@
 #import "JambuCellNML.h"
 #import "AppDelegate.h"
 #import "MoreViewController.h"
+#import "ShopInfoViewController.h"
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
 #define radiandsToDegrees(x) (x * 180.0 / M_PI)
@@ -85,7 +86,7 @@
                 aData.abstract = [row objectForKey:@"description"];
                 aData.type = @"";
                 aData.degreeDecimal = [self degreeCalculatorWithLat:[[row objectForKey:@"shop_lat"]doubleValue] andLong:[[row objectForKey:@"shop_lng"]doubleValue]];
-                aData.imageURL = [row objectForKey:@"image"];
+                aData.imageURL = [row objectForKey:@"shop_logo"];
                 aData.shareType = @"";
                 
                 id objnul = aData.category;
@@ -349,6 +350,7 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     cell.categoryLabel.text = fooData.category;
     cell.kmLabel.text = fooData.title;
     cell.labelView.backgroundColor = [UIColor colorWithHex:fooData.labelColor];
+    
     [cell.thumbsView setImageWithURL:[NSURL URLWithString:fooData.imageURL]
                     placeholderImage:[UIImage imageNamed:@"default_icon"]
                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -370,8 +372,8 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
 {
     NSLog(@"INDEXPATH from JambuCellNML");
     
-    MoreViewController *detailView = [[MoreViewController alloc] init];
-    detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
+    ShopInfoViewController *detailView = [[ShopInfoViewController alloc] init];
+    detailView.shopID = [[[self.tableData objectAtIndex:indexPath.row] qrcodeId] integerValue];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.otherNavController pushViewController:detailView animated:YES];
     [detailView release];

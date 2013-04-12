@@ -165,8 +165,9 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     NMTabViewController *nearMeVC = [[NMTabViewController alloc] init];
     
-    [self.otherNavController popToRootViewControllerAnimated:YES];
-    [self.otherNavController pushViewController:nearMeVC animated:YES];
+    [self.otherNavController popToRootViewControllerAnimated:NO];
+    [self.otherNavController pushViewController:nearMeVC animated:NO];
+    [nearMeVC release];
     [self.tabView activateController:4];
     
     
