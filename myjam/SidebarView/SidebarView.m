@@ -711,7 +711,7 @@
         }
     }
     
-    [mydelegate handleTab5];
+    [mydelegate closeSidebar];
     [detailViewController release];
     
     [DejalBezelActivityView removeViewAnimated:YES];

@@ -409,6 +409,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         [blackView removeFromSuperview];
     }
     
+    if (self.isCheckoutFromSideBar) {
+        [self.tabView activateController:kShopTab];
+        self.isCheckoutFromSideBar = NO;
+    }
+    
     sideBarOpen = NO;
     [homeNavController.view setUserInteractionEnabled:YES];
     [bannerView setUserInteractionEnabled:YES];

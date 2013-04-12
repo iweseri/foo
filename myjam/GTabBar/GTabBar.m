@@ -116,9 +116,10 @@
             
             if (i == kShopTab) {
                 //NSLog(@"shop hardcoded clicked");
-                if (mydelegate.isCheckoutFromSideBar == YES) {
-                    mydelegate.isCheckoutFromSideBar = NO;
-                }else if(mydelegate.isShowPurchaseHistory == YES){
+//                if (mydelegate.isCheckoutFromSideBar == YES) {
+//                    mydelegate.isCheckoutFromSideBar = NO;
+//                }else
+                if(mydelegate.isShowPurchaseHistory == YES){
                     mydelegate.isShowPurchaseHistory = NO;
                 }else{
                     [mydelegate.shopNavController popToRootViewControllerAnimated:NO];
