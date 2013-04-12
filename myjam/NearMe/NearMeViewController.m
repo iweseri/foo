@@ -363,6 +363,7 @@
     
     ShopInfoViewController *shopInfoVC = [[ShopInfoViewController alloc]init];
     shopInfoVC.shopID = [sender tag];
+    shopInfoVC.shopName = self.shopName;
     
     [mydelegate.otherNavController pushViewController:shopInfoVC animated:YES];
     [shopInfoVC release];
@@ -399,6 +400,7 @@
                 ctrpoint.latitude = [[row objectForKey:@"shop_lat"] doubleValue];
                 ctrpoint.longitude = [[row objectForKey:@"shop_lng"]doubleValue];
                 self.shopDistance = [[row objectForKey:@"distance_in_meter"]intValue];
+                self.shopName = [row objectForKey:@"shop_name"];
                 mkPointAnnotation = [[MKPointAnnotation alloc]init];
                 [mkPointAnnotation setCoordinate:ctrpoint];
                 [mkPointAnnotation setTitle:[row objectForKey:@"shop_name"]];

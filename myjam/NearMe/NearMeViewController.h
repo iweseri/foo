@@ -35,5 +35,6 @@
 @property (nonatomic,retain) UIButton *currentLocalBtn;
 @property (retain, nonatomic) IBOutlet UIButton *userHeadingBtn;
 @property (nonatomic) NSInteger degrees;
+@property (nonatomic, retain) NSString *shopName;
 
 @end

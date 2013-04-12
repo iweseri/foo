@@ -7,6 +7,7 @@
 //
 
 #import "ShopInfoViewController.h"
+#import "ShopDetailListingViewController.h"
 #import "DejalActivityView.h"
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
@@ -197,6 +198,8 @@
             
             [self.addressView loadHTMLString:setContent baseURL:nil];
             
+            [self getOtherData];
+            
             [DejalBezelActivityView removeViewAnimated:YES];
         }
     }
@@ -207,6 +210,34 @@
         [alert release];
     }
     
+}
+
+- (void)getOtherData
+{
+    NSString* request = [NSString stringWithFormat:@"%@/api/shop_product_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    
+    NSString *options =[NSString stringWithFormat:@"{\"shop_id\":%d,\"search_sort\":\"A-Z\"}",self.shopID];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:request  andDataContent:options];
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
+    
+    NSLog(@"dict %@",resultsDictionary);
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        
+        if ([status isEqualToString:@"ok"])
+        {
+            self.topSellerOrNot = [resultsDictionary objectForKey:@"top_seller"];
+        }
+    }
+    else
+    {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Near Me" message:@"Connection error. Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
 }
 
 - (void)prevMapHyperAct
@@ -224,6 +255,18 @@
 - (void)visitJSHyperAct
 {
     NSLog(@"Visit JAM-BU Shop Action Voided!");
+    
+    ShopDetailListingViewController *detailViewController = [[ShopDetailListingViewController alloc] init];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    detailViewController.productArray = [[NSMutableArray alloc] initWithArray:[[MJModel sharedInstance] getTopListOfItemsFor:[NSString stringWithFormat:@"%d",self.shopID]]];
+    //NSLog(@"%@",_catArray);
+    detailViewController.shopInfo = [[NSDictionary alloc] initWithObjectsAndKeys:[NSString stringWithFormat:@"%d",self.shopID],@"shop_id",
+                                    self.shopName, @"shop_name",
+                                    self.topSellerOrNot,@"shop_top_seller", nil];
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [mydelegate.otherNavController pushViewController:detailViewController animated:YES];
+    
+    
 }
 
 - (void)shareFBHyperAct

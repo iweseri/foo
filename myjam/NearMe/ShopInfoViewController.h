@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
 #import "ASIWrapper.h"
+#import "MJModel.h"
 #import "CoreViewController.h"
 #import "PrevMapNMViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -32,5 +33,7 @@
 @property (nonatomic) float shopCoordLat;
 @property (nonatomic) float shopCoordLong;
 @property (nonatomic) NSInteger shopDistance;
+@property (nonatomic, retain) NSString *shopName;
+@property (nonatomic, retain) NSString *topSellerOrNot;
 
 @end

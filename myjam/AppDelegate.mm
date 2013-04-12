@@ -479,7 +479,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
                          [DejalBezelActivityView activityViewForView:self.window withLabel:@"Loading ..." width:100];
                          [self performSelector:@selector(updateCart) withObject:nil afterDelay:0.5];
                          
-                     
+                         
                      }];
 }
 
@@ -493,7 +493,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (void)handleTab5
 {
     //NSLog(@"handleSideBar");
-//    [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
+    //    [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
     LayerOption = kCloseSideBar;
     
     if ([self sideBarOpen])
@@ -896,16 +896,28 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
  */
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
     
-    NSArray *permissions = [NSArray arrayWithObjects:@"email", @"user_about_me", nil];
+    NSArray *permissions = [NSArray arrayWithObjects:@"email", nil];
     
     return [FBSession openActiveSessionWithReadPermissions:permissions
                                               allowLoginUI:allowLoginUI
-                                         completionHandler:^(FBSession *session,
-                                                             FBSessionState state,
+                                         completionHandler:^(FBSession *session, FBSessionState state,
                                                              NSError *error) {
+                                             NSLog(@"%@",error);
                                              [self sessionStateChanged:session
                                                                  state:state
-                                                                 error:error];
+                                                                 error:nil];
+                                             if ([error code] == 2)
+                                             {
+                                                 CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Login to Facebook" message:@"Permission refused. Unable to login to JAM-BU using Facebook ID." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                 [alert show];
+                                                 [alert release];
+                                             }
+                                             else if([error code])
+                                             {
+                                                 CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Login to Facebook" message:@"Unable to login. Please try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                                                 [alert show];
+                                                 [alert release];
+                                             }
                                          }];
 }
 
@@ -1006,7 +1018,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         [FBSettings publishInstall:kAppID];
         [FBSession.activeSession handleDidBecomeActive]; //fb login
     }
-
+    
     
 }
 

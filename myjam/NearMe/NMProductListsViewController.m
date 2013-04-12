@@ -10,7 +10,6 @@
 #import "JambuCellNML.h"
 #import "AppDelegate.h"
 #import "MoreViewController.h"
-#import "ShopInfoViewController.h"
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
 #define radiandsToDegrees(x) (x * 180.0 / M_PI)
@@ -86,7 +85,7 @@
                 aData.abstract = [row objectForKey:@"description"];
                 aData.type = @"";
                 aData.degreeDecimal = [self degreeCalculatorWithLat:[[row objectForKey:@"shop_lat"]doubleValue] andLong:[[row objectForKey:@"shop_lng"]doubleValue]];
-                aData.imageURL = [row objectForKey:@"shop_logo"];
+                aData.imageURL = [row objectForKey:@"image"];
                 aData.shareType = @"";
                 
                 id objnul = aData.category;
@@ -189,10 +188,10 @@
     
     NSString *compassFault = nil;
     double updatedHeading;
-    double radianConst;
+    //double radianConst;
     
     updatedHeading = newHeading.magneticHeading;
-    float headingFloat = 0 - newHeading.magneticHeading;
+    //float headingFloat = 0 - newHeading.magneticHeading;
     
     //rotateImg.transform = CGAffineTransformMakeRotation(headingFloat*radianConst);
     float value = updatedHeading;
@@ -350,7 +349,6 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     cell.categoryLabel.text = fooData.category;
     cell.kmLabel.text = fooData.title;
     cell.labelView.backgroundColor = [UIColor colorWithHex:fooData.labelColor];
-    
     [cell.thumbsView setImageWithURL:[NSURL URLWithString:fooData.imageURL]
                     placeholderImage:[UIImage imageNamed:@"default_icon"]
                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -372,8 +370,8 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
 {
     NSLog(@"INDEXPATH from JambuCellNML");
     
-    ShopInfoViewController *detailView = [[ShopInfoViewController alloc] init];
-    detailView.shopID = [[[self.tableData objectAtIndex:indexPath.row] qrcodeId] integerValue];
+    MoreViewController *detailView = [[MoreViewController alloc] init];
+    detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.otherNavController pushViewController:detailView animated:YES];
     [detailView release];
