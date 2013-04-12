@@ -79,8 +79,6 @@
     
     [self.saveButton addTarget:self action:@selector(saveAddress) forControlEvents:UIControlEventTouchUpInside];
     
-    self.dictStates = [[NSMutableDictionary alloc] init];
-    self.dictCountries = [[NSMutableDictionary alloc] init];
     // Setup pickerview
     self.statePickerView = [[UIPickerView alloc] init];
     self.countryPickerView = [[UIPickerView alloc] init];
@@ -223,15 +221,15 @@
         if (![self.stateTextField.text length]) {
             self.stateTextField.text = [self.stateArray objectAtIndex:0];
         }
-        //self.stateId = [self.dictStates objectForKey:self.stateTextField.text];
-        self.stateId = self.stateTextField.text;
+        self.stateId = [self.dictStates objectForKey:self.stateTextField.text];
+//        self.stateId = self.stateTextField.text;
         [self.stateTextField resignFirstResponder];
     } else if (self.currTag == 2) {
         if (![self.countryTextField.text length]) {
             self.countryTextField.text = [self.countryArray objectAtIndex:0];
         }
-        //self.countryId = [self.dictCountries objectForKey:self.countryTextField.text];
-        self.countryId = self.countryTextField.text;
+        self.countryId = [self.dictCountries objectForKey:self.countryTextField.text];
+//        self.countryId = self.countryTextField.text;
         [self.countryTextField resignFirstResponder];
     }
 }
