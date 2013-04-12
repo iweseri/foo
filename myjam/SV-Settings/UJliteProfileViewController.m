@@ -57,16 +57,18 @@
 
 - (void)viewDidLoad
 {
+    NSLog(@"vdl");
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
-    //[self loadData];
-    
+    [self loadData];
+
     activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     activityIndicator.frame = CGRectMake(20, 130, 130, 143);
     
     if ([self retrieveDataFromAPI])
     {
-       // [self performSelectorOnMainThread:@selector(setupViews) withObject:nil waitUntilDone:NO];
+       // [self performSelectorOnMainThread:@selector(setupViews) withObject:nil waitUntilDone:NO];]
+        [self setupViews];
     }else{
         //        [self setupErrorPage];
         NSLog(@"setupFailed");
@@ -75,10 +77,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"vwa");
 //    [super viewWillAppear:animated];
     [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
     [activityIndicator startAnimating];
-    [self performSelector:@selector(loadData) withObject:self];
+//    [self performSelector:@selector(loadData) withObject:self];
 }
 
 -(void)loadData
