@@ -482,17 +482,20 @@
 - (void)setBuyNowCell:(BuyNowCell *)cell
 {
     int butbool= 0;
-    if ([[productInfo valueForKey:@"product_stockable"] isEqualToString:@"N"]){
-        cell.limitedLabel.hidden = YES;
-    }
+    //    if ([[productInfo valueForKey:@"product_stockable"] isEqualToString:@"N"]){
+    //        cell.limitedLabel.hidden = YES;
+    //    }else{
+    //        cell.limitedLabel.hidden = NO;
+    //        cell.limitedLabel.text = @"Limited\nStock!";
+    //    }
     
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     NSMutableArray *cartItems = [[NSMutableArray alloc] initWithArray:mydelegate.sidebarController.cartItems];
     for (int i = 0; i< [cartItems count]; i++){
-        //NSLog(@"%@",[cartItems objectAtIndex:i]);
+        NSLog(@"%@",[cartItems objectAtIndex:i]);
         if ([[[cartItems objectAtIndex:i ] valueForKey:@"shop_name"] isEqual:[productInfo valueForKey:@"shop_name"]] ){
             for (id row in [[cartItems objectAtIndex:i  ]valueForKey:@"item_list"]){
-                //NSLog(@"row: %@", row);
+                NSLog(@"row: %@", row);
                 if ([self.productId isEqual:[row valueForKey:@"product_id"]]){
                     if (counter == 0){
                         butbool = 1;
@@ -526,6 +529,7 @@
     }
     if (butbool == 0){
         if ([[productInfo valueForKey:@"product_stock_balance_total"] isEqual:[NSNumber numberWithInt:0]]){
+            [cell.limitedLabel setHidden:YES];
             [cell.button1 setBackgroundImage:[UIImage imageNamed:@"sold_out"] forState:UIControlStateNormal];
             [cell.button1 setTitle:@"" forState:UIControlStateNormal];
             cell.button1.userInteractionEnabled = NO;
@@ -533,6 +537,14 @@
         }
         else{
             [cell.button1 addTarget:self action:@selector(buyNow:) forControlEvents:UIControlEventTouchUpInside];
+            
+            if ([[productInfo valueForKey:@"product_stock_balance_total"] isEqual:[NSNumber numberWithInt:1]]) {
+                cell.limitedLabel.text = @"Last Unit!";
+            }else{
+                if ([[productInfo valueForKey:@"product_stockable"] isEqualToString:@"Y"]){
+                    cell.limitedLabel.text = @"Limited\nStock!";
+                }
+            }
             
         }
         cell.continueShoppingButton.hidden = YES;
@@ -550,6 +562,7 @@
         [cell.checkOutButton addTarget:self action:@selector(checkOut:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
+
 
 - (void)setPurchaseCell:(PurchaseVerificationCell *)cell
 {
