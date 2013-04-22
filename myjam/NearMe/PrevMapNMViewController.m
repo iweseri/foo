@@ -59,14 +59,28 @@
     [locationManager setDistanceFilter:kCLDistanceFilterNone];
     [locationManager setDesiredAccuracy:kCLLocationAccuracyBest];
     
-    [self.mkMapView setShowsUserLocation:YES];
     [locationManager startUpdatingLocation];
     [locationManager startUpdatingHeading];
     
     NSLog(@"Shop ID: %d",shopID);
-    [self.mkMapView setShowsUserLocation:YES];
+    //[self.mkMapView setShowsUserLocation:YES];
     [self getShopCoordNDistFromAPI];
     [self locateShop];
+    
+    [self.currentLocation addTarget:self action:@selector(goToUserLoc) forControlEvents:UIControlStateNormal];
+    [self.zoomLocation addTarget:self action:@selector(goToSelectedPlace) forControlEvents:UIControlStateNormal];
+}
+
+- (void)goToUserLoc
+{
+    NSLog(@"goToUserLoc");
+    [self.mkMapView setCenterCoordinate:self.mkMapView.userLocation.coordinate animated:YES];
+}
+
+- (void)goToSelectedPlace
+{
+    NSLog(@"goToSelectedPlace");
+    [self.mkMapView setCenterCoordinate:self->clc2dpoint animated:YES];
 }
 
 - (void)getShopCoordNDistFromAPI

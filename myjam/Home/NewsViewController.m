@@ -60,6 +60,9 @@
         if (![self.selectedCategories isKindOfClass:[NSString class]]) {
             self.selectedCategories = @"";
         }
+        if (![self.sortBy isKindOfClass:[NSString class]]) {
+            self.sortBy = @"";
+        }
         //[mydelegate.bottomSVNews.checkedCategorie removeAllObjects];
         //mydelegate.bottomSVNews.searchTextField.text = @"";
         //self.selectedCategories = @"";

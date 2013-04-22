@@ -2,14 +2,15 @@
 //  NMProductListsViewController.m
 //  myjam
 //
-//  Created by Mohd Zulhilmi on 1/04/13.
+//  Created by ME-Tech Mac User 2 on 2/28/13.
 //  Copyright (c) 2013 me-tech. All rights reserved.
 //
 
 #import "NMProductListsViewController.h"
-#import "JambuCellNML.h"
 #import "AppDelegate.h"
-#import "MoreViewController.h"
+#import "JambuCellNML.h"
+#import "ShopInfoViewController.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #define degreesToRadians(x) (M_PI * x / 180.0)
 #define radiandsToDegrees(x) (x * 180.0 / M_PI)
@@ -20,12 +21,122 @@
 
 @implementation NMProductListsViewController
 
-//@synthesize shopeName;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    self.selectedCategories = @"";
+    self.searchedText = @"";
+    self.sortData = @"";
+    
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    if (screenBounds.size.height == 568) {
+        // code for 4-inch screen
+        kDisplayPerscreen = 4;
+    } else {
+        // code for 3.5-inch screen
+        kDisplayPerscreen = 3;
+    }
+    
+    UIPanGestureRecognizer *slideRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:nil];
+    slideRecognizer.delegate = self;
+    [self.tableView addGestureRecognizer:slideRecognizer];
+    [self loadData];
+    
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    if (!self.refreshDisabled)
+    {
+        AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        if (![mydelegate.bottomSVAll.searchTextField.text isKindOfClass:[NSString class]]) {
+            mydelegate.bottomSVAll.searchTextField.text = @"";
+        } NSLog(@"AAA :%@",self.selectedCategories);
+        if (![self.selectedCategories isKindOfClass:[NSString class]]) {
+            self.selectedCategories = @"";
+        } NSLog(@"BBB :%@",self.sortData);
+        if (![self.sortData isKindOfClass:[NSString class]]) {
+            self.sortData = @"";
+        }
+        
+        [self.tableData removeAllObjects];
+        [self.tableView reloadData];
+        [self.loadingLabel setText:@"Loading ..."];
+        [self.activityIndicator setHidden:NO];
+        [self.activityIndicatorView setHidden:NO];
+        [self loadData];
+        
+        [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    }else{
+        self.refreshDisabled = NO;
+    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    CGPoint translation = [(UIPanGestureRecognizer *)gestureRecognizer translationInView:self.view];
+    
+    if(gestureRecognizer.numberOfTouches == 2){
+        if (translation.y < 0) {
+            AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+            [mydelegate handleSwipeUp];
+            return YES;
+        }
+    }
+    else{
+        //NSLog(@"%d",gestureRecognizer.numberOfTouches);
+    }
+    return NO;
+}
+
+
+- (void)loadData
+{
+    [self.activityIndicator startAnimating];
+    //    [self performSelectorOnMainThread:@selector(setupView) withObject:nil waitUntilDone:YES];
+    [self performSelector:@selector(setupView) withObject:nil afterDelay:0.0];
+    //    [self setupView];
+    //    [self performSelectorInBackground:@selector(setupView) withObject:nil];
+    
+}
+
+- (void)setupView
+{
+    if (![self.searchedText isKindOfClass:[NSString class]]) {
+        self.searchedText = @"";
+    }
+    NSString *isLogin = [[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"]copy];
+    
+    if ([isLogin isEqualToString:@"YES"]) {
+        self.pageCounter = 1;
+        self.tableData = [self loadMoreFromServer];
+    }
+    if ([self.tableData count]) {
+        [self.tableView reloadData];
+        [self.activityIndicator stopAnimating];
+    }
+}
+
+#pragma mark -
+#pragma mark Bottom Loadmore action
+
+- (void) addItemsToEndOfTableView{
+    [UIView animateWithDuration:0.3 animations:^{
+        if (self.pageCounter >= self.totalPage) {
+            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-kExtraCellHeight+5);
+            [self.tableView setContentOffset:bottomOffset animated:YES];
+        }
+        else if (self.pageCounter < self.totalPage) {
+            self.pageCounter++;
+            NSArray *list = [self loadMoreFromServer];
+            
+            if ([list count] > 0) {
+                [self.tableData addObjectsFromArray:list];
+            }
+        }
+    }];
 }
 
 - (NSString *)returnAPIURL
@@ -33,18 +144,13 @@
     return [NSString stringWithFormat:@"%@/api/nearme_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
 }
 
-// Overidden method to change API dataContent
 - (NSString *)returnAPIDataContent
 {
-    NSLog(@"box fav datacontent");
-    
     AppDelegate *setDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
-    NSLog(@"Coordinates: %f:%f, Radius: %d",(double)setDelegate.currentLat,(double)setDelegate.currentLong,(NSInteger)setDelegate.withRadius);
-    
-    return [NSString stringWithFormat:@"{\"lat\":\"%f\",\"lng\":\"%f\",\"radius\":\"%d\",\"page\":\"%d\",\"perpage\":\"%d\",\"search\":\"%@\",\"category_id\":\"%@\",\"sort_by\":\"%@\"}",(double)setDelegate.currentLat,(double)setDelegate.currentLong,(NSInteger)setDelegate.withRadius,self.pageCounter, kListPerpage, self.searchedText, self.selectedCategories, @"a_to_z"];
+    //return [NSString stringWithFormat:@"{\"lat\":\"%f\",\"lng\":\"%f\",\"radius\":\"%d\",\"page\":\"%d\",\"perpage\":\"%d\",\"search\":\"%@\",\"category_id\":\"%@\",\"sort_by\":\"%@\"}",(double)setDelegate.currentLat,(double)setDelegate.currentLong,(NSInteger)setDelegate.withRadius,self.pageCounter, kListPerpage, self.searchedText, self.selectedCategories, self.sortData];
+    return [NSString stringWithFormat:@"{\"lat\":\"3.024613\",\"lng\":\"101.616600\",\"radius\":\"%d\",\"page\":\"%d\",\"perpage\":\"%d\",\"search\":\"%@\",\"category_id\":\"%@\",\"sort_by\":\"%@\"}",(NSInteger)setDelegate.withRadius,self.pageCounter, kListPerpage, self.searchedText, self.selectedCategories, self.sortData];
 }
-
 
 - (NSMutableArray *)loadMoreFromServer
 {
@@ -53,7 +159,7 @@
     NSString *dataContent = [self returnAPIDataContent];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"dataContent: %@\nresponse listings: %@", dataContent,response);
+    NSLog(@"URLSTRING: %@\ndataContent: %@\nresponse listings: %@",urlString,dataContent,response);
     NSMutableArray *newData = [[NSMutableArray alloc] init];
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     
@@ -82,10 +188,10 @@
                 aData.contentProvider = [row objectForKey:@"shop_name"];
                 aData.title = [self distanceConverter:[[row objectForKey:@"distance_in_meter"]intValue]];
                 aData.date = [row objectForKey:@"date"];
-                aData.abstract = [row objectForKey:@"description"];
+                aData.abstract = [row objectForKey:@"idescription"];
                 aData.type = @"";
                 aData.degreeDecimal = [self degreeCalculatorWithLat:[[row objectForKey:@"shop_lat"]doubleValue] andLong:[[row objectForKey:@"shop_lng"]doubleValue]];
-                aData.imageURL = [row objectForKey:@"image"];
+                aData.imageURL = [row objectForKey:@"shop_logo"];
                 aData.shareType = @"";
                 
                 id objnul = aData.category;
@@ -164,24 +270,10 @@
         NSLog(@"data empty");
         [self.activityIndicatorView setHidden:YES];
     }
-    
     [resultsDictionary release];
     
     return newData;
 }
-
-//- (NSString *)distanceCalculator
-//{
-//    //preserve for reference
-//    NSString *total = nil;
-//    
-//    NSInteger earthRadius = 6371;
-//    double toRad = 3.141592653589793 / 180; //Math.PI / 180 (ref jscript)
-//    
-//    NSLog(@"ToRad: %f",toRad);
-//    
-//    return total;
-//}
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateHeading:(CLHeading *)newHeading
 {
@@ -283,6 +375,29 @@
 
 static inline double radians (double degrees) {return degrees * M_PI/180;}
 
+#pragma mark -
+#pragma mark UIScrollView delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    
+    [super scrollViewDidScroll:scrollView];
+}
+
+
+#pragma mark -
+#pragma mark Table view data source
+
+// Customize the number of sections in the table view.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.tableData count];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *simpleTableIdentifier = @"FeedCell";
@@ -298,11 +413,11 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     for (MarqueeLabel *label in cell.transView.subviews) {
         [label removeFromSuperview];
     }
-
+    
     MarqueeLabel *shopeName;
     
     MData *fooData = [self.tableData objectAtIndex:indexPath.row];
-
+    
     shopeName = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 0, 65, 17) rate:20.0f andFadeLength:10.0f];
     shopeName.marqueeType = MLContinuous;
     shopeName.animationCurve = UIViewAnimationOptionCurveLinear;
@@ -337,7 +452,7 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     
     UIImage *imagePointer = [[UIImage imageNamed:@"arrowNaviHR.png"]imageRotatedByDegrees:degreeDecimals];
     UIImageView *pointing = [[UIImageView alloc]initWithImage:imagePointer];
-
+    
     pointing.frame = CGRectMake(80, 0, 20, 15);
     [cell.transView addSubview:pointing];
     [pointing release];
@@ -362,31 +477,74 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self processRowAtIndexPath:indexPath];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return kTableCellHeight;
+}
 
 #pragma mark -
 #pragma mark didSelectRow extended action
-
+//for moreview to pass to spam (abstract n imageView)
 - (void)processRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"INDEXPATH from JambuCellNML");
-    
-    MoreViewController *detailView = [[MoreViewController alloc] init];
-    detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
+    //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    ShopInfoViewController*detailView = [[ShopInfoViewController alloc] init];
+    detailView.shopID = [[[self.tableData objectAtIndex:indexPath.row] qrcodeId]integerValue];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.otherNavController pushViewController:detailView animated:YES];
     [detailView release];
-    
+}
+//end
+
+#pragma mark -
+#pragma mark PullRefresh action
+
+- (void)refresh {
+    [self performSelector:@selector(addItem) withObject:nil afterDelay:0.0];
 }
 
-- (void) refreshTableItemsWithFilter:(NSString *)str andSearchedText:(NSString *)pattern
+- (void)addItem { /* add item to top */
+    self.pageCounter = 1;
+    [self.tableData removeAllObjects];
+    self.tableData = [[self loadMoreFromServer] mutableCopy];
+    [self.tableView reloadData];
+    
+    [self stopLoading];
+}
+
+#pragma mark content filter
+
+//- (void) refreshTableItemsWithFilter:(NSString *)str
+//{
+//    //NSLog(@"Filtering all list");
+//    self.selectedCategories = @"";
+//    self.selectedCategories = str;
+//    self.pageCounter = 1;
+//    [self.tableData removeAllObjects];
+//    self.tableData = [[self loadMoreFromServer] mutableCopy];
+//    [self.tableView reloadData];
+//    [self.tableView setContentOffset:CGPointZero animated:YES];
+//    
+//}
+
+- (void) refreshTableItemsWithFilter:(NSString *)str andSearchedText:(NSString *)pattern andSortBy:(NSString *)sort
 {
     //    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     
-    NSLog(@"Filtering favbox list with searched text %@",str);
+    
+    NSLog(@"Filtering ALL list with searched text %@",str);
     self.selectedCategories = @"";
     self.selectedCategories = str;
     self.searchedText = @"";
     self.searchedText = pattern;
+    self.sortData = @"";
+    self.sortData = sort;
     self.pageCounter = 1;
     [self.tableData removeAllObjects];
     self.tableData = [[self loadMoreFromServer] mutableCopy];
@@ -397,16 +555,27 @@ static inline double radians (double degrees) {return degrees * M_PI/180;}
     
 }
 
-- (void)dealloc
-{
-    [super dealloc];
-//    [self.shopeName release];
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewDidUnload {
+    self.activityIndicator=nil;
+    self.activityIndicatorView=nil;
+    self.footerActivityIndicator=nil;
+    self.tableView=nil;
+    self.tableData=nil;
+    [super viewDidUnload];
+}
+
+
+- (void)dealloc {
+    [[self activityIndicator] release];
+    [[self activityIndicatorView] release];
+    [[self footerActivityIndicator] release];
+    [super dealloc];
 }
 
 @end

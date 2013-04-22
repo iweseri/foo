@@ -24,6 +24,7 @@
 @property (nonatomic,retain) IBOutlet CLLocationManager *clLocationMgr;
 @property (nonatomic,retain) IBOutlet MKMapView *mkMapView;
 @property (nonatomic,strong) IBOutlet CLGeocoder *clGeoCoder;
+@property (nonatomic, retain) IBOutlet UIButton *currentLocation;
 @property (nonatomic) NSInteger setBtnTag;
 @property (nonatomic) float currentLat;
 @property (nonatomic) float currentLong;

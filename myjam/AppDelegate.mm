@@ -38,7 +38,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 @synthesize window;
 @synthesize sidebarController;
-@synthesize bottomSVAll, bottomSVNews, bottomSVPromo, bottomSVScanBox, bottomSVShareBox, bottomSVFavBox, bottomSVCreateBox,bottomSVJShop, bottomSVJSPurchase;
+@synthesize bottomSVAll, bottomSVNews, bottomSVPromo, bottomSVScanBox, bottomSVShareBox, bottomSVFavBox, bottomSVCreateBox,bottomSVJShop, bottomSVJSPurchase, bottomNearMe;
 
 @synthesize sideBarOpen;
 @synthesize bottomViewOpen;
@@ -71,6 +71,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [boxNavController release];
     [shopNavController release];
     [otherNavController release];
+    [bottomNearMe release];
     [super dealloc];
 }
 
@@ -151,11 +152,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     UIImage *nearMeIco = [UIImage imageNamed:@"near_me_icon.png"];
     self.nearMeBtn = [[UIButton alloc]initWithFrame:CGRectMake(280, 28, nearMeIco.size.width-2, nearMeIco.size.height-2)];
-    [self.nearMeBtn setHidden:YES];
+    [self.nearMeBtn setHidden:NO];
     [self.nearMeBtn setBackgroundImage:nearMeIco forState:UIControlStateNormal];
     [self.nearMeBtn addTarget:self action:@selector(gotoNM) forControlEvents:UIControlEventTouchUpInside];
     
-    //UIBarButtonItem *nearMeBarBtnItem = [[UIBarButtonItem alloc]initWithCustomView:nearMeBtn];
+    //UIBarButtonItem *nearMeBarBtnItem = [[UIBarButtonItem alloc]initWithCustomView:self.nearMeBtn];
     [self.window addSubview:self.nearMeBtn];
     [self.nearMeBtn release];
 }
@@ -195,6 +196,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [bottomSVCreateBox.view removeFromSuperview];
     [bottomSVJShop.view removeFromSuperview];
     [bottomSVJSPurchase.view removeFromSuperview];
+    [bottomNearMe.view removeFromSuperview];
     [frontLayerView release];
     [tabView release];
     [bottomSVAll release];
@@ -206,6 +208,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [scanNavController release];
     [boxNavController release];
     [shopNavController release];
+    [bottomNearMe release];
 }
 
 - (void)setupViews
@@ -228,6 +231,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     bottomSVShareBox = [[BottomSwipeViewShareBox alloc] init];
     bottomSVFavBox = [[BottomSwipeViewFavBox alloc] init];
     bottomSVCreateBox = [[BottomSwipeViewCreateBox alloc] init];
+    bottomNearMe = [[BottomSwipeViewNearMe alloc] init];
     
     // Init viewcontrollers
     HomeViewController *homeVC = [[HomeViewController alloc] init];
@@ -345,6 +349,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     bottomSVJSPurchase.view.frame = CGRectMake(0.0f, self.window.frame.size.height, bottomSVJSPurchase.view.frame.size.width, bottomSVJSPurchase.view.frame.size.height);
     
+    bottomNearMe.view.frame = CGRectMake(0.0f, self.window.frame.size.height, bottomNearMe.view.frame.size.width, bottomNearMe.view.frame.size.height);
+    
     [self.window addSubview:sidebarController.view];
     [self.window addSubview:tabView.view];
     
@@ -426,6 +432,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [bottomSVCreateBox.view setHidden:NO];
     [bottomSVJShop.view setHidden:NO];
     [bottomSVJSPurchase.view setHidden:NO];
+    [bottomNearMe.view setHidden:NO];
     
     [UIView animateWithDuration:kAnimateDuration delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction animations:^
      {
@@ -468,6 +475,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [bottomSVCreateBox.view setHidden:YES];
     [bottomSVJShop.view setHidden:YES];
     [bottomSVJSPurchase.view setHidden:YES];
+    [bottomNearMe.view setHidden:YES];
     
     // Reset scrollview to top
     //        CGPoint topOffset = CGPointMake(0,0);
@@ -524,7 +532,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     }
     
     if (self.swipeBottomEnabled == NO) {
-        //NSLog(@"Swipedbottom disabled");
+        NSLog(@"Swipedbottom disabled");
         return;
     }
     
@@ -573,6 +581,10 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
              {
                  bottomSVJSPurchase.view.frame = CGRectMake(0.0f, self.window.frame.size.height, bottomSVJSPurchase.view.frame.size.width, bottomSVJSPurchase.view.frame.size.height);
              }
+             else if ([swipeOptionString isEqual:@"nearme"])
+             {
+                 bottomNearMe.view.frame = CGRectMake(0.0f, self.window.frame.size.height, bottomNearMe.view.frame.size.width, bottomNearMe.view.frame.size.height);
+             }
              
          }
                          completion:^(BOOL finished){
@@ -615,6 +627,10 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
                              else if ([swipeOptionString isEqual:@"purchase"])
                              {
                                  [bottomSVJSPurchase.view removeFromSuperview];
+                             }
+                             else if ([swipeOptionString isEqual:@"nearme"])
+                             {
+                                 [bottomNearMe.view removeFromSuperview];
                              }
                          }];
         //        [tabView.view setUserInteractionEnabled:YES];
@@ -677,6 +693,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             [self.window addSubview:bottomSVJSPurchase.view];
             [self.window bringSubviewToFront:bottomSVJSPurchase.view];
         }
+        else if ([swipeOptionString isEqual:@"nearme"])
+        {
+            [self.window addSubview:bottomNearMe.view];
+            [self.window bringSubviewToFront:bottomNearMe.view];
+        }
         
         [UIView animateWithDuration:kAnimateDurationBottomView delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction animations:^
          {
@@ -720,6 +741,10 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
              else if ([swipeOptionString isEqual:@"purchase"])
              {
                  bottomSVJSPurchase.view.frame = CGRectMake(0.0f, self.window.frame.size.height-bottomSVJSPurchase.view.frame.size.height, bottomSVJSPurchase.view.frame.size.width, bottomSVJSPurchase.view.frame.size.height);
+             }
+             else if ([swipeOptionString isEqual:@"nearme"])
+             {
+                 bottomNearMe.view.frame = CGRectMake(0.0f, self.window.frame.size.height-bottomNearMe.view.frame.size.height, bottomNearMe.view.frame.size.width, bottomNearMe.view.frame.size.height);
              }
          }
                          completion:^(BOOL finished){
@@ -782,6 +807,12 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
                                  [bottomSVJSPurchase.activityView startAnimating];
                                  
                                  [bottomSVJSPurchase performSelector:@selector(setupCatagoryList) withObject:self afterDelay:0.2f];
+                             }
+                             else if ([swipeOptionString isEqual:@"nearme"])
+                             {
+                                 [bottomNearMe.activityView startAnimating];
+                                 
+                                 [bottomNearMe performSelector:@selector(setupCatagoryList) withObject:self afterDelay:0.2f];
                              }
                          }];
     }

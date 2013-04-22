@@ -221,7 +221,9 @@
                 aData.qrcodeId = [row objectForKey:@"qrcode_id"];
                 aData.category = [row objectForKey:@"category"];
                 aData.labelColor = [row objectForKey:@"color"];
-                aData.contentProvider = [row objectForKey:@"fullname"];
+                if ([[row objectForKey:@"fullname"] isKindOfClass:[NSString class]]) {
+                    aData.contentProvider = [row objectForKey:@"fullname"];
+                }
                 aData.title = [row objectForKey:@"title"];
                 aData.date = [row objectForKey:@"date"];
                 aData.abstract = [row objectForKey:@"description"];
