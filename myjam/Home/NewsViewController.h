@@ -31,6 +31,7 @@
 @property (nonatomic,retain) NSMutableArray *tableData;
 @property (retain, nonatomic) NSString *selectedCategories;
 @property (retain, nonatomic) NSString *searchedText;
+@property (retain, nonatomic) NSString *sortBy;
 
 - (NSMutableArray *)loadMoreFromServer;
 - (void)loadData;

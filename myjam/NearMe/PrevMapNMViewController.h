@@ -24,6 +24,8 @@
 @property (nonatomic, retain) IBOutlet MKMapView *mkMapView;
 @property (nonatomic, retain) IBOutlet CLLocationManager *locationManager;
 @property (nonatomic, retain) IBOutlet CLGeocoder *geoCoder;
+@property (nonatomic, retain) IBOutlet UIButton *currentLocation;
+@property (nonatomic, retain) IBOutlet UIButton *zoomLocation;
 @property (nonatomic) NSInteger shopID;
 @property (nonatomic) double shopLat;
 @property (nonatomic) double shopLong;

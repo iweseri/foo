@@ -61,7 +61,7 @@
     NearMeViewController *nmtab1 = [[NearMeViewController alloc] init];
     nmtab1.view.frame = innerViewFrame;
     nmtab2 = [[NMProductListsViewController alloc] init];
-    nmtab2.view.frame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(TBTB.frame.size.height)-60);
+    nmtab2.view.frame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(TBTB.frame.size.height)-26);
     
     tb1 = [[[TBViewController alloc] init]autorelease];
     [tb1.view addSubview:nmtab1.view];
@@ -105,6 +105,17 @@
     
     [currentView removeFromSuperview];
     
+    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+    
+    if (viewController == tb2) {
+        //NSLog(@"ALL");
+        myDelegate.swipeBottomEnabled = YES;
+        myDelegate.swipeOptionString = @"nearme";
+    }else{
+        //NSLog(@"Bottom view disabled");
+        myDelegate.swipeBottomEnabled = NO;
+    }
+
     viewController.view.frame = CGRectMake(0,28,self.view.bounds.size.width, self.view.bounds.size.height-(TBTB.frame.size.height)-24);
     
     viewController.view.tag = SELECTED_VIEW_CONTROLLER_TAG;
@@ -113,10 +124,10 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
-    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
-    
-    [myDelegate.nearMeBtn setHidden:NO];
-    myDelegate.swipeBottomEnabled = NO;
+//    AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
+//    
+//    [myDelegate.nearMeBtn setHidden:NO];
+//    myDelegate.swipeBottomEnabled = NO;
 }
 
 @end

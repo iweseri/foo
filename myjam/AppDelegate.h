@@ -23,6 +23,7 @@
 #import "CustomBadge.h"
 #import "TutorialView.h"
 #import "NMTabViewController.h"
+#import "BottomSwipeViewNearMe.h"
 //#import "ContactViewController.h"
 
 @class SidebarView;
@@ -52,6 +53,7 @@
 @property (nonatomic, retain) BottomSwipeViewCreateBox *bottomSVCreateBox;
 @property (nonatomic, retain) BottomSwipeViewJShop *bottomSVJShop;
 @property (nonatomic, retain) BottomSwipeViewJSPurchase *bottomSVJSPurchase;
+@property (nonatomic, retain) BottomSwipeViewNearMe *bottomNearMe;
 @property (nonatomic, retain) GTabBar *tabView;
 @property (nonatomic, retain) Banner *bannerView;
 @property (nonatomic, retain) TutorialView *tutorial;

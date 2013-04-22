@@ -44,7 +44,6 @@
         [clLocationMgr setDistanceFilter:kCLDistanceFilterNone];
         [clLocationMgr setDesiredAccuracy:kCLLocationAccuracyBest];
         
-        [self.mkMapView setShowsUserLocation:YES];
         [clLocationMgr startUpdatingLocation];
         [clLocationMgr startUpdatingHeading];
         
@@ -63,7 +62,7 @@
 
     UIImage *buttonImage = [UIImage imageNamed:@"greyButtonHighlight.png"];
     UIImage *buttonImageHighlight = [UIImage imageNamed:@"greyButton.png"];
-    UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey.png"];
+    UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey@2x.png"];
     
     //Configure the button
     userHeadingBtn = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -79,10 +78,10 @@
     
     if (screenBounds.size.height == 568) {
         // code for 4-inch screen
-        userHeadingBtn.frame = CGRectMake(5,screenBounds.origin.y+370,39,30);
+        userHeadingBtn.frame = CGRectMake(5,screenBounds.origin.y+355,39,30);
     } else {
         // code for 3.5-inch screen
-        userHeadingBtn.frame = CGRectMake(5,screenBounds.origin.y+280,39,30);
+        userHeadingBtn.frame = CGRectMake(5,screenBounds.origin.y+265,39,30);
     }
     
     //userHeadingBtn.frame = CGRectMake(5,30,39,30);
@@ -104,31 +103,53 @@
     //[self performSelectorInBackground:@selector(retrieveMapDataFromAPI) withObject:self];
 }
 
+
+
 #pragma mark - User Heading
-- (IBAction) startShowingUserHeading:(id)sender{
-    
-    if(self.mkMapView.userTrackingMode == 0){
-        [self.mkMapView setUserTrackingMode: MKUserTrackingModeFollow animated: YES];
+- (IBAction) startShowingUserHeading:(id)sender
+{
+    if (SYSTEM_VERSION_EQUAL_TO(@"5.0") || SYSTEM_VERSION_EQUAL_TO(@"5.1"))
+    {
+        [self.currentLocation setHidden:NO];
         
-        //Turn on the position arrow
-        UIImage *buttonArrow = [UIImage imageNamed:@"LocationBlue.png"];
-        [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
+        [self.currentLocation addTarget:self action:@selector(goToUserLocation) forControlEvents:UIControlStateNormal];
         
     }
-    else if(self.mkMapView.userTrackingMode == 1){
-        [self.mkMapView setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES];
+    else
+    {
+        [self.currentLocation setHidden:YES];
         
-        //Change it to heading angle
-        UIImage *buttonArrow = [UIImage imageNamed:@"LocationHeadingBlue"];
-        [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
+        if(self.mkMapView.userTrackingMode == 0)
+        {
+            [self.mkMapView setUserTrackingMode: MKUserTrackingModeFollow animated:YES];
+            
+            //Turn on the position arrow
+            UIImage *buttonArrow = [UIImage imageNamed:@"LocationBlue@2x.png"];
+            [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
+            
+        }
+        else if(self.mkMapView.userTrackingMode == 1)
+        {
+            [self.mkMapView setUserTrackingMode: MKUserTrackingModeFollowWithHeading animated: YES];
+            
+            //Change it to heading angle
+            UIImage *buttonArrow = [UIImage imageNamed:@"LocationHeadingBlue@2x.png"];
+            [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
+        }
+        else if(self.mkMapView.userTrackingMode == 2)
+        {
+            [self.mkMapView setUserTrackingMode: MKUserTrackingModeNone animated: YES];
+            
+            //Put it back again
+            UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey@2x.png"];
+            [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
+        }
     }
-    else if(self.mkMapView.userTrackingMode == 2){
-        [self.mkMapView setUserTrackingMode: MKUserTrackingModeNone animated: YES];
-        
-        //Put it back again
-        UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey.png"];
-        [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
-    }
+}
+
+- (void)goToUserLocation
+{
+    [self.mkMapView setCenterCoordinate:self.mkMapView.userLocation.coordinate animated:YES];
 }
 
 - (void)mapView:(MKMapView *)mapView didChangeUserTrackingMode:(MKUserTrackingMode)mode animated:(BOOL)animated
@@ -137,7 +158,7 @@
         [self.mkMapView setUserTrackingMode: MKUserTrackingModeNone animated: YES];
         
         //Put it back again
-        UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey.png"];
+        UIImage *buttonArrow = [UIImage imageNamed:@"LocationGrey@2x.png"];
         [userHeadingBtn setImage:buttonArrow forState:UIControlStateNormal];
     }
     
@@ -147,7 +168,7 @@
 {
     // To get current Lat/Long (current user position)
     
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 800, 800);
+    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance(userLocation.coordinate, 10000, 10000);
     
     [self.mkMapView setRegion:[self.mkMapView regionThatFits:region] animated:YES];
     
@@ -297,7 +318,7 @@
     //image changes/resizes goes here
     UIImage *setAnnotationImage = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:self.imageURL]]];
     UIImage *thumbAnnotateImage = nil;
-    CGSize setSize = CGSizeMake(70,70);
+    CGSize setSize = CGSizeMake(30,30);
     
     UIGraphicsBeginImageContext(setSize);
     
@@ -312,13 +333,16 @@
     
     mkAnnotationView.image = thumbAnnotateImage;
     
+    UIButton *btnImg = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 30)];
+    [btnImg setImage:thumbAnnotateImage forState:UIControlStateNormal];
+    
     //UIImageView *imageForCallOut = [[UIImageView alloc]initWithImage:thumbAnnotateImage];
     
     //The part of map callOut
     UIButton *moreInformationButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
     [moreInformationButton addTarget:self action:@selector(clicked:)
                     forControlEvents:UIControlEventTouchUpInside];
-    //mkAnnotationView.leftCalloutAccessoryView = imageForCallOut;
+    //mkAnnotationView.leftCalloutAccessoryView = btnImg;
     mkAnnotationView.rightCalloutAccessoryView = moreInformationButton;
     moreInformationButton.frame = CGRectMake(0, 0, 30, 30);
     moreInformationButton.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
@@ -442,16 +466,15 @@
 - (void)dealloc
 {
     [super dealloc];
-    [self.mkMapView dealloc];
+    //[self.mkMapView dealloc];
     [self.mkMapView release];
-    [clLocationMgr dealloc];
+    //[clLocationMgr dealloc];
     [clLocationMgr release];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    
 }
 
 @end
