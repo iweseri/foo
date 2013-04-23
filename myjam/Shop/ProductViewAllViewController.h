@@ -19,6 +19,7 @@
 {
     int pageCounter;
     int rows;
+    int kDisplayPerScreen;
 }
 @property (strong, nonatomic) NSMutableArray *productAllArray;
 @property (strong, nonatomic) NSMutableArray *productArray;

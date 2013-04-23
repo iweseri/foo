@@ -43,6 +43,15 @@
 
 - (void)viewDidLoad
 {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    if (screenBounds.size.height == 568) {
+        // code for 4-inch screen
+        kDisplayPerScreen = 4;
+    } else {
+        // code for 3.5-inch screen
+        kDisplayPerScreen = 3;
+    }
+    
     self.title = @"JAM-BU Shop";
     FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
     titleView.text = self.title;
@@ -59,7 +68,6 @@
                                       style:UIBarButtonItemStyleBordered
                                      target:nil
                                      action:nil] autorelease];
-    
     pageCounter = 1;
     [super viewDidLoad];
 
@@ -87,7 +95,11 @@
         rows = (([productAllArray count]/3) + 2);
     }
     NSLog(@"row %d",rows);
-    rows += 1; // Extra row for loading cell
+    
+    if (rows >= kDisplayPerScreen) {
+        rows += 1; // Extra row for loading cell
+    }
+    
     
     return rows;
 }
@@ -115,7 +127,7 @@
         cell.viewAllButton.hidden = YES;
         return cell;
     }
-    else if (indexPath.row == rows-1){
+    else if (indexPath.row == rows-1 && rows-1 >= kDisplayPerScreen){
         ShopLoadingCell *cell = (ShopLoadingCell*)[tableView dequeueReusableCellWithIdentifier:@"ShopLoadingCell"];
         if (cell == nil)
         {
@@ -145,7 +157,7 @@
     if (indexPath.row == 0){
         return 70;
     }
-    else if(indexPath.row == rows-1){
+    else if(indexPath.row == rows-1 && rows-1 >= kDisplayPerScreen){
         return 44; // Loading cell height
     }
     else{
@@ -155,7 +167,7 @@
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == rows-1) {
+    if (indexPath.row == rows-1 && [cell isKindOfClass:[ShopLoadingCell class]]) {
         pageCounter++;
         [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.2];
     }
@@ -167,11 +179,10 @@
     
     BOOL success = [self retrieveData];
     
-    
     if (!success) {
         // Hide loading cell
         [UIView animateWithDuration:0.5 animations:^{
-            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44-5);
+            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44-10);
             [self.tableView setContentOffset:bottomOffset animated:YES];
         }];
     }else{
