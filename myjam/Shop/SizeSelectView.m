@@ -156,7 +156,7 @@
         
         [imageView setText:[[[self.sizeChoices objectAtIndex:0] objectAtIndex:i] valueForKey:@"size_name"]];
         [imageView setBackgroundColor:[UIColor whiteColor]];
-        [imageView setFont:[UIFont fontWithName:@"Verdana" size:24.0] ];
+        [imageView setFont:[UIFont fontWithName:@"Verdana" size:16.0] ];
         [imageView setNumberOfLines:1];
         [imageView sizeToFit];
         [imageView setTextAlignment:NSTextAlignmentCenter];
