@@ -168,7 +168,7 @@
     NSLog(@"request %@\n%@\n\nresponse retrieveData: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
     
-    NSLog(@"dict %@",resultsDictionary);
+//    NSLog(@"dict %@",resultsDictionary);
     
     if([resultsDictionary count])
     {

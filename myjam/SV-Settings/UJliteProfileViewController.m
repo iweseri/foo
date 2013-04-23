@@ -450,7 +450,7 @@
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"abc: %@, def:%@",dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
-    NSLog(@"dict %@",resultsDictionary);
+//    NSLog(@"dict %@",resultsDictionary);
     if([resultsDictionary count])
     { NSLog(@"masuk2");
         NSString *status = [resultsDictionary objectForKey:@"status"];
@@ -527,7 +527,7 @@
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse dataSetPrime: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
-    NSLog(@"dict %@",resultsDictionary);
+//    NSLog(@"dict %@",resultsDictionary);
     
     if([resultsDictionary count])
     {

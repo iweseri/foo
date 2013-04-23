@@ -219,30 +219,6 @@
 }
 
 
-//- (void)processRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    NSString *productId = [self checkQRCodeType:[[self.tableData objectAtIndex:indexPath.row] qrcodeId]];
-//    
-//    if ([productId intValue] > 0)
-//    {
-//        // type of product
-//        DetailProductViewController *detailViewController = [[DetailProductViewController alloc] initWithNibName:@"DetailProductViewController" bundle:nil];
-//        //        NSString *prodId = productId;
-//        detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:productId];
-//        detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
-//        detailViewController.productId = [productId mutableCopy];
-//        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//        [mydelegate.boxNavController pushViewController:detailViewController animated:YES];
-//    }
-//    else{
-//        MoreViewController *detailView = [[MoreViewController alloc] init];
-//        detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
-//        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-//        [mydelegate.boxNavController pushViewController:detailView animated:YES];
-//        [detailView release];
-//    }
-//}
-
 #pragma mark -
 #pragma mark ZXingDelegateMethods
 - (void)zxingController:(ZXingWidgetController*)controller didScanResult:(NSString *)resultString
@@ -352,8 +328,7 @@
     }else{
         //NSLog(@"Error occured.");
     }
-    
-    //NSLog(@"qrcodeid : %@",qrcodeId);
+
 }
 
 - (void)zxingControllerDidCancel:(ZXingWidgetController*)controller {
@@ -385,6 +360,10 @@
             
         }else{
             // Others scan result treat as plain text
+            if ([self isValidURL:resultString]) {
+                return [self processOpenURLFromString:resultString];
+            }
+            
             return [self processPlainText:resultString];
         }
         
@@ -410,6 +389,29 @@
     }
     
     return qrcodeId;
+}
+
+- (BOOL)isValidURL:(NSString *)url
+{
+    NSString *searchedString = url;
+    NSError* error = nil;
+    
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"(?:www\\.)?((?!-)[a-zA-Z0-9-]{2,63}(?<!-))\\.?((?:[a-zA-Z0-9]{2,})?(?:\\.[a-zA-Z0-9]{2,})?)" options:0 error:&error];
+    NSArray* matches = [regex matchesInString:searchedString options:0 range:NSMakeRange(0, [searchedString length])];
+    
+    NSTextCheckingResult* match = [matches objectAtIndex:0];
+//    NSString* matchText = [searchedString substringWithRange:[match range]];
+//    NSLog(@"match: %@", matchText);
+    NSRange group1 = [match rangeAtIndex:1];
+    NSRange group2 = [match rangeAtIndex:2];
+//    NSLog(@"group1: %@", [searchedString substringWithRange:group1]);
+//    NSLog(@"group2: %@", [searchedString substringWithRange:group2]);
+    
+    if ([[searchedString substringWithRange:group1] length] && [[searchedString substringWithRange:group2] length]) {
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (NSString *)processPlainText:(NSString *)text
@@ -629,6 +631,38 @@
     }
     return qrcodeId;
 }
+
+- (NSString *)processOpenURLFromString:(NSString *)aURL
+{
+    //NSLog(@"processOpenURL");
+    
+    NSString *qrcodeId = nil;
+    
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/qrcode_url.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    
+    NSString *dataContent = [NSString stringWithFormat:@"{\"app_title\":\"Alien\",\"url_name\":\"\",\"url_url\":\"%@\",\"external\":\"1\"}",aURL];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    //NSLog(@"abc: %@, def:%@",dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        
+        if ([status isEqualToString:@"ok"])
+        {
+            qrcodeId = [resultsDictionary objectForKey:@"qrcode_id"];
+            //NSLog(@"Submit url ok!");
+        }
+        else{
+            //NSLog(@"Submit url error! %@",[resultsDictionary objectForKey:@"message"]);
+            
+        }
+    }
+    return qrcodeId;
+}
+
 
 #pragma mark -
 #pragma mark MKReverseGeocoder delegate

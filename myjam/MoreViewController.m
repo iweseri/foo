@@ -820,7 +820,7 @@
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     //NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    NSLog(@"dict %@",resultsDictionary);
+//    NSLog(@"dict %@",resultsDictionary);
     
     if([resultsDictionary count])
     {
