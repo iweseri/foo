@@ -116,9 +116,9 @@
             
             if (i == kShopTab) {
                 //NSLog(@"shop hardcoded clicked");
-//                if (mydelegate.isCheckoutFromSideBar == YES) {
+                if (mydelegate.isCheckoutFromSideBar == YES) {
 //                    mydelegate.isCheckoutFromSideBar = NO;
-//                }else
+                }else
                 if(mydelegate.isShowPurchaseHistory == YES){
                     mydelegate.isShowPurchaseHistory = NO;
                 }else{

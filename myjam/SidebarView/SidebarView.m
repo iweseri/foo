@@ -699,7 +699,7 @@
     [mydelegate.shopNavController pushViewController:detailViewController animated:NO];
     
     
-    [mydelegate.tabView activateController:1];
+//    [mydelegate.tabView activateController:1];
     
     
     // Manually change the selected tabButton
