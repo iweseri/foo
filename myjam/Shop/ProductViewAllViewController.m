@@ -8,6 +8,7 @@
 
 #import "ProductViewAllViewController.h"
 #import "ProductHeaderViewCell.h"
+#import "ShopLoadingCell.h"
 
 #define kTableCellHeightM 130
 @interface ProductViewAllViewController ()
@@ -15,29 +16,13 @@
 @end
 
 @implementation ProductViewAllViewController
-@synthesize shopInfo, catName, productAllArray, tableView;
+@synthesize productAllArray;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        //        self.navigationItem.title = @"JAM-BU Shop";
-//        self.title = @"JAM-BU Shop";
-//        FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
-//        titleView.text = self.title;
-//        titleView.textAlignment = NSTextAlignmentCenter;
-//        titleView.backgroundColor = [UIColor clearColor];
-//        titleView.textColor = [UIColor whiteColor];
-//        [titleView sizeToFit];
-//        self.navigationItem.titleView = titleView;
-//        [titleView release];
-//        
-//        
-//        self.navigationItem.backBarButtonItem =
-//        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
-//                                          style:UIBarButtonItemStyleBordered
-//                                         target:nil
-//                                         action:nil] autorelease];
+
     }
     return self;
 }
@@ -47,9 +32,6 @@
     if (self){
         self.shopInfo = shopInfo;
         self.catName = catName;
-        
-        
-        // ...
     }
     
     return self;
@@ -78,14 +60,9 @@
                                      target:nil
                                      action:nil] autorelease];
     
-//    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background.png"]];
-//    [tempImageView setFrame:self.tableView.frame];
-//    
-//    self.tableView.backgroundView = tempImageView;
-//    [tempImageView release];
-    [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 70, 0)];
+    pageCounter = 1;
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -101,21 +78,24 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
+    rows = 0;
     // Return the number of rows in the section.
-    if ( ([productAllArray count] % 3) == 0){
-        return ([productAllArray count]/3)+1;
+    if (([productAllArray count] % 3) == 0){
+        rows = ([productAllArray count]/3)+1;
     }
     else{
-        return (([productAllArray count]/3) + 2);
+        rows = (([productAllArray count]/3) + 2);
     }
+    NSLog(@"row %d",rows);
+    rows += 1; // Extra row for loading cell
+    
+    return rows;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     if(indexPath.row == 0){
-        //ShopHeaderViewCell *cell = (ShopHeaderViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         ProductHeaderViewCell *cell = (ProductHeaderViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil)
         {
@@ -123,21 +103,29 @@
             cell = [nib objectAtIndex:0];
         }
         cell.shopLabel.text = [self.shopInfo valueForKey:@"shop_name"];
-//        if([[self.shopInfo valueForKey:@"shop_top_seller"] isEqual:@"Y"]){
-//            cell.topSellerLabel.hidden=NO;
-//        }
+
         UILabel *catNameLabelTemp = [[UILabel alloc] init];
         CGSize expectedLabelSize  = [self.catName sizeWithFont:[UIFont fontWithName:@"Verdana" size:12.0] constrainedToSize:CGSizeMake(150.0, cell.catNameLabel.frame.size.height) lineBreakMode:UILineBreakModeWordWrap];
         CGRect newFrame = cell.catNameLabel.frame;
         newFrame.size.width = expectedLabelSize.width;
-        cell.catNameLabel.text = catName;
+        cell.catNameLabel.text = self.catName;
         cell.catNameLabel.frame = newFrame;
         [catNameLabelTemp release];
         
         cell.viewAllButton.hidden = YES;
         return cell;
     }
-    
+    else if (indexPath.row == rows-1){
+        ShopLoadingCell *cell = (ShopLoadingCell*)[tableView dequeueReusableCellWithIdentifier:@"ShopLoadingCell"];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ShopLoadingCell" owner:nil options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        
+        [cell.loadingIndicator startAnimating];
+        return cell;
+    }
     else{
         
         ProductTableViewCellwoCat *cell = (ProductTableViewCellwoCat*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -157,26 +145,61 @@
     if (indexPath.row == 0){
         return 70;
     }
+    else if(indexPath.row == rows-1){
+        return 44; // Loading cell height
+    }
     else{
         return kTableCellHeightM;
     }
 }
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == rows-1) {
+        pageCounter++;
+        [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.2];
+    }
+}
+
+- (void)loadMoreData
+{
+    NSLog(@"Page now is %d",pageCounter);
+    
+    BOOL success = [self retrieveData];
+    
+    
+    if (!success) {
+        // Hide loading cell
+        [UIView animateWithDuration:0.5 animations:^{
+            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44-5);
+            [self.tableView setContentOffset:bottomOffset animated:YES];
+        }];
+    }else{
+        // Reload tableView
+        [self.tableView reloadData];
+    }
+    
+    
+}
+
+- (BOOL)retrieveData
+{
+    NSArray *newData = [[MJModel sharedInstance] getFullListOfProductsFor:[self.shopInfo valueForKey:@"shop_id"] inCat:self.catID andPage:[NSString stringWithFormat:@"%d",pageCounter]];
+    
+    if ([newData count]) {
+        [productAllArray addObjectsFromArray:newData]; // Append new data to tableData
+        return YES;
+    }
+    else{
+        pageCounter--;
+        return NO;
+    }
+}
+
 - (void)createCellForIndex:(NSIndexPath *)indexPath cell:(ProductTableViewCellwoCat *)cell
 {
     [cell.transView2 setHidden:YES];
     [cell.transView3 setHidden:YES];
-//    if (indexPath.row ==1){
-//        UILabel *catNameLabelTemp = [[UILabel alloc] init];
-//        
-//        CGSize expectedLabelSize  = [self.catName sizeWithFont:[UIFont fontWithName:@"Verdana" size:12.0] constrainedToSize:CGSizeMake(150.0, cell.catNameLabel.frame.size.height) lineBreakMode:UILineBreakModeWordWrap];
-//        
-//        CGRect newFrame = cell.catNameLabel.frame;
-//        newFrame.size.width = expectedLabelSize.width;
-//        cell.catNameLabel.text = catName;
-//        cell.catNameLabel.frame = newFrame;
-//        [catNameLabelTemp release];
-//        cell.viewAllButton.hidden = YES;
-//    }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // Configure the cell...
@@ -374,9 +397,9 @@
 
 -(void) dealloc{
     [productAllArray release];
-    [shopInfo release];
-    [catName release];
-    [tableView release];
+    [_shopInfo release];
+    [_catName release];
+    [_tableView release];
     [super dealloc];
 }
 @end

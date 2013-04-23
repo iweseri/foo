@@ -152,7 +152,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     UIImage *nearMeIco = [UIImage imageNamed:@"near_me_icon.png"];
     self.nearMeBtn = [[UIButton alloc]initWithFrame:CGRectMake(280, 28, nearMeIco.size.width-2, nearMeIco.size.height-2)];
-    [self.nearMeBtn setHidden:NO];
+    [self.nearMeBtn setHidden:YES];
     [self.nearMeBtn setBackgroundImage:nearMeIco forState:UIControlStateNormal];
     [self.nearMeBtn addTarget:self action:@selector(gotoNM) forControlEvents:UIControlEventTouchUpInside];
     

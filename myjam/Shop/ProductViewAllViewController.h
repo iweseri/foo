@@ -15,11 +15,16 @@
 #import "ShopHeaderViewCell.h"
 #import "ShopInfoButtonCell.h"
 #import <SDWebImage/UIButton+WebCache.h>
-@interface ProductViewAllViewController : UITableViewController
+@interface ProductViewAllViewController : UIViewController
+{
+    int pageCounter;
+    int rows;
+}
 @property (strong, nonatomic) NSMutableArray *productAllArray;
 @property (strong, nonatomic) NSMutableArray *productArray;
 @property (retain, nonatomic) NSDictionary *shopInfo;
 @property (strong, nonatomic) NSString *catName;
+@property (strong, nonatomic) NSString *catID;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 
 -(id)initWith:(NSDictionary*)shopInfo andCat:(NSString*)catName;

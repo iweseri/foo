@@ -346,7 +346,8 @@
 {
     ProductViewAllViewController *detailViewController = [[ProductViewAllViewController alloc] initWith:_shopInfo andCat:[[_productArray objectAtIndex:[sender tag] ]valueForKey:@"category_name"]];
     
-    detailViewController.productAllArray =[[MJModel sharedInstance] getFullListOfProductsFor:[_shopInfo valueForKey:@"shop_id"] inCat:[[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"] andPage:@"1"];
+    detailViewController.productAllArray = [[MJModel sharedInstance] getFullListOfProductsFor:[_shopInfo valueForKey:@"shop_id"] inCat:[[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"] andPage:@"1"];
+    detailViewController.catID = [[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"];
     
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];

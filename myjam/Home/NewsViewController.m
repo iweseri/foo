@@ -152,16 +152,6 @@
         {
             CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-kExtraCellHeight+5);
             [self.tableView setContentOffset:bottomOffset animated:YES];
-//            if (([self.tableData count] > kDisplayPerscreen)) {
-//                [self.tableView setContentOffset:CGPointMake(0, (([self.tableData count]-kDisplayPerscreen)*kTableCellHeight)+kExtraCellHeight)];
-//            }else{
-//            
-//                CGRect screenBounds = [[UIScreen mainScreen] bounds];
-//                if (screenBounds.size.height != 568) {
-//                    // code for 4-inch screen
-//                    [self.tableView setContentOffset:CGPointMake(0, (([self.tableData count]-kDisplayPerscreen)*kTableCellHeight)+kExtraCellHeight)];
-//                }
-//            }
         
         }else if (self.pageCounter < self.totalPage){
             self.pageCounter++;
