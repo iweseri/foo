@@ -385,7 +385,7 @@
     detailViewController.productAllArray = self.productAllArray;
     detailViewController.productArray = self.productArray;
     detailViewController.shopInfo = self.shopInfo;
-    detailViewController.categoryId = self.catId;
+    detailViewController.categoryId = self.catID;
     //------------------------------------------------------------
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];

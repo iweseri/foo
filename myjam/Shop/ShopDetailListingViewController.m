@@ -348,6 +348,12 @@
     
     detailViewController.productAllArray = [[MJModel sharedInstance] getFullListOfProductsFor:[_shopInfo valueForKey:@"shop_id"] inCat:[[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"] andPage:@"1"];
     detailViewController.catID = [[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"];
+
+    detailViewController.productAllArray =[[MJModel sharedInstance] getFullListOfProductsFor:[_shopInfo valueForKey:@"shop_id"] inCat:[[_productArray objectAtIndex:[sender tag]] valueForKey:@"category_id"] andPage:@"1"];
+    //for compareRelatedData--------------------------------------
+    detailViewController.productArray = self.productArray;
+    //------------------------------------------------------------
+
     
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
@@ -368,6 +374,7 @@
     NSString *prodId = [[[[_productArray objectAtIndex:([sender tag]/3)] valueForKey:@"product_list"] objectAtIndex:([sender tag]%3)] valueForKey:@"product_id" ];
     detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:prodId];
     detailViewController.productId = [prodId mutableCopy];
+    detailViewController.categoryId = [[_productArray objectAtIndex:([sender tag]/3)]valueForKey:@"category_id"];
     detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];

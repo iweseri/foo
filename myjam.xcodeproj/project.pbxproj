@@ -464,6 +464,10 @@
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
 		61EF563B17052C30008706C7 /* ProductTableViewCellwoCat.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61EF563917052C30008706C7 /* ProductTableViewCellwoCat.xib */; };
+		61F0B3B11728F6BB0075054F /* CustomProduct.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F0B3AF1728F6BB0075054F /* CustomProduct.m */; };
+		61F0B3B21728F6BB0075054F /* CustomProduct.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F0B3B01728F6BB0075054F /* CustomProduct.xib */; };
+		61F0B3B81728F6DE0075054F /* CompareRelatedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F0B3B61728F6DE0075054F /* CompareRelatedViewController.m */; };
+		61F0B3B91728F6DE0075054F /* CompareRelatedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F0B3B71728F6DE0075054F /* CompareRelatedViewController.xib */; };
 		E0622C8817180160008E025B /* BottomSwipeViewNearMe.m in Sources */ = {isa = PBXBuildFile; fileRef = E0622C8617180160008E025B /* BottomSwipeViewNearMe.m */; };
 		E0622C8917180160008E025B /* BottomSwipeViewNearMe.xib in Resources */ = {isa = PBXBuildFile; fileRef = E0622C8717180160008E025B /* BottomSwipeViewNearMe.xib */; };
 		E08AB400171BA87200553837 /* arrowNaviHR.png in Resources */ = {isa = PBXBuildFile; fileRef = E08AB3FF171BA87200553837 /* arrowNaviHR.png */; };
@@ -1146,6 +1150,12 @@
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
 		61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductTableViewCellwoCat.m; sourceTree = "<group>"; };
 		61EF563917052C30008706C7 /* ProductTableViewCellwoCat.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductTableViewCellwoCat.xib; sourceTree = "<group>"; };
+		61F0B3AE1728F6BB0075054F /* CustomProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomProduct.h; sourceTree = "<group>"; };
+		61F0B3AF1728F6BB0075054F /* CustomProduct.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomProduct.m; sourceTree = "<group>"; };
+		61F0B3B01728F6BB0075054F /* CustomProduct.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CustomProduct.xib; sourceTree = "<group>"; };
+		61F0B3B51728F6DE0075054F /* CompareRelatedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompareRelatedViewController.h; sourceTree = "<group>"; };
+		61F0B3B61728F6DE0075054F /* CompareRelatedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompareRelatedViewController.m; sourceTree = "<group>"; };
+		61F0B3B71728F6DE0075054F /* CompareRelatedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CompareRelatedViewController.xib; sourceTree = "<group>"; };
 		E0622C8517180160008E025B /* BottomSwipeViewNearMe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BottomSwipeViewNearMe.h; sourceTree = "<group>"; };
 		E0622C8617180160008E025B /* BottomSwipeViewNearMe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewNearMe.m; sourceTree = "<group>"; };
 		E0622C8717180160008E025B /* BottomSwipeViewNearMe.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomSwipeViewNearMe.xib; sourceTree = "<group>"; };
@@ -1520,6 +1530,9 @@
 		6139632616EF8EFF0056B314 /* Shop */ = {
 			isa = PBXGroup;
 			children = (
+				61F0B3B51728F6DE0075054F /* CompareRelatedViewController.h */,
+				61F0B3B61728F6DE0075054F /* CompareRelatedViewController.m */,
+				61F0B3B71728F6DE0075054F /* CompareRelatedViewController.xib */,
 				61C42BD417169102001C2E57 /* ProductHeaderViewCell.h */,
 				61C42BD517169102001C2E57 /* ProductHeaderViewCell.m */,
 				61C42BD617169102001C2E57 /* ProductHeaderViewCell.xib */,
@@ -1632,6 +1645,9 @@
 		6139633716EF8EFF0056B314 /* CustomCell */ = {
 			isa = PBXGroup;
 			children = (
+				61F0B3AE1728F6BB0075054F /* CustomProduct.h */,
+				61F0B3AF1728F6BB0075054F /* CustomProduct.m */,
+				61F0B3B01728F6BB0075054F /* CustomProduct.xib */,
 				6139633816EF8EFF0056B314 /* BuyNowCell.h */,
 				6139633916EF8EFF0056B314 /* BuyNowCell.m */,
 				6139633A16EF8EFF0056B314 /* BuyNowCell.xib */,
@@ -2723,6 +2739,8 @@
 				E08AB40E171CFBE000553837 /* LocationHeadingBlue.png in Resources */,
 				E08AB40F171CFBE000553837 /* LocationHeadingBlue@2x.png in Resources */,
 				612E161D1726186900A2AF09 /* ShopLoadingCell.xib in Resources */,
+				61F0B3B21728F6BB0075054F /* CustomProduct.xib in Resources */,
+				61F0B3B91728F6DE0075054F /* CompareRelatedViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2915,6 +2933,8 @@
 				21426EF217179AD500B766BE /* UIImage-Extensions.m in Sources */,
 				E0622C8817180160008E025B /* BottomSwipeViewNearMe.m in Sources */,
 				612E16191726184A00A2AF09 /* ShopLoadingCell.m in Sources */,
+				61F0B3B11728F6BB0075054F /* CustomProduct.m in Sources */,
+				61F0B3B81728F6DE0075054F /* CompareRelatedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

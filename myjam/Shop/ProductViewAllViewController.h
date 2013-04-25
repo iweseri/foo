@@ -25,6 +25,7 @@
 @property (strong, nonatomic) NSMutableArray *productArray;
 @property (retain, nonatomic) NSDictionary *shopInfo;
 @property (strong, nonatomic) NSString *catName;
+
 @property (strong, nonatomic) NSString *catID;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 
