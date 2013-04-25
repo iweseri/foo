@@ -29,7 +29,7 @@ static MJModel *_sharedInstance = nil;
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
 //   NSDictionary *resultsDictionary = [[NSDictionary alloc] initWithDictionary:[response objectFromJSONString]];
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-//    //NSLog(@"%@",resultsDictionary);
+    //NSLog(@"%@",resultsDictionary);
     return resultsDictionary;
 }
 

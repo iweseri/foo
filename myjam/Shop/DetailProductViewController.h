@@ -24,6 +24,7 @@
 #import "SidebarView.h"
 #import "ProductReportViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/UIButton+WebCache.h>
 #import "ReportSpamViewController.h"
 #import "FavFolderViewController.h"
 #import "UIViewController+MJPopupViewController.h"
@@ -57,6 +58,14 @@
 @property (retain, nonatomic) IBOutlet UILabel *descLabel;
 @property (retain, nonatomic) IBOutlet UIView *bottomView;
 
+@property (strong, nonatomic) NSMutableArray *productAllArray;
+@property (strong, nonatomic) NSMutableArray *productArray;
+@property (retain, nonatomic) NSDictionary *shopInfo;
+@property (nonatomic, retain) NSMutableArray *compareArray;
+@property (nonatomic, retain) NSMutableArray *relatedArray;
+@property (nonatomic, retain) IBOutlet UIButton *viewAllCompare;
+@property (nonatomic, retain) IBOutlet UIButton *viewAllRelated;
+@property (retain, nonatomic) NSString *categoryId;
 
 - (IBAction)facebookPressed:(id)sender;
 - (IBAction)twitterPressed:(id)sender;

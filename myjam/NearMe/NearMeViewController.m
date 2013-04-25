@@ -179,7 +179,7 @@
     
     if (SYSTEM_VERSION_EQUAL_TO(@"5.0") || SYSTEM_VERSION_EQUAL_TO(@"5.1"))
     {
-        [self performSelector:@selector(retrieveMapDataFromAPI) withObject:self afterDelay:2.0f];
+        [self performSelector:@selector(retrieveMapDataFromAPI) withObject:self afterDelay:0.2f];
     }
     
     //Trigger to identify current user degrees.
@@ -401,12 +401,9 @@
     NSString *urlString = [NSString stringWithFormat:@"%@/api/nearme_map.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"lat\":\"%f\",\"lng\":\"%f\",\"radius\":\"%d\"}",self.currentLat,self.currentLong,self.withRad];
     
-    NSLog(@"UrlString %@ and datacontent %@",urlString,dataContent);
-    
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse retrieveData: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
-    
     NSLog(@"dict %@",resultsDictionary);
     
     if([resultsDictionary count])

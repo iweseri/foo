@@ -7,6 +7,8 @@
 //
 
 #import "DetailProductViewController.h"
+#import "CompareRelatedViewController.h"
+#import "CustomProduct.h"
 #define kTableCellHeightC 70
 @interface DetailProductViewController ()
 
@@ -154,12 +156,223 @@
     [footerView release];
     
     //    self.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
+    [self performSelectorInBackground:@selector(setupCompareRelated) withObject:self];
     
     [self setupCarousel];
     [DejalBezelActivityView removeViewAnimated:YES];
     // Do any additional setup after loading the view from its nib.
 }
+//--------------------------------------------------------------------------------------------
+-(BOOL)getCompareRelatedFromAPI:(NSString *)type
+{
+    BOOL success = NO;
+    NSString *urlString=nil, *dataContent=nil;
+    if ([type isEqualToString:@"compare"]) {
+        urlString = [NSString stringWithFormat:@"%@/api/shop_product_compare.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+        dataContent = [NSString stringWithFormat:@"{\"product_id\":\"%@\"}",self.productId];
+    } else if([type isEqualToString:@"related"]) {
+        urlString = [NSString stringWithFormat:@"%@/api/shop_product_related2.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+        dataContent = [NSString stringWithFormat:@"{\"product_id\":\"%@\",\"category_id\":\"%@\",\"flag\":\"related_product\"}",self.productId,self.categoryId];
+    }
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    NSLog(@"request %@\n%@\n\nresponse retrieveData: %@", urlString, dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
+    //NSLog(@"dict %@",resultsDictionary);
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        NSMutableArray *resultList;
+        
+        if ([status isEqualToString:@"ok"])
+        {
+            success = YES;
+            resultList = [resultsDictionary objectForKey:@"list"];
+            if([type isEqualToString:@"compare"]) {
+                self.compareArray = resultList; NSLog(@"AAA :%@",self.compareArray); }
+            else if ([type isEqualToString:@"related"]) {
+                self.relatedArray = resultList; NSLog(@"BBB :%@",self.relatedArray); }
+        }
+    }
+    [resultsDictionary release];
+    return success;
+}
 
+-(void)setupCompareRelated
+{
+    if ([self getCompareRelatedFromAPI:@"compare"]) {
+        if (![self.compareArray isKindOfClass:[NSString class]]) {
+            CustomProduct *compare = [[CustomProduct alloc] initWithFrame:CGRectMake(0, 225, 320, 100)];
+            int count=0;
+            for (id row in self.compareArray) { count++; } NSLog(@"CNT :%d",count);
+            if(count>3) {
+                [self.viewAllCompare setHidden:NO];
+                [self.viewAllCompare setTag:1];
+                [self.viewAllCompare addTarget:self action:@selector(viewAll:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            [self setupDataCompareRelated:compare toThe:self.compareArray];
+            [self.bottomView addSubview:compare];
+            [compare release];
+        }
+    }
+    if ([self getCompareRelatedFromAPI:@"related"]) {
+        if (![self.relatedArray isKindOfClass:[NSString class]]) {
+            CustomProduct *related = [[CustomProduct alloc] initWithFrame:CGRectMake(0, 360, 320, 100)];
+            int count=0;
+            for (id row in self.relatedArray) { count++; } NSLog(@"CNT :%d",count);
+            if(count>3) {
+                [self.viewAllRelated setHidden:NO];
+                [self.viewAllRelated setTag:1];
+                [self.viewAllRelated addTarget:self action:@selector(viewAll:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            [self setupDataCompareRelated:related toThe:self.relatedArray];
+            [self.bottomView addSubview:related];
+            [related release];
+        }
+    }
+}
+
+-(void)setupDataCompareRelated:(CustomProduct *)setData toThe:(NSMutableArray *)withData
+{
+    int count=0;
+    for (id row in withData) { count++; }
+    if (count > 0) {
+        [setData.transView1 setHidden:NO];
+        NSString *productName = [[withData objectAtIndex:0] valueForKey:@"product_name"];
+        NSString *categoryName = [[withData objectAtIndex:0] valueForKey:@"product_category"];
+        [self setMarquee:setData.transView1 toThe:productName and:categoryName];
+        
+        [setData.priceLabel1 setText:[[withData objectAtIndex:0] valueForKey:@"product_price"]];
+        if ([[[withData objectAtIndex:0] valueForKey:@"product_rating"] isEqual:@"0.0"]) {
+            [setData.rateView1 setHidden:YES];
+        } else {
+            [setData.rateView1 setRating:[[[withData objectAtIndex:0] valueForKey:@"product_rating"] doubleValue]];
+            [setData.rateView1 setEditable:NO];
+            [setData.rateView1 setSelectedImage:[UIImage imageNamed:@"star.png"]];
+            [setData.rateView1 setNonSelectedImage:[UIImage imageNamed:@"grey_star.png"]];
+            [setData.rateView1 setMaxRating:5];
+        }
+        [setData.buttonTap1 setTag:[[withData objectAtIndex:0] valueForKey:@"product_id"]];
+        [setData.button1 setBackgroundImageWithURL:[[withData objectAtIndex:0] valueForKey:@"product_image"] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_icon"]];
+        [setData.buttonTap1 addTarget:self action:@selector(tapAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    if (count > 1) {
+        [setData.transView2 setHidden:NO];
+        NSString *productName = [[withData objectAtIndex:1] valueForKey:@"product_name"];
+        NSString *categoryName = [[withData objectAtIndex:1] valueForKey:@"product_category"];
+        [self setMarquee:setData.transView2 toThe:productName and:categoryName];
+        
+        [setData.priceLabel2 setText:[[withData objectAtIndex:1] valueForKey:@"product_price"]];
+        if ([[[withData objectAtIndex:1] valueForKey:@"product_rating"] isEqual:@"0.0"]) {
+            [setData.rateView2 setHidden:YES];
+        } else {
+            [setData.rateView2 setRating:[[[withData objectAtIndex:1] valueForKey:@"product_rating"] doubleValue]];
+            [setData.rateView2 setEditable:NO];
+            [setData.rateView2 setSelectedImage:[UIImage imageNamed:@"star.png"]];
+            [setData.rateView2 setNonSelectedImage:[UIImage imageNamed:@"grey_star.png"]];
+            [setData.rateView2 setMaxRating:5];
+        }
+        [setData.buttonTap2 setTag:[[withData objectAtIndex:1] valueForKey:@"product_id"]];
+        [setData.button2 setBackgroundImageWithURL:[[withData objectAtIndex:1] valueForKey:@"product_image"] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_icon"]];
+        [setData.buttonTap2 addTarget:self action:@selector(tapAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    if (count > 2) {
+        [setData.transView3 setHidden:NO];
+        NSString *productName = [[withData objectAtIndex:2] valueForKey:@"product_name"];
+        NSString *categoryName = [[withData objectAtIndex:2] valueForKey:@"product_category"];
+        [self setMarquee:setData.transView3 toThe:productName and:categoryName];
+        
+        [setData.priceLabel3 setText:[[withData objectAtIndex:2] valueForKey:@"product_price"]];
+        if ([[[withData objectAtIndex:2] valueForKey:@"product_rating"] isEqual:@"0.0"]) {
+            [setData.rateView3 setHidden:YES];
+        } else {
+            [setData.rateView3 setRating:[[[withData objectAtIndex:2] valueForKey:@"product_rating"] doubleValue]];
+            [setData.rateView3 setEditable:NO];
+            [setData.rateView3 setSelectedImage:[UIImage imageNamed:@"star.png"]];
+            [setData.rateView3 setNonSelectedImage:[UIImage imageNamed:@"grey_star.png"]];
+            [setData.rateView3 setMaxRating:5];
+        }
+        [setData.buttonTap3 setTag:[[withData objectAtIndex:2] valueForKey:@"product_id"]];
+        [setData.button3 setBackgroundImageWithURL:[[withData objectAtIndex:2] valueForKey:@"product_image"] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_icon"]];
+        [setData.buttonTap3 addTarget:self action:@selector(tapAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+}
+
+-(void)setMarquee:(UIView *)setTransView toThe:(NSString *)product and:(NSString *)category
+{
+    MarqueeLabel *productNameLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 0, 90, 18) rate:20.0f andFadeLength:10.0f];
+    productNameLabel.marqueeType = MLContinuous;
+    productNameLabel.animationCurve = UIViewAnimationOptionCurveLinear;
+    productNameLabel.numberOfLines = 1;
+    productNameLabel.opaque = NO;
+    productNameLabel.enabled = YES;
+    productNameLabel.textAlignment = UITextAlignmentLeft;
+    productNameLabel.textColor = [UIColor blackColor];
+    productNameLabel.backgroundColor = [UIColor clearColor];
+    productNameLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:10];
+    productNameLabel.text = product;
+    [setTransView addSubview:productNameLabel];
+    [productNameLabel release];
+    
+    MarqueeLabel *categoryLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 14, 90, 18) rate:20.0f andFadeLength:10.0f];
+    categoryLabel.marqueeType = MLContinuous;
+    categoryLabel.animationCurve = UIViewAnimationOptionCurveLinear;
+    categoryLabel.numberOfLines = 1;
+    categoryLabel.opaque = NO;
+    categoryLabel.enabled = YES;
+    categoryLabel.textAlignment = UITextAlignmentLeft;
+    categoryLabel.textColor = [UIColor blackColor];
+    categoryLabel.backgroundColor = [UIColor clearColor];
+    categoryLabel.font = [UIFont fontWithName:@"Helvetica" size:10];
+    categoryLabel.text = category;
+    [setTransView addSubview:categoryLabel];
+    [categoryLabel release];
+}
+
+-(void)viewAll:(id)sender{
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    [self performSelector:@selector(showAllProducts:) withObject:sender afterDelay:0.1];
+}
+
+- (void)showAllProducts:(id)sender
+{
+    //ProductViewAllViewController *detailViewController = [[ProductViewAllViewController alloc] initWith:_shopInfo andCat:[[_productArray objectAtIndex:[sender tag] ]valueForKey:@"category_name"]];
+    CompareRelatedViewController *detailViewController = [[CompareRelatedViewController alloc] initWithNibName:@"CompareRelatedViewController" bundle:nil];
+    detailViewController.productAllArray = self.compareArray;
+    if ([sender tag] == 1) {
+        detailViewController.catName = @"Compare Prices";
+    } else {
+        detailViewController.catName = @"Related Products";
+    }
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+}
+
+-(void)tapAction:(id)sender{
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    [self performSelector:@selector(showProductDetail:) withObject:sender afterDelay:0.1];
+}
+
+- (void)showProductDetail:(id)sender
+{
+    DetailProductViewController *detailViewController = [[DetailProductViewController alloc] initWithNibName:@"DetailProductViewController" bundle:nil];
+    //NSString *prodId = [[[[_productArray objectAtIndex:([sender tag]/3)] valueForKey:@"product_list"] objectAtIndex:([sender tag]%3)] valueForKey:@"product_id" ];
+    NSString *prodId = [sender tag];
+    detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:prodId];
+    detailViewController.productId = [prodId mutableCopy];
+    detailViewController.categoryId = self.categoryId;
+    detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [DejalBezelActivityView removeViewAnimated:YES];
+}
+//--------------------------------------------------------------------------------------------
 -(void)backToShop
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -921,6 +1134,14 @@
     [_colorSelectView release];
     [_tableView release];
     [buyButton release];
+    [_productArray release];
+    [_productAllArray release];
+    [_shopInfo release];
+    [_compareArray release];
+    [_relatedArray release];
+    [_viewAllCompare release];
+    [_viewAllRelated release];
+    [_categoryId release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [super dealloc];
