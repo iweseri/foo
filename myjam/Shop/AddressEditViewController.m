@@ -279,18 +279,18 @@
 
 - (void)processSaveAddress
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/settings_jambulite_profile.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"flag\":\"ADD_ADDRESS2\",\"address\":\"%@\",\"city\":\"%@\",\"postcode\":\"%@\",\"state_id\":\"%@\",\"country_id\":\"%@\"}",self.addressTextField.text,self.cityTextField.text,self.postcodeTextField.text,self.stateId,self.countryId];
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy]; NSLog(@"masuk :%@\n%@",response,dataContent);
-    if([resultsDictionary count]) {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"]) {
-            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Address Profile" message:@"New Address Updated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            [alert release];
-        }
-    }
+//    NSString *urlString = [NSString stringWithFormat:@"%@/api/settings_jambulite_profile.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+//    NSString *dataContent = [NSString stringWithFormat:@"{\"flag\":\"ADD_ADDRESS2\",\"address\":\"%@\",\"city\":\"%@\",\"postcode\":\"%@\",\"state_id\":\"%@\",\"country_id\":\"%@\"}",self.addressTextField.text,self.cityTextField.text,self.postcodeTextField.text,self.stateId,self.countryId];
+//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+//    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy]; NSLog(@"masuk :%@\n%@",response,dataContent);
+//    if([resultsDictionary count]) {
+//        NSString *status = [resultsDictionary objectForKey:@"status"];
+//        if ([status isEqualToString:@"ok"]) {
+//            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Address Profile" message:@"New Address Updated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//            [alert show];
+//            [alert release];
+//        }
+//    }
     
     NSDictionary *status = [[MJModel sharedInstance] submitAddressForCart:self.cartId forAddress:self.addressTextField.text  inCity:self.cityTextField.text withPostcode:self.postcodeTextField.text inState:self.stateId inCountry:self.countryId];
     //NSLog(@"cartID :%@, add :%@, city :%@,  pcode :%@, state :%@, country :%@",self.cartId,self.addressTextField.text,self.cityTextField.text,self.postcodeTextField.text,self.stateId,self.countryId);
@@ -304,6 +304,15 @@
             [alertView release];
             
         }else{
+            
+//            if([resultsDictionary count]) {
+//                NSString *status = [resultsDictionary objectForKey:@"status"];
+                if ([[status valueForKey:@"status"] isEqualToString:@"ok"]) {
+                    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Address Profile" message:@"New Address Updated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                }
+//            }
             
             DeliveryChoiceViewController *detailViewController = [[DeliveryChoiceViewController alloc] initWithNibName:@"DeliveryChoiceViewController" bundle:nil andCartId:self.cartId];
             
