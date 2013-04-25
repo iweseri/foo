@@ -17,6 +17,7 @@
 #import "FeedbackViewController.h"
 #import "AboutViewController.h"
 #import "SettingsViewController.h"
+#import "JBuddyViewController.h"
 
 #define kTableCellHeightA 110
 @interface SidebarView ()
@@ -102,6 +103,11 @@
     UITapGestureRecognizer *tapSocialRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSocial)];
     [self.socialLabel addGestureRecognizer:tapSocialRecognizer];
     [tapSocialRecognizer release];
+    
+    self.jBuddyLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapJBuddyRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleBuddy)];
+    [self.jBuddyLabel addGestureRecognizer:tapJBuddyRecognizer];
+    [tapJBuddyRecognizer release];
     
     self.faqLabel.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapFAQRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFAQ)];
@@ -223,6 +229,7 @@
     [self setNameLabel:nil];
     [self setEmailLabel:nil];
     [self setTableView:nil];
+    [self setJBuddyLabel:nil];
     [super viewDidUnload];
     self.contentView = nil;
     
@@ -299,6 +306,15 @@
     }
     
     [mydelegate closeSidebar];
+}
+
+- (void)handleBuddy
+{
+    NSLog(@"handleBuddy");
+    
+    JBuddyViewController *buddyListVc = [[JBuddyViewController alloc] init];
+    [self showViewControllerWithLoadingView:buddyListVc];
+    [buddyListVc release];
 }
 
 - (void)handleSwipeRight
@@ -408,9 +424,11 @@
             [localData setObject:@"" forKey:@"email"];
             [localData setObject:@"" forKey:@"mobile"];
             [localData setObject:@"NO" forKey:@"islogin"];
+            [localData setObject:@"NO" forKey:@"connectedToNodeJS"];
 //            [localData setObject:@"YES" forKey:@"isReloadNewsNeeded"];
             [localData synchronize];
             [mydelegate handleTab5];
+            [mydelegate disconnectNodeJS];
             [mydelegate.tabView activateController:0];
             [mydelegate.tabView activateTabItem:0];
         }
@@ -437,6 +455,7 @@
     [_tableView release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
+    [_jBuddyLabel release];
     [super dealloc];
 }
 

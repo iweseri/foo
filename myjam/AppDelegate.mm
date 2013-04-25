@@ -5,8 +5,7 @@
 //  Created by nazri on 11/7/12.
 //  Copyright (c) 2012 me-tech. All rights reserved.
 //
-
-#import <QuartzCore/QuartzCore.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 #import "AppDelegate.h"
 #import "FBAppDelegate.h"
@@ -22,6 +21,8 @@
 #import "ASIWrapper.h"
 #import "ConnectionClass.h"
 #import "ErrorViewController.h"
+#import "JSONKit.h"
+#import "SocketIOPacket.h"
 
 #define kCloseSwipeBottom   1
 #define kCloseSideBar       2
@@ -37,6 +38,7 @@ static CGFloat bannerHeight = 34;
 NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSessionStateChangedNotification"; //fb login
 
 @synthesize window;
+@synthesize socketIO;
 @synthesize sidebarController;
 @synthesize bottomSVAll, bottomSVNews, bottomSVPromo, bottomSVScanBox, bottomSVShareBox, bottomSVFavBox, bottomSVCreateBox,bottomSVJShop, bottomSVJSPurchase, bottomNearMe;
 
@@ -78,7 +80,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
-    
+    // Create socket nodejs client
+    socketIO = [[SocketIO alloc] initWithDelegate:self];
     [self initViews];
     
     [self.window makeKeyAndVisible];
@@ -92,6 +95,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     // local cache dictionaries
     NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
     
+    [localData setObject:@"NO" forKey:@"connectedToNodeJS"];
     // if internetconnection is good
     if ([ConnectionClass connected])
     {
@@ -138,6 +142,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             if (![self isSetupDone]) {
                 [self setupViews];
             }
+            [self connectNodeJS];
         }
         [localData setObject:@"NO" forKey:@"noConnection"];
         [localData synchronize];
@@ -829,6 +834,104 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [loginNav.view release];
     
 }
+
+#pragma mark -
+#pragma mark SocketIO methods and delegate
+
+- (void)connectNodeJS
+{
+    NSLog(@"connect nodejs");
+    [socketIO connectToHost:@"202.71.110.204" onPort:80];
+}
+
+- (void)sendTokenNodeJS
+{
+    SocketIOCallback cb = ^(id argsData) {
+        NSDictionary *response = argsData;
+        // do something with response
+        NSLog(@"token nodejs ack arrived: %@", response);
+    };
+    
+    NSDictionary *datadict = [NSDictionary dictionaryWithObject:[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"] forKey:@"token"];
+    [socketIO sendEvent:@"login" withData:datadict andAcknowledge:cb];
+}
+
+- (void)disconnectNodeJS
+{
+    [socketIO disconnect];
+}
+
+- (void) socketIO:(SocketIO *)socket didReceiveEvent:(SocketIOPacket *)packet
+{
+    NSLog(@"didReceiveEvent()");
+    NSLog(@"packet: %@",[packet data]);
+    
+    NSDictionary *data = [packet dataAsJSON];
+    //    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+    //    if ([conn isEqualToString:@"NO"]) {
+    //        if ([[data objectForKey:@"name"] isEqualToString:@"connected"]) {
+    //            [self sendTokenNodeJS];
+    //            [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"connectedToNodeJS"];
+    //        }
+    //    }
+    
+    if ([[data objectForKey:@"name"] isEqualToString:@"server_to_client"]) {
+        NSDictionary *msg = [[data objectForKey:@"args"] objectAtIndex:0];
+        if ([[msg objectForKey:@"message"] isEqualToString:@"conversation_list_updated"]) {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"updateMessageList"
+             object:nil];
+            [self playAlertSound];
+        }
+        else if ([[msg objectForKey:@"message"] isEqualToString:@"buddy_list_updated"])
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"reloadBuddyList"
+             object:nil];
+            [self playAlertSound];
+        }
+    }
+    
+}
+
+- (void)socketIODidConnect:(SocketIO *)socket
+{
+    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+    if ([conn isEqualToString:@"NO"]) {
+        [self sendTokenNodeJS];
+        [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"connectedToNodeJS"];
+    }
+}
+
+- (void)socketIODidDisconnect:(SocketIO *)socket disconnectedWithError:(NSError *)error
+{
+    NSLog(@"Nodejs disconnect. Reconnecting ..");
+    [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"connectedToNodeJS"];
+    //        [self connectNodeJS];
+    
+    if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"] isEqualToString:@"YES"]) {
+        [self connectNodeJS];
+    }
+}
+
+
+- (void) socketIO:(SocketIO *)socket failedToConnectWithError:(NSError *)error
+{
+    NSLog(@"failedToConnectWithError() %@", error);
+}
+
+- (void)playAlertSound
+{
+    SystemSoundID audioEffect;
+    NSURL *pathSound = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"beep-beep" ofType:@"mp3"] isDirectory:NO];
+    AudioServicesCreateSystemSoundID((CFURLRef) pathSound, &audioEffect);
+    AudioServicesPlaySystemSound(audioEffect);
+    // call the following function when the sound is no longer used
+    // (must be done AFTER the sound is done playing)
+    //    AudioServicesDisposeSystemSoundID(audioEffect);
+}
+
+
 
 #pragma mark -
 #pragma mark FB LOGIN

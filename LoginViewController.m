@@ -309,7 +309,7 @@
         //NSLog(@"token: %@, name %@",token, fname);
         if ([status isEqualToString:@"ok"])
         {
-            [self handleSuccessLogin];
+//            [self handleSuccessLogin];
             
             // store token and remember-login in local cache
             NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
@@ -340,6 +340,8 @@
             }
             
             [localData synchronize];
+            
+            [self handleSuccessLogin];
         }else{
             //NSLog(@"Login failed");
             
@@ -381,6 +383,7 @@
         [mydelegate setupViews];
     }
     
+    [mydelegate connectNodeJS];
     [mydelegate.tabView activateController:0];
     [mydelegate.tabView activateTabItem:0];
 }

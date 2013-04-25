@@ -24,10 +24,11 @@
 #import "TutorialView.h"
 #import "NMTabViewController.h"
 #import "BottomSwipeViewNearMe.h"
+#import "SocketIO.h"
 //#import "ContactViewController.h"
 
 @class SidebarView;
-@interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate> {
+@interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, SocketIODelegate> {
     UIWindow *window;
 	GTabBar *tabView;
     UIView *frontLayerView;
@@ -35,6 +36,7 @@
     BOOL showCamera;
     UIView *blackView;
     CGRect screenBounds;
+    BOOL isNodeJSConnected;
 }
 
 @property (nonatomic, retain) UINavigationController* shopNavController;
@@ -61,6 +63,8 @@
 @property (nonatomic, retain) NSMutableArray *arrayTemp;
 @property (nonatomic, retain) CustomBadge *cartCounter;
 @property (nonatomic, retain) UIButton *nearMeBtn;
+
+@property (nonatomic, retain) SocketIO *socketIO;
 
 //For Near Me Use
 @property (nonatomic) double currentLat;
@@ -95,4 +99,6 @@
 - (void)setCustomBadgeWithText:(NSString *)text;
 - (void)showUpdateProfileDialog;
 
+- (void)connectNodeJS;
+- (void)disconnectNodeJS;
 @end

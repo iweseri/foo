@@ -31,6 +31,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *emailLabel;
 @property (retain, nonatomic) IBOutlet UILabel *mobileLabel;
 @property (retain, nonatomic) IBOutlet UILabel *settingsLabel;
+@property (retain, nonatomic) IBOutlet UILabel *jBuddyLabel;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *cartItems;
 
