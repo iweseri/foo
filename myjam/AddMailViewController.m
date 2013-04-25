@@ -294,9 +294,11 @@
     //NSLog(@"option selected %d", row);
     if (pickerView.tag == 1) {
         self.stateTextField.text = [self.stateArray objectAtIndex:row];
+        self.stateId = [self.dictStates objectForKey:self.stateTextField.text];
     }
     else
         self.countryTextField.text = [self.countryArray objectAtIndex:row];
+        self.countryId = [self.dictCountries objectForKey:self.countryTextField.text];
 }
 
 #pragma mark -

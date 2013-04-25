@@ -1,62 +1,29 @@
 //
-//  ProductViewAllViewController.m
+//  CompareRelatedViewController.m
 //  myjam
 //
 //  Created by Azad Johari on 2/13/13.
 //  Copyright (c) 2013 me-tech. All rights reserved.
 //
 
-#import "ProductViewAllViewController.h"
-#import "ProductHeaderViewCell.h"
-
+#import "CompareRelatedViewController.h"
 #define kTableCellHeightM 130
-@interface ProductViewAllViewController ()
+
+@interface CompareRelatedViewController ()
 
 @end
 
-@implementation ProductViewAllViewController
+@implementation CompareRelatedViewController
+
 @synthesize shopInfo, catName, productAllArray, tableView;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        //        self.navigationItem.title = @"JAM-BU Shop";
-//        self.title = @"JAM-BU Shop";
-//        FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
-//        titleView.text = self.title;
-//        titleView.textAlignment = NSTextAlignmentCenter;
-//        titleView.backgroundColor = [UIColor clearColor];
-//        titleView.textColor = [UIColor whiteColor];
-//        [titleView sizeToFit];
-//        self.navigationItem.titleView = titleView;
-//        [titleView release];
-//        
-//        
-//        self.navigationItem.backBarButtonItem =
-//        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
-//                                          style:UIBarButtonItemStyleBordered
-//                                         target:nil
-//                                         action:nil] autorelease];
     }
     return self;
-}
--(id)initWith:(NSDictionary*)shopInfo andCat:(NSString*)catName{
-    
-    self = [super initWithNibName:@"ProductViewAllViewController" bundle:nil];
-    if (self){
-        self.shopInfo = shopInfo;
-        self.catName = catName;
-        
-        
-        // ...
-    }
-    
-    return self;
-    
-}
-- (void)loadView {
-    [super loadView];
 }
 
 - (void)viewDidLoad
@@ -71,18 +38,17 @@
     self.navigationItem.titleView = titleView;
     [titleView release];
     
-    
     self.navigationItem.backBarButtonItem =
     [[[UIBarButtonItem alloc] initWithTitle:@"Back"
                                       style:UIBarButtonItemStyleBordered
                                      target:nil
                                      action:nil] autorelease];
     
-//    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background.png"]];
-//    [tempImageView setFrame:self.tableView.frame];
-//    
-//    self.tableView.backgroundView = tempImageView;
-//    [tempImageView release];
+    
+    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"background.png"]];
+    [tempImageView setFrame:self.tableView.frame];
+    self.tableView.backgroundView = tempImageView;
+    [tempImageView release];
     [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, 70, 0)];
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
@@ -101,12 +67,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
     // Return the number of rows in the section.
     if ( ([productAllArray count] % 3) == 0){
         return ([productAllArray count]/3)+1;
-    }
-    else{
+    } else {
         return (([productAllArray count]/3) + 2);
     }
 }
@@ -115,14 +79,12 @@
 {
     static NSString *CellIdentifier = @"Cell";
     if(indexPath.row == 0){
-        //ShopHeaderViewCell *cell = (ShopHeaderViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        ProductHeaderViewCell *cell = (ProductHeaderViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil)
-        {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ProductHeaderViewCell" owner:nil options:nil];
+        CustomHeaderCell *cell = (CustomHeaderCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil) {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CustomHeaderCell" owner:nil options:nil];
             cell = [nib objectAtIndex:0];
         }
-        cell.shopLabel.text = [self.shopInfo valueForKey:@"shop_name"];
+//        cell.shopLabel.text = [self.shopInfo valueForKey:@"shop_name"];
 //        if([[self.shopInfo valueForKey:@"shop_top_seller"] isEqual:@"Y"]){
 //            cell.topSellerLabel.hidden=NO;
 //        }
@@ -136,13 +98,9 @@
         
         cell.viewAllButton.hidden = YES;
         return cell;
-    }
-    
-    else{
-        
+    } else {
         ProductTableViewCellwoCat *cell = (ProductTableViewCellwoCat*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        if (cell == nil)
-        {
+        if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ProductTableViewCellwoCat" owner:nil options:nil];
             cell = [nib objectAtIndex:0];
         }
@@ -150,14 +108,12 @@
         [self createCellForIndex:indexPath cell:cell];
         return cell;
     }
-    
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0){
-        return 70;
-    }
-    else{
+    if (indexPath.row == 0) {
+        return 44;
+    } else {
         return kTableCellHeightM;
     }
 }
@@ -165,18 +121,6 @@
 {
     [cell.transView2 setHidden:YES];
     [cell.transView3 setHidden:YES];
-//    if (indexPath.row ==1){
-//        UILabel *catNameLabelTemp = [[UILabel alloc] init];
-//        
-//        CGSize expectedLabelSize  = [self.catName sizeWithFont:[UIFont fontWithName:@"Verdana" size:12.0] constrainedToSize:CGSizeMake(150.0, cell.catNameLabel.frame.size.height) lineBreakMode:UILineBreakModeWordWrap];
-//        
-//        CGRect newFrame = cell.catNameLabel.frame;
-//        newFrame.size.width = expectedLabelSize.width;
-//        cell.catNameLabel.text = catName;
-//        cell.catNameLabel.frame = newFrame;
-//        [catNameLabelTemp release];
-//        cell.viewAllButton.hidden = YES;
-//    }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     // Configure the cell...
@@ -194,7 +138,7 @@
     productNameLabel.text = [[productAllArray objectAtIndex:(3*(indexPath.row-1)+0)]  valueForKey:@"product_name"];
     [cell.transView1 addSubview:productNameLabel];
     [productNameLabel release];
-//    NSLog(@"IMG1 :%d",3*(indexPath.row-1)+0);
+    NSLog(@"IMG1 :%d",3*(indexPath.row-1)+0);
     
     MarqueeLabel *categoryLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 14, 90, 18) rate:20.0f andFadeLength:10.0f];
     categoryLabel.marqueeType = MLContinuous;
@@ -244,7 +188,7 @@
         productNameLabel.text = [[productAllArray objectAtIndex:(3*(indexPath.row-1)+1)]  valueForKey:@"product_name"];
         [cell.transView2 addSubview:productNameLabel];
         [productNameLabel release];
-//        NSLog(@"IMG2 :%d",3*(indexPath.row-1)+1);
+        NSLog(@"IMG2 :%d",3*(indexPath.row-1)+1);
         
         MarqueeLabel *categoryLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 14, 90, 18) rate:20.0f andFadeLength:10.0f];
         categoryLabel.marqueeType = MLContinuous;
@@ -298,7 +242,7 @@
         productNameLabel.text = [[productAllArray objectAtIndex:(3*(indexPath.row-1)+2)]  valueForKey:@"product_name"];
         [cell.transView3 addSubview:productNameLabel];
         [productNameLabel release];
-//        NSLog(@"IMG3 :%d",3*(indexPath.row-1)+2);
+        NSLog(@"IMG3 :%d",3*(indexPath.row-1)+2);
         
         MarqueeLabel *categoryLabel = [[MarqueeLabel alloc] initWithFrame:CGRectMake(0, 14, 90, 18) rate:20.0f andFadeLength:10.0f];
         categoryLabel.marqueeType = MLContinuous;
@@ -343,28 +287,18 @@
 -(void)showProductDetail:(id)sender {
     
     DetailProductViewController *detailViewController = [[DetailProductViewController alloc] initWithNibName:@"DetailProductViewController" bundle:nil];
+    NSLog(@"%@",productAllArray);
     NSString *prodId = [[productAllArray  objectAtIndex:[sender tag] ] valueForKey:@"product_id" ];
     detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:prodId];
     detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
     detailViewController.productId = [prodId mutableCopy];
-    //for compareRelatedData--------------------------------------
+    //------------------------------------------------------------
     detailViewController.productAllArray = self.productAllArray;
     detailViewController.productArray = self.productArray;
     detailViewController.shopInfo = self.shopInfo;
-    detailViewController.categoryId = self.catId;
     //------------------------------------------------------------
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
-}
-
-- (IBAction)locateStore:(id)sender {
-    ShopAddressViewController *detailViewController = [[ShopAddressViewController alloc] init];
-    // NSLog(@"%@",_shopInfo);
-    detailViewController.shopId = [self.shopInfo valueForKey:@"shop_id"];
-    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
-    // [detailViewController release];
-    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
