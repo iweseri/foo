@@ -42,6 +42,13 @@
                                              selector:@selector(reloadBuddyList)
                                                  name:@"reloadBuddyList"
                                                object:nil];
+    
+    if (self.fromPlusButton) {
+        [self retrieveDataFromAPI];
+         [self.tableView reloadData];
+         searching = NO;
+         selectRowEnabled = YES;
+    }
 }
 
 - (void)reloadBuddyList
@@ -220,7 +227,7 @@
         cell.noButton.tag = [cell.buddyUserId intValue];
         cell.yesButton.tag = [cell.buddyUserId intValue];
         
-        NSLog(@"xxxx %d", cell.yesButton.tag);
+//        NSLog(@"xxxx %d", cell.yesButton.tag);
         [cell.noButton addTarget:self action:@selector(handleNotApproveButtons:) forControlEvents:UIControlEventTouchUpInside];
         [cell.yesButton addTarget:self action:@selector(handleApproveButtons:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -228,12 +235,17 @@
         [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#00CC66"]];
         cell.statusLabel.text = @"*Pending invite";
         
-    }else{
-        [cell.approveButtonsView setHidden:NO];
-        [cell.noButton setHidden:YES];
-        [cell.yesButton setImage:[UIImage imageNamed:@"btn-delete-mr"] forState:UIControlStateNormal];
-        cell.yesButton.tag = [cell.buddyUserId intValue];
-        [cell.yesButton addTarget:self action:@selector(handleDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    else{
+        if (self.fromPlusButton == YES){
+            [cell.approveButtonsView setHidden:YES];
+        }else{
+            [cell.approveButtonsView setHidden:NO];
+            [cell.noButton setHidden:YES];
+            [cell.yesButton setImage:[UIImage imageNamed:@"btn-delete-mr"] forState:UIControlStateNormal];
+            cell.yesButton.tag = [cell.buddyUserId intValue];
+            [cell.yesButton addTarget:self action:@selector(handleDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     
     [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];

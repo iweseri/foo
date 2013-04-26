@@ -9,17 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "TBTabBar.h"
 #import "TBTabButton.h"
-#import "ChatViewController.h"
+#import "BuddyListViewController.h"
 
 
 @interface NewChatViewController : UIViewController<TBTabBarDelegate> {
     TBTabBar *tabBar;
 }
 
-@property (retain, nonatomic) ChatViewController *chatVc;
+@property (retain, nonatomic) BuddyListViewController *buddyVc;
 @property (retain, nonatomic) TBViewController *vc1, *vc2;
 @property (retain, nonatomic) NSString *buddyId;
-
-- (id)initWithTabTitle:(NSString *)title andBuddyId:(NSString *)bid;
 
 @end

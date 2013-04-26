@@ -20,6 +20,7 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UISearchBar *searchBar;
 @property (retain, nonatomic) IBOutlet UILabel *recordLabel;
+@property BOOL fromPlusButton;
 
 
 @end

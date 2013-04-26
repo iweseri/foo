@@ -14,12 +14,10 @@
 
 @implementation NewChatViewController
 
-- (id)initWithTabTitle:(NSString *)title andBuddyId:(NSString *)bid
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super init];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];;
     if (self) {
-        self.title = title;
-        self.buddyId = bid;
         FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
         titleViewUsingFL.text = @"J-Buddy";
         titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
@@ -38,8 +36,6 @@
     return self;
 }
 
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -56,13 +52,14 @@
     
     CGRect innerViewFrame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(tabBar.frame.size.height)-26);
 
-    self.chatVc = [[ChatViewController alloc] initWithBuddyId:self.buddyId andUsername:self.title ];
-    self.chatVc.view.frame = innerViewFrame;
-//    
+    self.buddyVc = [[BuddyListViewController alloc] init];
+    self.buddyVc.fromPlusButton = YES;
+    self.buddyVc.view.frame = innerViewFrame;
+
     self.vc1 = [[[TBViewController alloc] init]autorelease];
-    [self.vc1.view addSubview:self.chatVc.view];
+    [self.vc1.view addSubview:self.buddyVc.view];
     
-    TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:self.title];
+    TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:@"NEW CHAT"];
     t1.viewController = self.vc1;
     
     NSArray *a = [NSArray arrayWithObjects:t1, nil];
