@@ -55,14 +55,21 @@
     self.buddyVc = [[BuddyListViewController alloc] init];
     self.buddyVc.fromPlusButton = YES;
     self.buddyVc.view.frame = innerViewFrame;
+    self.buddyGroupVc = [[BuddyGroupListViewController alloc] init];
+    self.buddyGroupVc.fromPlusButton = YES;
+    self.buddyGroupVc.view.frame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(tabBar.frame.size.height));
 
     self.vc1 = [[[TBViewController alloc] init]autorelease];
     [self.vc1.view addSubview:self.buddyVc.view];
+    self.vc2 = [[[TBViewController alloc] init]autorelease];
+    [self.vc2.view addSubview:self.buddyGroupVc.view];
     
     TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:@"NEW CHAT"];
     t1.viewController = self.vc1;
+    TBTabButton *t2 = [[TBTabButton alloc] initWithTitle:@"NEW GROUP"];
+    t2.viewController = self.vc2;
     
-    NSArray *a = [NSArray arrayWithObjects:t1, nil];
+    NSArray *a = [NSArray arrayWithObjects:t1, t2, nil];
     
     tabBar = [[TBTabBar alloc] initWithItems:a];
     

@@ -10,6 +10,7 @@
 #import "TBTabBar.h"
 #import "TBTabButton.h"
 #import "BuddyListViewController.h"
+#import "BuddyGroupListViewController.h"
 
 
 @interface NewChatViewController : UIViewController<TBTabBarDelegate> {
@@ -17,6 +18,7 @@
 }
 
 @property (retain, nonatomic) BuddyListViewController *buddyVc;
+@property (retain, nonatomic) BuddyGroupListViewController *buddyGroupVc;
 @property (retain, nonatomic) TBViewController *vc1, *vc2;
 @property (retain, nonatomic) NSString *buddyId;
 
