@@ -16,6 +16,7 @@
 #import "BoxViewController.h"
 #import "LoginViewController.h"
 #import "NewsViewController.h"
+#import "MoreViewController.h"
 #import "CreateViewController.h"
 #import "SidebarView.h"
 #import "ASIWrapper.h"
@@ -1060,6 +1061,34 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
                                          }];
 }
 
+- (NSString *)checkQRCodeType:(NSString *)qrcodeid
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/qrcode_type.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"qrcode_id\":%@}",qrcodeid];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    //NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    //NSLog(@"dict %@",resultsDictionary);
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        if ([status isEqualToString:@"ok"])
+        {
+            NSString *type = [resultsDictionary objectForKey:@"qrcode_type"];
+            
+            if ([type isEqualToString:@"Product"]) {
+                NSString *productid = [resultsDictionary objectForKey:@"product_id"];
+                return productid;
+            }
+            
+        }
+    }
+    
+    return @"0"; // normal qrcode, other than product
+}
+
 /*
  * If we have a valid session at the time of openURL call, we handle
  * Facebook transitions by passing the url argument to handleOpenURL
@@ -1067,18 +1096,61 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
+         annotation:(id)annotation
+{
     // attempt to extract a token from the url
     
-    if ([url isEqual:[NSURL URLWithString:@"jambu://www.jam-bu.com/" ]]){
+//    NSError *error = nil;
+    NSString *urlString = [NSString stringWithFormat:@"%@",url];
+    NSLog(@"url: %@", urlString);
+    
+//    [error rangeOfString:@"timed out"].location == NSNotFound
+    if ([url isEqual:[NSURL URLWithString:@"jambu://www.jam-bu.com/" ]])
+    {
         if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
         {
             self.isReturnFromPayment = YES;
             [[NSNotificationCenter defaultCenter]  postNotificationName:@"PurchaseVerification" object:self];
-            //NSLog(@"entered here");
-            
+        }
+
+    }else if ([urlString hasPrefix:@"jambu://www.jam-bu.com/?qrcode_id="]){
+        NSArray *splittedURL = [urlString componentsSeparatedByString:@"="];
+        NSString *qrcodeId = [[[splittedURL objectAtIndex:1] componentsSeparatedByString:@"&"] objectAtIndex:0];
+        NSLog(@"captured qrcode = %@",qrcodeId);
+        
+        [tabView activateController:kHomeTab]; // set active tabcontroller at box
+        self.pageIndex = kHomeTab;
+        // Manually change the selected tabButton
+        for (int i = 0; i < [tabView.tabItemsArray count]; i++) {
+            if (i == kHomeTab) {
+                [[tabView.tabItemsArray objectAtIndex:i] toggleOn:YES];
+            } else {
+                [[tabView.tabItemsArray objectAtIndex:i] toggleOn:NO];
+            }
         }
         
+        NSString *productId = [self checkQRCodeType:qrcodeId];
+        
+        if ([productId intValue] > 0)
+        {
+            // type of product
+            DetailProductViewController *detailViewController = [[DetailProductViewController alloc] initWithNibName:@"DetailProductViewController" bundle:nil];
+            //        NSString *prodId = productId;
+            detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:productId];
+            detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
+            detailViewController.productId = [productId mutableCopy];
+            [boxNavController pushViewController:detailViewController animated:YES];
+        }
+        else{
+            MoreViewController *more = [[MoreViewController alloc] init];
+            more.qrcodeId = qrcodeId;
+//            [boxNavController popToRootViewControllerAnimated:YES];
+            
+            [homeNavController pushViewController:more animated:YES];
+            [more release];
+        }
+        
+
     }
     else{
         return [FBSession.activeSession handleOpenURL:url];

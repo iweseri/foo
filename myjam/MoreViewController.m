@@ -112,7 +112,7 @@
     // Initialize an event store object with the init method. Initilize the array for events.
 	self.eventStore = [[[EKEventStore alloc] init] autorelease];
 	// Get the default calendar from store.
-	self.defaultCalendar = [self.eventStore defaultCalendarForNewEvents];
+//	self.defaultCalendar = [self.eventStore defaultCalendarForNewEvents];
     
     //NSLog(@"Show details for id(%@)",self.qrcodeId);
     // Init scrollview

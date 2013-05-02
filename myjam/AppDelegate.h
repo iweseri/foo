@@ -80,6 +80,7 @@
 @property BOOL isFromScannerTab;
 @property BOOL isReturnFromPayment;
 @property BOOL isShowPurchaseHistory;
+@property BOOL isOpenFromURL;
 
 @property BOOL isSetupDone;
 @property BOOL sideBarOpen;

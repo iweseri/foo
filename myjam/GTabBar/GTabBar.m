@@ -127,8 +127,10 @@
             }else if(i == kHomeTab)
             {
                 //NSLog(@"home hardcoded clicked");
-                
-                [mydelegate.homeNavController popToRootViewControllerAnimated:NO];
+                if (!mydelegate.isOpenFromURL) {
+                    [mydelegate.homeNavController popToRootViewControllerAnimated:NO];
+                }
+            
             }else if(i == kBoxTab)
             {
                 //NSLog(@"Box hardcoded clicked");

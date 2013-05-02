@@ -67,15 +67,12 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"])
         {
-
             for (id data in [resultsDictionary objectForKey:@"list"])
             {
                 [self.tableData addObject:data];
 
             }
-                 
         }
-        
     }
     
     [resultsDictionary release];
