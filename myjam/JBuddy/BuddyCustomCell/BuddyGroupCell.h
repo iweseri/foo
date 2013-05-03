@@ -19,6 +19,7 @@
 @property (retain, nonatomic) IBOutlet UIView *approveButtonsView;
 @property (retain, nonatomic) IBOutlet UIButton *noButton;
 @property (retain, nonatomic) IBOutlet UIButton *yesButton;
+@property (retain, nonatomic) IBOutlet UIButton *addGroupButton;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 @end

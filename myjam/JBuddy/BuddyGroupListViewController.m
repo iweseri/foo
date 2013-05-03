@@ -44,32 +44,22 @@
     self.tableView.delegate = self;
     self.tableData = [[NSMutableArray alloc] init];
     copyListOfItems = [[NSMutableArray alloc] init];
+    self.searchBar.delegate = self;
+    
+    UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
+    [overlayView setBackgroundColor:[UIColor whiteColor]];
+    [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
+    [overlayView release];
     
     [self.subjectLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     [self.participantLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     self.subjectTextfield.delegate  = self;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reloadBuddyList)
-                                                 name:@"reloadBuddyList"
-                                               object:nil];
-    
-    if (self.fromPlusButton) {
-        [self retrieveDataFromAPI];
-         [self.tableView reloadData];
-         searching = NO;
-         selectRowEnabled = YES;
-    }
-}
-
-- (void)reloadBuddyList
-{
-    [self retrieveDataFromAPI];
-    [self.tableView reloadData];
+    self.groupArray = [[NSMutableDictionary alloc] init];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"vwa-NEWGROUP");
     [self retrieveDataFromAPI];
     [self.tableView reloadData];
     searching = NO;
@@ -78,33 +68,27 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self.tableData removeAllObjects];
+    //[self.tableData removeAllObjects];
 }
 
 - (void)retrieveDataFromAPI
 {
     [self.tableData removeAllObjects];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_new_chat_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = @"";
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
 
-    if([resultsDictionary count])
-    {
+    if([resultsDictionary count]) {
         NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"])
-        {
-            for (id data in [resultsDictionary objectForKey:@"list"])
-            {
+        if ([status isEqualToString:@"ok"]) {
+            for (id data in [resultsDictionary objectForKey:@"list"]) {
                 [self.tableData addObject:data];
             }
-            
         }
-        
     }
-    
     [resultsDictionary release];
 }
 
@@ -124,22 +108,20 @@
     return YES;
 }
 
-- (IBAction)groupChat:(id)sender {
-    GroupChatViewController *newChat = [[GroupChatViewController alloc] init];
-    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [mydelegate.otherNavController pushViewController:newChat animated:YES];
-    [newChat release];
-}
-
 #pragma mark -
 #pragma mark SearchBar delegate
 
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
-    //[self.scroller setContentSize:CGSizeMake(self.contentView.frame.size.width, kFrameHeightOnKeyboardUp-160)];
-    searching = YES;
-    selectRowEnabled = NO;
-//    self.tableView.scrollEnabled = NO;
+    //searching = YES;
+    //selectRowEnabled = NO;
     [self.searchBar setShowsCancelButton:YES animated:NO];
+    UIButton *cancelButton = nil;
+    for(UIView *subView in theSearchBar.subviews){
+        if([subView isKindOfClass:UIButton.class]){
+            cancelButton = (UIButton*)subView;
+        }
+    }
+    [cancelButton setTintColor:[UIColor lightGrayColor]];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -148,6 +130,12 @@
     [searchBar setShowsCancelButton:NO animated:YES];
     searching = NO;
     [self.tableView reloadData];
+    [searchBar resignFirstResponder];
+}
+
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
 }
 
@@ -165,7 +153,7 @@
     else {
         
         searching = NO;
-        selectRowEnabled = NO;
+//        selectRowEnabled = NO;
 //        self.tableView.scrollEnabled = NO;
     }
     
@@ -229,71 +217,43 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *simpleTableIdentifier = @"BuddyGroupCell";
-    
     BuddyGroupCell *cell = (BuddyGroupCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
     
-    if (cell == nil)
-    {
+    if (cell == nil) {
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"BuddyGroupCell" owner:nil options:nil];
         cell = [nib objectAtIndex:0];
     }
-
+    NSLog(@"cell data %@\nJENG:%@",copyListOfItems,self.tableData);
     NSDictionary *cellData = nil;
     if (searching) {
         cellData = [copyListOfItems objectAtIndex:indexPath.row];
     }else{
         cellData = [self.tableData objectAtIndex:indexPath.row];
     }
-    
     NSLog(@"cell data %@",cellData);
     
     cell.buddyUserId = [cellData valueForKey:@"buddy_user_id"];
-    cell.usernameLabel.text = (NSString*)[cellData valueForKey:@"username"];
-    cell.statusLabel.text = [cellData valueForKey:@"status"];
+    [cell.usernameLabel setText:(NSString*)[cellData valueForKey:@"username"]];
+    [cell.statusLabel setText:[cellData valueForKey:@"status"]];
     [cell.timeLabel setHidden:YES];
     [cell.dateLabel setHidden:YES];
-    if ([cell.statusLabel.text isEqualToString:@"Pending Approval"]) {
-        [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#00CC66"]];
-        cell.statusLabel.text = @"Requested an invite. Accept?";
-        
-        [cell.approveButtonsView setHidden:NO];
-
-        cell.noButton.tag = [cell.buddyUserId intValue];
-        cell.yesButton.tag = [cell.buddyUserId intValue];
-        
-//        NSLog(@"xxxx %d", cell.yesButton.tag);
-        [cell.noButton addTarget:self action:@selector(handleNotApproveButtons:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.yesButton addTarget:self action:@selector(handleApproveButtons:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    else if ([cell.statusLabel.text isEqualToString:@"Buddy Request Sent"]) {
-        [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#00CC66"]];
-        cell.statusLabel.text = @"*Pending invite";
-        
-    }
-    else{
-        if (self.fromPlusButton == YES){
-            [cell.approveButtonsView setHidden:YES];
-        }else{
-            [cell.approveButtonsView setHidden:NO];
-            [cell.noButton setHidden:YES];
-            [cell.yesButton setImage:[UIImage imageNamed:@"btn-delete-mr"] forState:UIControlStateNormal];
-            cell.yesButton.tag = [cell.buddyUserId intValue];
-            [cell.yesButton addTarget:self action:@selector(handleDeleteButton:) forControlEvents:UIControlEventTouchUpInside];
-        }
-    }
-    
+    [cell.approveButtonsView setHidden:YES];
+    [cell.noButton setHidden:YES];
     [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
-
     [cell.userImageView setImageWithURL:[NSURL URLWithString:[cellData valueForKey:@"image"]]
                        placeholderImage:[UIImage imageNamed:@"blank_avatar"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                  if (!error) {
-                                      
-                                  }else{
+                                  if (!error) { }else{
                                       NSLog(@"error retrieve image: %@",error);
                                   }
-                                  
                               }];
+    NSLog(@"ARRAY :%@\nKEY :%@\nBID :%@",self.groupArray,[self.groupArray objectForKey:cell.buddyUserId],cell.buddyUserId);
+    if ([cell.buddyUserId isEqual:[self.groupArray objectForKey:cell.buddyUserId]]) {
+     [cell.addGroupButton setImage:[UIImage imageNamed:@"checkbox_active"] forState:UIControlStateNormal];
+    } else {
+     [cell.addGroupButton setImage:[UIImage imageNamed:@"checkbox_inactive"] forState:UIControlStateNormal];
+    }
+    
     return cell;
 }
 
@@ -301,18 +261,19 @@
 {
     NSLog(@"tapped at index %d",indexPath.row);
     
-    NSString *status = [[self.tableData objectAtIndex:indexPath.row] objectForKey:@"status"];
-    if (![status isEqualToString:@"Pending Approval"] && ![status isEqualToString:@"Buddy Request Sent"]) {
+    BuddyGroupCell *cell = (BuddyGroupCell *)[tableView cellForRowAtIndexPath:indexPath];
+
+    NSDictionary *buddy = nil;
     
-        NSDictionary *buddy = [self.tableData objectAtIndex:indexPath.row];
-        
-        ChatViewController *newChat = [[ChatViewController alloc] initWithBuddyId:[buddy valueForKey:@"buddy_user_id"] andUsername:[buddy valueForKey:@"username"]];
-        
-        AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        
-        [mydelegate.otherNavController pushViewController:newChat animated:YES];
-        [newChat release];
+    if (searching) {
+        buddy = [copyListOfItems objectAtIndex:indexPath.row];
+    }else{
+        buddy = [self.tableData objectAtIndex:indexPath.row];
     }
+        NSString *buddyID = [buddy valueForKey:@"buddy_user_id"];
+        NSLog(@"BuddyID :%@",[buddy valueForKey:@"buddy_user_id"]);
+        
+        [self handleTapGroupList:buddyID toThe:cell];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -320,60 +281,44 @@
     return kBuddyGroupCellHeight;
 }
 
-- (void)handleApproveButtons:(UIButton *)button
+- (void)handleTapGroupList:(NSString*)bID toThe:(BuddyGroupCell*)cell
 {
-    NSLog(@"YES");
-    [self processApproveBuddy:button.tag withStatus:@"Confirm"];
-}
-
-- (void)handleNotApproveButtons:(UIButton *)button
-{
-    NSLog(@"NO");
-    [self processApproveBuddy:button.tag withStatus:@"Delete Request"];
-}
-
-- (void)handleDeleteButton:(UIButton *)button
-{
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:@"Delete from your buddy list?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-    alert.tag = button.tag;
-    [alert show];
-    [alert release];
-}
-
-- (void)processApproveBuddy:(int)buddyId withStatus:(NSString *)action
-{
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%d\",\"action\":\"%@\"}",buddyId,action];
-    
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
-    if([resultsDictionary count])
-    {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"])
-        {
-            [self.tableData removeAllObjects];
-            [self retrieveDataFromAPI];
-            [self.tableView reloadData];
-        }
-        
+    if ([bID isEqual:[self.groupArray objectForKey:bID]]) {
+        [self.groupArray removeObjectForKey:bID];
+        [cell.addGroupButton setImage:[UIImage imageNamed:@"checkbox_inactive"] forState:UIControlStateNormal];
+    } else {
+        [self.groupArray setObject:bID forKey:bID];
+        [cell.addGroupButton setImage:[UIImage imageNamed:@"checkbox_active"] forState:UIControlStateNormal];
     }
-    
-    [resultsDictionary release];
-}
-
-#pragma mark -
-#pragma mark AlertView delegate
-
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 1)
-    {
-        [self processApproveBuddy:alertView.tag withStatus:@"Delete Request"];
+    NSMutableString *strData = [NSMutableString stringWithFormat:@""];
+    int i = 0;
+    for (id row in self.groupArray) {
+        if (i == 0) {
+            strData = [NSString stringWithFormat:@"%@",row];
+        } else {
+            strData = [NSString stringWithFormat:@"%@,%@",strData,row];
+        } i++;
     }
+    NSLog(@"SUBJECT :%@\nGROUP :%@",self.subjectTextfield.text,strData);
 }
 
+- (IBAction)groupChat:(id)sender {
+    
+    NSMutableString *strData = [NSMutableString stringWithFormat:@""];
+    int i = 0;
+    for (id row in self.groupArray) {
+        if (i == 0) {
+            strData = [NSString stringWithFormat:@"%@",row];
+        } else {
+            strData = [NSString stringWithFormat:@"%@,%@",strData,row];
+        } i++;
+    }
+    NSLog(@"SUBJECT :%@\nGROUP :%@",self.subjectTextfield.text,strData);
+    GroupChatViewController *newChat = [[GroupChatViewController alloc] init];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [mydelegate.otherNavController pushViewController:newChat animated:YES];
+    [newChat release];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -382,15 +327,72 @@
 }
 
 - (void)dealloc {
+    [_groupArray release];
     [_tableView release];
     [_searchBar release];
     [_recordLabel release];
     [super dealloc];
 }
 - (void)viewDidUnload {
+    [self setGroupArray:nil];
     [self setTableView:nil];
     [self setSearchBar:nil];
     [self setRecordLabel:nil];
     [super viewDidUnload];
 }
+
+//- (void)handleApproveButtons:(UIButton *)button
+//{
+//    NSLog(@"YES");
+//    [self processApproveBuddy:button.tag withStatus:@"Confirm"];
+//}
+//
+//- (void)handleNotApproveButtons:(UIButton *)button
+//{
+//    NSLog(@"NO");
+//    [self processApproveBuddy:button.tag withStatus:@"Delete Request"];
+//}
+//
+//- (void)handleDeleteButton:(UIButton *)button
+//{
+//    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:@"Delete from your buddy list?" delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+//    alert.tag = button.tag;
+//    [alert show];
+//    [alert release];
+//}
+//
+//- (void)processApproveBuddy:(int)buddyId withStatus:(NSString *)action
+//{
+//    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+//    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%d\",\"action\":\"%@\"}",buddyId,action];
+//    
+//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+//    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+//    
+//    if([resultsDictionary count])
+//    {
+//        NSString *status = [resultsDictionary objectForKey:@"status"];
+//        if ([status isEqualToString:@"ok"])
+//        {
+//            [self.tableData removeAllObjects];
+//            [self retrieveDataFromAPI];
+//            [self.tableView reloadData];
+//        }
+//        
+//    }
+//    
+//    [resultsDictionary release];
+//}
+//
+//#pragma mark -
+//#pragma mark AlertView delegate
+
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == 1)
+//    {
+//        [self processApproveBuddy:alertView.tag withStatus:@"Delete Request"];
+//    }
+//}
+
 @end

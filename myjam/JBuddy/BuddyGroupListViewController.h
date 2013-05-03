@@ -11,7 +11,7 @@
 
 @class TPKeyboardAvoidingScrollView;
 
-@interface BuddyGroupListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIScrollViewDelegate>
+@interface BuddyGroupListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UIScrollViewDelegate, UISearchBarDelegate>
 {
     BOOL searching;
     BOOL selectRowEnabled;
@@ -27,6 +27,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *participantLabel;
 @property (retain, nonatomic) IBOutlet UITextField *subjectTextfield;
 @property (retain, nonatomic) IBOutlet UIButton *groupButton;
+@property (retain, nonatomic) NSMutableDictionary *groupArray;
 @property BOOL fromPlusButton;
 
 - (IBAction)groupChat:(id)sender;

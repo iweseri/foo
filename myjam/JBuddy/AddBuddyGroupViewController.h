@@ -12,13 +12,16 @@
 {
     NSMutableArray *tableData;
 }
-@property (retain, nonatomic) IBOutlet UITextField *searchTextField;
-@property (retain, nonatomic) IBOutlet UIView *searchButtonView;
+@property (retain, nonatomic) IBOutlet UITextField *subjectTextField;
+@property (retain, nonatomic) IBOutlet UIButton *addBuddyButton;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
-@property (retain, nonatomic) IBOutlet UIView *fbPhoneSearchView;
-@property (retain, nonatomic) IBOutlet UIButton *phonebookButton;
-@property (retain, nonatomic) IBOutlet UIButton *fbButton;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (retain, nonatomic) IBOutlet UILabel *noRecordLabel;
+@property (retain, nonatomic) IBOutlet UILabel *subjectNameLabel;
+@property (retain, nonatomic) NSString *groupId;
+@property (retain, nonatomic) NSString *subjectName;
+
+- (IBAction)handleChangeSubject:(id)sender;
+- (id)initWithGroupId:(NSString *)gid andGroupname:(NSString *)gname;
 
 @end
