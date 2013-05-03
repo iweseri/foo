@@ -14,10 +14,11 @@
 	UILabel	*senderAndTimeLabel;
 	UITextView *messageContentView;
 	UIImageView *bgImageView;
-	
+	UILabel *notifyDesc;
 }
 
 @property (nonatomic,assign) UILabel *senderAndTimeLabel;
+@property (nonatomic,assign) UILabel *notifyDesc;
 @property (nonatomic,assign) UITextView *messageContentView;
 @property (nonatomic,assign) UIImageView *bgImageView;
 

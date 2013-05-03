@@ -25,16 +25,14 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        
     }
     return self;
 }
 
-- (id)initWithBuddyId:(NSString *)bid andUsername:(NSString *)username
+- (id)initWithGroupId:(NSString *)gid andGroupname:(NSString *)groupname
 {
     self = [super init];
     if (self) {
-        
         FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
         titleViewUsingFL.text = @"J-Buddy";
         titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
@@ -49,11 +47,9 @@
                                           style:UIBarButtonItemStyleBordered
                                          target:nil
                                          action:nil] autorelease];
-        
-        self.buddyUserId = bid;
-        self.buddyUsername = username;
+        self.buddyGroupId = gid;
+        self.buddyGroupname = groupname;
     }
-    
     return self;
 }
 
@@ -62,7 +58,6 @@
     [super viewDidLoad];
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    
     if (screenBounds.size.height == 568) {
         // code for 4-inch screen
         self.view.frame = CGRectMake(0,0,self.view.bounds.size.width, 568);
@@ -71,7 +66,7 @@
         self.view.frame = CGRectMake(0,0,self.view.bounds.size.width, 480);
     }
 
-    self.usernameLabel.text = self.buddyUsername;
+    self.usernameLabel.text = self.buddyGroupname;
     tableHeight = 0;
     
     // Keyboard stuffings
@@ -90,6 +85,11 @@
                                                  name:@"updateMessageList"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateSubjectName:)
+                                                 name:@"updateSubjectName"
+                                               object:nil];
+    
     self.tableData = [[NSMutableArray alloc] init];
     
     [self retrieveDataFromAPI];
@@ -97,10 +97,16 @@
     
 }
 
+- (void)updateSubjectName:(NSNotification *)name {
+    NSDictionary *dict = [name userInfo];
+    self.usernameLabel.text = [dict objectForKey:@"newSubject"];
+    NSLog(@"SUBJEK :%@|%@",self.usernameLabel.text,dict);
+}
+
 - (void)retrieveDataFromAPI
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_message_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%@\"}",self.buddyUserId];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group_message.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"action\":\"\"}",self.buddyGroupId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -167,8 +173,8 @@
 
 - (void)updateMessageList
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_message_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%@\",\"last_message_id\":\"%d\"}",self.buddyUserId,[[self getLastMessageId] intValue]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group_message.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"last_message_id\":\"%d\",\"action\":\"get_new\"}",self.buddyGroupId,[[self getLastMessageId] intValue]];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -193,7 +199,6 @@
     [self.sendMsgIndicator setHidden:YES];
 }
 
-
 #pragma mark -
 #pragma mark Send message handler
 
@@ -203,15 +208,14 @@
     if (![textView.text length]) {
         return;
     }
-    
     [self.sendMsgIndicator setHidden:NO];
     [self performSelector:@selector(processSendMsg) withObject:nil afterDelay:0.0];
 }
 
 - (void)processSendMsg
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_message_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%@\",\"last_message_id\":\"%@\",\"message\":\"%@\"}",self.buddyUserId,[self getLastMessageId], textView.text];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group_message.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"message\":\"%@\",\"action\":\"send\"}",self.buddyGroupId, textView.text];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -231,7 +235,7 @@
             textView.text = @"";
         }
         else{
-            NSDictionary *msg = [NSDictionary dictionaryWithObjectsAndKeys:@"2", @"type", @"", @"idate", @"", @"itime", [resultsDictionary objectForKey:@"message"], @"imessage", nil];
+            NSDictionary *msg = [NSDictionary dictionaryWithObjectsAndKeys:@"2", @"message_type", @"", @"idate", @"", @"datetime", [resultsDictionary objectForKey:@"message"], @"message", nil];
             [self.tableData addObject:msg];
             [self.tableView reloadData];
         }
@@ -341,7 +345,6 @@ static CGFloat kMinCellHeight = 40;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	
     //	NSDictionary *s = (NSDictionary *) [messages objectAtIndex:indexPath.row];
 	
 	static NSString *CellIdentifier = @"MessageCellIdentifier";
@@ -354,10 +357,10 @@ static CGFloat kMinCellHeight = 40;
     
     NSDictionary *conversation = [self.tableData objectAtIndex:indexPath.row];
     
-    NSString *sender = [conversation valueForKey:@"type"];
-	NSString *date = [conversation valueForKey:@"idate"]; 
-	NSString *message = [conversation valueForKey:@"imessage"]; 
-	NSString *time = [conversation valueForKey:@"itime"];
+    NSString *sender = [conversation valueForKey:@"message_type"];
+	NSString *username = [conversation valueForKey:@"username"];
+	NSString *message = [conversation valueForKey:@"message"];
+	NSString *time = [conversation valueForKey:@"datetime"];
 	
 	CGSize  textSize = { 205.0, 10000.0 };
 	CGSize size = [message sizeWithFont:[UIFont boldSystemFontOfSize:13]
@@ -365,19 +368,27 @@ static CGFloat kMinCellHeight = 40;
 						  lineBreakMode:UILineBreakModeWordWrap];
 	
 	size.width += (padding/2);
-	
+	[cell.senderAndTimeLabel setHidden:NO];
+    [cell.messageContentView setHidden:NO];
+    [cell.notifyDesc setHidden:YES];
 	cell.messageContentView.text = message;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.userInteractionEnabled = NO;
-	
     
 	UIImage *bgImage = nil;
 
-	if ([sender intValue] == 1) { // left aligned
+	if([sender intValue] == 1) {
+        [cell.senderAndTimeLabel setHidden:YES];
+        [cell.messageContentView setHidden:YES];
+        [cell.notifyDesc setHidden:NO];
+        [cell.notifyDesc setText:message];
+        [cell.notifyDesc setFrame:CGRectMake(10, kTailHeight, textSize.width+50, size.height)];
+        
+    } else if([sender intValue] == 0) { // left aligned
         cell.senderAndTimeLabel.textAlignment = UITextAlignmentLeft;
-        cell.senderAndTimeLabel.frame = CGRectMake(250, 10, 70, 28);
+        cell.senderAndTimeLabel.frame = CGRectMake(240, 10, 70, 28);
 		bgImage = [[UIImage imageNamed:@"pink_conversation"] stretchableImageWithLeftCapWidth:24  topCapHeight:15];
-		
+
 		[cell.messageContentView setFrame:CGRectMake(padding, padding/2+kTailHeight, textSize.width, size.height)];
 		
 		[cell.bgImageView setFrame:CGRectMake( cell.messageContentView.frame.origin.x - padding/2,
@@ -401,59 +412,50 @@ static CGFloat kMinCellHeight = 40;
 											  size.height+padding)];
 		
 	}
-	
-    
     if ([message isEqualToString:@"Request timed out."] || [message isEqualToString:@"Connection failure occured."]) {
         // Not yet error handling
     }
 	cell.bgImageView.image = bgImage;
-	cell.senderAndTimeLabel.text = [NSString stringWithFormat:@"%@\n%@", time,date];
+	cell.senderAndTimeLabel.text = [NSString stringWithFormat:@"%@\n@ %@",username,time];
     
 	return cell;
-	
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	
 	NSDictionary *dict = (NSDictionary *)[self.tableData objectAtIndex:indexPath.row];
-	NSString *msg = [dict objectForKey:@"imessage"];
-	
+	NSString *msg = [dict objectForKey:@"message"];
 	CGSize  textSize = { 205.0, 10000.0 };
 	CGSize size = [msg sizeWithFont:[UIFont boldSystemFontOfSize:13]
 				  constrainedToSize:textSize
 					  lineBreakMode:UILineBreakModeWordWrap];
 	
 	size.height += padding*2;
-	
 	CGFloat height = size.height < kMinCellHeight ? kMinCellHeight : size.height;
-    
     tableHeight += height;
+    
+    if ([[dict objectForKey:@"message_type"]intValue] == 1) {
+        height = 20;
+    }
     
     // Set tableview to last row
     if (indexPath.row == [self.tableData count]-1) {
         [self.tableView setContentOffset:CGPointMake(tableView.frame.size.width,tableHeight)];
     }
-    
 	return height;
-	
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	
 	return [self.tableData count];
-	
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	
 	return 1;
-	
 }
 
 - (IBAction)editGroup:(id)sender {
-    AddBuddyGroupViewController *newChat = [[AddBuddyGroupViewController alloc] init];
+    AddBuddyGroupViewController *newChat = [[AddBuddyGroupViewController alloc] initWithGroupId:self.buddyGroupId andGroupname:self.buddyGroupname];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [mydelegate.otherNavController pushViewController:newChat animated:YES];
     [newChat release];

@@ -19,11 +19,11 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UITextField *chatTextField;
 @property (retain, nonatomic) UIView *sendMsgView;
-@property (retain, nonatomic) NSString *buddyUserId;
-@property (retain, nonatomic) NSString *buddyUsername;
+@property (retain, nonatomic) NSString *buddyGroupId;
+@property (retain, nonatomic) NSString *buddyGroupname;
 @property (retain, nonatomic) IBOutlet UIView *usernameView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *sendMsgIndicator;
 
-- (id)initWithBuddyId:(NSString *)bid andUsername:(NSString *)username;
+- (id)initWithGroupId:(NSString *)gid andGroupname:(NSString *)groupname;
 - (IBAction)editGroup:(id)sender;
 @end

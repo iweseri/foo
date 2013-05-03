@@ -11,13 +11,14 @@
 
 @implementation SMMessageViewTableCell
 
-@synthesize senderAndTimeLabel, messageContentView, bgImageView;
+@synthesize senderAndTimeLabel, messageContentView, bgImageView, notifyDesc;
 
 - (void)dealloc {
 	
 	[senderAndTimeLabel release];
 	[messageContentView release];
 	[bgImageView release];
+    [notifyDesc release];
     [super dealloc];
 	
 }
@@ -43,7 +44,13 @@
 		messageContentView.scrollEnabled = NO;
 		[messageContentView sizeToFit];
 		[self.contentView addSubview:messageContentView];
-
+        
+        notifyDesc = [[UILabel alloc] init];
+		notifyDesc.font = [UIFont systemFontOfSize:11.0];
+		notifyDesc.textColor = [UIColor darkGrayColor];
+        [notifyDesc setBackgroundColor:[UIColor clearColor]];
+        [notifyDesc setNumberOfLines:1];
+		[self.contentView addSubview:notifyDesc];
     }
 	
     return self;

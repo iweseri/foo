@@ -11,7 +11,7 @@
 #import "BuddyCell.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ChatViewController.h"
-//#import "NewChatViewController.h"
+#import "GroupChatViewController.h"
 #import "AppDelegate.h"
 
 #define kBuddyCellHeight 64
@@ -142,17 +142,18 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"tapped at index %d",indexPath.row);
-    
     NSDictionary *buddy = [self.tableData objectAtIndex:indexPath.row];
     
-//    NewChatViewController *newChat = [[NewChatViewController alloc] initWithTabTitle:[buddy valueForKey:@"username"] andBuddyId:[buddy valueForKey:@"buddy_user_id"]];
-    
-    ChatViewController *newChat = [[ChatViewController alloc] initWithBuddyId:[buddy valueForKey:@"buddy_user_id"] andUsername:[buddy valueForKey:@"username"]];
-    
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    
-    [mydelegate.otherNavController pushViewController:newChat animated:YES];
-    [newChat release];
+    if([[buddy valueForKey:@"group_id"]intValue] == 0) {
+        ChatViewController *newChat = [[ChatViewController alloc] initWithBuddyId:[buddy valueForKey:@"buddy_user_id"] andUsername:[buddy valueForKey:@"username"]];
+        [mydelegate.otherNavController pushViewController:newChat animated:YES];
+        [newChat release];
+    } else {
+        GroupChatViewController *newGChat = [[GroupChatViewController alloc] initWithGroupId:[buddy valueForKey:@"group_id"] andGroupname:[buddy valueForKey:@"username"]];
+        [mydelegate.otherNavController pushViewController:newGChat animated:YES];
+        [newGChat release];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath

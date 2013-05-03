@@ -373,7 +373,7 @@ static CGFloat kMinCellHeight = 40;
 
 	if ([sender intValue] == 1) { // left aligned
         cell.senderAndTimeLabel.textAlignment = UITextAlignmentLeft;
-        cell.senderAndTimeLabel.frame = CGRectMake(250, 10, 70, 28);
+        cell.senderAndTimeLabel.frame = CGRectMake(240, 10, 70, 28);
 		bgImage = [[UIImage imageNamed:@"pink_conversation"] stretchableImageWithLeftCapWidth:24  topCapHeight:15];
 		
 		[cell.messageContentView setFrame:CGRectMake(padding, padding/2+kTailHeight, textSize.width, size.height)];

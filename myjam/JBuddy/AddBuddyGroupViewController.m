@@ -29,37 +29,82 @@
     return self;
 }
 
+- (id)initWithGroupId:(NSString *)gid andGroupname:(NSString *)gname
+{
+    self = [super init];
+    if (self) {
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-Buddy";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
+        self.groupId = gid;
+        self.subjectName = gname;
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
     tableData = [[NSMutableArray alloc] init];
-    
-    UITapGestureRecognizer *tapSearch = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSearchBuddy)];
-    [self.searchButtonView setUserInteractionEnabled:YES];
-    [self.searchButtonView addGestureRecognizer:tapSearch];
-    [tapSearch release];
-    
-    self.searchTextField.delegate = self;
+    self.subjectNameLabel.text = self.subjectName;
+    self.subjectTextField.delegate = self;
 }
 
-- (void)handleSearchBuddy
+- (IBAction)handleChangeSubject:(id)sender
 {
     [self.loadingIndicator startAnimating];
-    [self.searchTextField resignFirstResponder];
-    [self performSelector:@selector(processSearch) withObject:nil afterDelay:0.5];
+    [self.subjectTextField resignFirstResponder];
+    if ([self.subjectTextField.text length] > 0) {
+        [self performSelector:@selector(processChanged) withObject:nil afterDelay:0.5];
+    } else {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:@"Please insert Subject" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
 }
 
-- (void)processSearch
+- (void)processChanged //list participants
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"group_title\":\"%@\",\"action\":\"change_group_title\"}",self.groupId,self.subjectTextField.text];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    
+    if([resultsDictionary count]) {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        if ([status isEqualToString:@"ok"]) {
+            NSDictionary *newSubject = [NSDictionary dictionaryWithObjectsAndKeys:self.subjectTextField.text,@"newSubject",nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateSubjectName" object:newSubject];
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }
+    [resultsDictionary release];
+    [self.loadingIndicator stopAnimating];
+}
+
+- (void)listparticipants
 {
     if ([tableData count] > 0) {
         [tableData removeAllObjects];
     }
     
-    
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"%@\"}",self.searchTextField.text];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"action\":\"\"}",self.groupId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -88,7 +133,7 @@
         [self.noRecordLabel setHidden:NO];
         [self.tableView setHidden:YES];
     }
-
+    
     [self.tableView reloadData];
     [self.loadingIndicator stopAnimating];
 }
@@ -156,14 +201,14 @@
 {
     NSLog(@"tapped at index %d",indexPath.row);
     
-    NSString *username = [[tableData objectAtIndex:indexPath.row] objectForKey:@"username"];
-    NSString *userId = [[tableData objectAtIndex:indexPath.row] objectForKey:@"jambu_user_id"];
-    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
-    
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-    alert.tag = [userId intValue];
-    [alert show];
-    [alert release];
+//    NSString *username = [[tableData objectAtIndex:indexPath.row] objectForKey:@"username"];
+//    NSString *userId = [[tableData objectAtIndex:indexPath.row] objectForKey:@"jambu_user_id"];
+//    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
+//    
+//    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+//    alert.tag = [userId intValue];
+//    [alert show];
+//    [alert release];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -174,35 +219,35 @@
 #pragma mark -
 #pragma mark AlertView delegate
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 1)
-    {
-        [self processAddBuddy:alertView.tag];
-    }
-}
-
-- (void)processAddBuddy:(int)buddyId
-{
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"jambu_user_id\":\"%d\"}",buddyId];
-    
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
-    if([resultsDictionary count])
-    {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"])
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
-            [self.navigationController popViewControllerAnimated:YES];
-        }
-        
-    }
-    
-    [resultsDictionary release];
-}
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == 1)
+//    {
+//        [self processAddBuddy:alertView.tag];
+//    }
+//}
+//
+//- (void)processAddBuddy:(int)buddyId
+//{
+//    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+//    NSString *dataContent = [NSString stringWithFormat:@"{\"jambu_user_id\":\"%d\"}",buddyId];
+//    
+//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+//    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+//    
+//    if([resultsDictionary count])
+//    {
+//        NSString *status = [resultsDictionary objectForKey:@"status"];
+//        if ([status isEqualToString:@"ok"])
+//        {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
+//            [self.navigationController popViewControllerAnimated:YES];
+//        }
+//        
+//    }
+//    
+//    [resultsDictionary release];
+//}
 
 - (void)didReceiveMemoryWarning
 {
@@ -211,23 +256,15 @@
 }
 
 - (void)dealloc {
-    [_searchTextField release];
-    [_searchButtonView release];
+    [_subjectTextField release];
     [_tableView release];
-    [_fbPhoneSearchView release];
-    [_fbButton release];
-    [_phonebookButton release];
     [_loadingIndicator release];
     [_noRecordLabel release];
     [super dealloc];
 }
 - (void)viewDidUnload {
-    [self setSearchTextField:nil];
-    [self setSearchButtonView:nil];
+    [self setSubjectTextField:nil];
     [self setTableView:nil];
-    [self setFbPhoneSearchView:nil];
-    [self setFbButton:nil];
-    [self setPhonebookButton:nil];
     [self setLoadingIndicator:nil];
     [self setNoRecordLabel:nil];
     [super viewDidUnload];
