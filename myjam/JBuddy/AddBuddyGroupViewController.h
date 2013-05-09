@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddBuddyGroupViewController : UIViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface AddBuddyGroupViewController : UIViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource,UIAlertViewDelegate>
 {
     NSMutableArray *tableData;
 }
@@ -18,10 +18,12 @@
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (retain, nonatomic) IBOutlet UILabel *noRecordLabel;
 @property (retain, nonatomic) IBOutlet UILabel *subjectNameLabel;
+@property (retain, nonatomic) IBOutlet UILabel *participantLabel;
 @property (retain, nonatomic) NSString *groupId;
 @property (retain, nonatomic) NSString *subjectName;
 
 - (IBAction)handleChangeSubject:(id)sender;
+- (IBAction)addBuddyGroup:(id)sender;
 - (id)initWithGroupId:(NSString *)gid andGroupname:(NSString *)gname;
 
 @end

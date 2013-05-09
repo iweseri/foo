@@ -98,9 +98,8 @@
 }
 
 - (void)updateSubjectName:(NSNotification *)name {
-    NSDictionary *dict = [name userInfo];
-    self.usernameLabel.text = [dict objectForKey:@"newSubject"];
-    NSLog(@"SUBJEK :%@|%@",self.usernameLabel.text,dict);
+    [self.usernameLabel setText:[name object]];
+    NSLog(@"SUBJEK :%@",[name object]);
 }
 
 - (void)retrieveDataFromAPI
@@ -468,6 +467,7 @@ static CGFloat kMinCellHeight = 40;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_chatTextField release];
     [_tableView release];
     [_sendMsgView release];

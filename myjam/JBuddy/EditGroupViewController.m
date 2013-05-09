@@ -1,12 +1,12 @@
 //
-//  BuddyGroupListViewController.m
+//  EditGroupViewController.m
 //  myjam
 //
 //  Created by Mohd Hafiz on 3/29/13.
 //  Copyright (c) 2013 me-tech. All rights reserved.
 //
 
-#import "BuddyGroupListViewController.h"
+#import "EditGroupViewController.h"
 #import "ASIWrapper.h"
 #import "AppDelegate.h"
 #import "ChatViewController.h"
@@ -16,11 +16,11 @@
 #define kFrameHeightOnKeyboardUp 315
 #define kBuddyGroupCellHeight 64
 
-@interface BuddyGroupListViewController ()
+@interface EditGroupViewController ()
 
 @end
 
-@implementation BuddyGroupListViewController
+@implementation EditGroupViewController
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -28,6 +28,29 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+    }
+    return self;
+}
+
+- (id)initWithGroupId:(NSString*)group_id nGroupNameIs:(NSString*)group_name {
+    self = [super init];
+    if (self) {
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-Buddy";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
+        self.groupId = group_id;
+        self.groupName = group_name;
     }
     return self;
 }
@@ -51,15 +74,12 @@
     [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
     [overlayView release];
     
-    [self.subjectLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
-    [self.participantLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
-    self.subjectTextfield.delegate  = self;
     self.groupArray = [[NSMutableDictionary alloc] init];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"vwa-NEWGROUP");
+    NSLog(@"vwa-EDITGROUP");
     [self retrieveDataFromAPI];
     [self.tableView reloadData];
     searching = NO;
@@ -74,8 +94,8 @@
 - (void)retrieveDataFromAPI
 {
     [self.tableData removeAllObjects];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_new_chat_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = @"";
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"action\":\"unadded_member_list\"}",self.groupId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -92,10 +112,10 @@
     [resultsDictionary release];
 }
 
-- (void)createDataToAPI:(NSString*)memberId
+- (void)addBuddyToAPI:(NSString*)memberId
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"group_title\":\"%@\",\"members\":\"%@\",\"action\":\"create\"}",self.subjectTextfield.text,memberId];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"members\":\"%@\",\"action\":\"add_group_member\"}",self.groupId,memberId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -105,11 +125,11 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:NO];
-            
-            GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:[resultsDictionary objectForKey:@"group_id"] andGroupname:self.subjectTextfield.text];
-            [mydelegate.otherNavController pushViewController:newChat animated:YES];
-            [newChat release];
+            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:2] animated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMessageList" object:nil];
+            //GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:self.groupId andGroupname:self.groupName];
+            //[mydelegate.otherNavController pushViewController:newChat animated:YES];
+            //[newChat release];
         } else {
             [self triggerRequiredAlert:[[resultsDictionary objectForKey:@"message"] string]];
         }
@@ -117,20 +137,11 @@
     [resultsDictionary release];
 }
 
-#pragma mark -
-#pragma mark Textfield delegate
-- (void)textFieldDidBeginEditing:(UITextField *)textField and:(UISearchBar *)searchBar
+- (void)triggerRequiredAlert:(NSString*)msg
 {
-    [searchBar resignFirstResponder];
-}
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-}
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    [textField resignFirstResponder];
-    return YES;
+    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Buddy" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+    [alert release];
 }
 
 #pragma mark -
@@ -328,23 +339,12 @@
             strData = [NSString stringWithFormat:@"%@,%@",strData,row];
         } i++;
     }
-    NSLog(@"SUBJECT :%@\nGROUP :%@",self.subjectTextfield.text,strData);
-    
-    if ([self.subjectTextfield.text length]<1) {
-        [self triggerRequiredAlert:@"Please insert the subject."];
-    }
-    else if ([strData length]<1) {
+    NSLog(@"GROUP :%@|ID :%@",strData,self.groupId);
+    if ([strData length]<1) {
         [self triggerRequiredAlert:@"Please select member."];
     } else {
-        [self createDataToAPI:strData];
+        [self addBuddyToAPI:strData];
     }
-}
-
-- (void)triggerRequiredAlert:(NSString*)msg
-{
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Buddy" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
-    [alert release];
 }
 
 - (void)didReceiveMemoryWarning
@@ -367,5 +367,15 @@
     [self setRecordLabel:nil];
     [super viewDidUnload];
 }
+
+//#pragma mark -
+//#pragma mark AlertView delegate
+
+//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    if (buttonIndex == 1)
+//    {
+//        [self processApproveBuddy:alertView.tag withStatus:@"Delete Request"];
+//    }
+//}
 
 @end

@@ -9,6 +9,7 @@
 #import "AddBuddyViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "BuddyCell.h"
+#import "AddBuddyHeader.h"
 #import "ASIWrapper.h"
 #import "CustomAlertView.h"
 
@@ -112,12 +113,32 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [tableData count];
+    if (section == 0) {
+        return [tableData count];
+    } else {
+        return [tableData count];
+    }
+    
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    
+    AddBuddyHeader *header = [[[NSBundle mainBundle] loadNibNamed:@"AddBuddyHeader" owner:self options:nil]objectAtIndex:0];
+    
+    if (section == 0) {
+        [header.contactLabel setHidden:NO];
+        [header.inviteLabel setHidden:YES];
+    } else {
+        [header.contactLabel setHidden:YES];
+        [header.inviteLabel setHidden:NO];
+    }
+    return header;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -169,6 +190,11 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return kBuddyCellHeight;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 20;
 }
 
 #pragma mark -

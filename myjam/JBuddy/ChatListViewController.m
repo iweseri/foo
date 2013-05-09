@@ -38,6 +38,11 @@
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
     self.tableData = [[NSMutableArray alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(viewWillAppear:)
+                                                 name:@"reloadChatList"
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -45,6 +50,7 @@
     [self.tableData removeAllObjects];
     [self retrieveDataFromAPI];
     [self.tableView reloadData];
+    NSLog(@"vwa-chatList");
 }
 
 
@@ -67,12 +73,15 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"])
         {
+
             for (id data in [resultsDictionary objectForKey:@"list"])
             {
                 [self.tableData addObject:data];
 
             }
+                 
         }
+        
     }
     
     [resultsDictionary release];
@@ -165,6 +174,7 @@
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tableData release];
     [_tableView release];
     [_recordLabel release];

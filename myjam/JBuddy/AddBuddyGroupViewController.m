@@ -7,7 +7,9 @@
 //
 
 #import "AddBuddyGroupViewController.h"
+#import "EditGroupViewController.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "AppDelegate.h"
 #import "BuddyCell.h"
 #import "ASIWrapper.h"
 #import "CustomAlertView.h"
@@ -61,22 +63,24 @@
     tableData = [[NSMutableArray alloc] init];
     self.subjectNameLabel.text = self.subjectName;
     self.subjectTextField.delegate = self;
+    [self listParticipants];
 }
+
+#pragma mark -
+#pragma mark edit Subject
 
 - (IBAction)handleChangeSubject:(id)sender
 {
-    [self.loadingIndicator startAnimating];
     [self.subjectTextField resignFirstResponder];
     if ([self.subjectTextField.text length] > 0) {
+        [self.loadingIndicator startAnimating];
         [self performSelector:@selector(processChanged) withObject:nil afterDelay:0.5];
     } else {
-        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:@"Please insert Subject" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        [alert release];
+        [self presentAlert:@"Please insert Subject"];
     }
 }
 
-- (void)processChanged //list participants
+- (void)processChanged
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"group_title\":\"%@\",\"action\":\"change_group_title\"}",self.groupId,self.subjectTextField.text];
@@ -88,16 +92,29 @@
     if([resultsDictionary count]) {
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
-            NSDictionary *newSubject = [NSDictionary dictionaryWithObjectsAndKeys:self.subjectTextField.text,@"newSubject",nil];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateSubjectName" object:newSubject];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateSubjectName" object:self.subjectTextField.text];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMessageList" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatList" object:nil];
             [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [self presentAlert:[[resultsDictionary objectForKey:@"status"] string]];
         }
     }
     [resultsDictionary release];
     [self.loadingIndicator stopAnimating];
 }
 
-- (void)listparticipants
+- (void)presentAlert:(NSString*)msg
+{
+    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
+    [alert release];
+}
+
+#pragma mark -
+#pragma mark Retrieve API participant
+
+- (void)listParticipants
 {
     if ([tableData count] > 0) {
         [tableData removeAllObjects];
@@ -123,7 +140,7 @@
         }
         
     }
-    
+    self.participantLabel.text = [NSString stringWithFormat:@"Participants (%d)",[tableData count]];
     [resultsDictionary release];
     
     if ([tableData count] > 0) {
@@ -200,15 +217,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"tapped at index %d",indexPath.row);
-    
-//    NSString *username = [[tableData objectAtIndex:indexPath.row] objectForKey:@"username"];
-//    NSString *userId = [[tableData objectAtIndex:indexPath.row] objectForKey:@"jambu_user_id"];
-//    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
-//    
-//    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-//    alert.tag = [userId intValue];
-//    [alert show];
-//    [alert release];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -216,38 +224,12 @@
     return kBuddyCellHeight;
 }
 
-#pragma mark -
-#pragma mark AlertView delegate
-
-//-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-//    if (buttonIndex == 1)
-//    {
-//        [self processAddBuddy:alertView.tag];
-//    }
-//}
-//
-//- (void)processAddBuddy:(int)buddyId
-//{
-//    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-//    NSString *dataContent = [NSString stringWithFormat:@"{\"jambu_user_id\":\"%d\"}",buddyId];
-//    
-//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-//    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-//    
-//    if([resultsDictionary count])
-//    {
-//        NSString *status = [resultsDictionary objectForKey:@"status"];
-//        if ([status isEqualToString:@"ok"])
-//        {
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
-//            [self.navigationController popViewControllerAnimated:YES];
-//        }
-//        
-//    }
-//    
-//    [resultsDictionary release];
-//}
+- (IBAction)addBuddyGroup:(id)sender {
+    EditGroupViewController *addBuddy = [[EditGroupViewController alloc] initWithGroupId:self.groupId nGroupNameIs:self.subjectTextField.text];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [mydelegate.otherNavController pushViewController:addBuddy animated:YES];
+    [addBuddy release];
+}
 
 - (void)didReceiveMemoryWarning
 {

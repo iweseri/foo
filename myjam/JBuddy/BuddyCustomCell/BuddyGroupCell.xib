@@ -269,6 +269,7 @@
 									<bytes key="NSRGB">MC43MjMyNzQwNzUzIDAuNzIzMjc0MDc1MyAwLjcyMzI3NDA3NTMAA</bytes>
 								</object>
 								<bool key="IBUIOpaque">NO</bool>
+								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
