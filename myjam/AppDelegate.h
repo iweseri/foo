@@ -94,6 +94,8 @@
 - (void)handleSwipeUp;
 - (void)presentLoginPage;
 - (void)clearViews;
+- (void)addBlackView;
+- (void)removeBlackView;
 
 - (void)closeSession; //fb login
 - (void)removeCustomBadge;

@@ -485,6 +485,27 @@
 		61E37E89173A30FB00C9F0F7 /* MBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37E6F173A30FB00C9F0F7 /* MBuddy.m */; };
 		61E37E8A173A30FB00C9F0F7 /* NewChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37E71173A30FB00C9F0F7 /* NewChatViewController.m */; };
 		61E37E8B173A30FB00C9F0F7 /* NewChatViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37E72173A30FB00C9F0F7 /* NewChatViewController.xib */; };
+		61E37E90173B3E2000C9F0F7 /* PublicViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37E8E173B3E2000C9F0F7 /* PublicViewController.m */; };
+		61E37E91173B3E2000C9F0F7 /* PublicViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37E8F173B3E2000C9F0F7 /* PublicViewController.xib */; };
+		61E37E95173B3E4900C9F0F7 /* PersonalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37E93173B3E4900C9F0F7 /* PersonalViewController.m */; };
+		61E37E96173B3E4900C9F0F7 /* PersonalViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37E94173B3E4900C9F0F7 /* PersonalViewController.xib */; };
+		61E37E9A173B3EAC00C9F0F7 /* JWallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37E98173B3EAC00C9F0F7 /* JWallViewController.m */; };
+		61E37E9B173B3EAC00C9F0F7 /* JWallViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37E99173B3EAC00C9F0F7 /* JWallViewController.xib */; };
+		61E37EA5173B4BB900C9F0F7 /* PostTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EA4173B4BB900C9F0F7 /* PostTextCell.m */; };
+		61E37EA9173B4C2B00C9F0F7 /* PostTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EA8173B4C2B00C9F0F7 /* PostTextCell.xib */; };
+		61E37EAE173B511300C9F0F7 /* PostHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EAD173B511300C9F0F7 /* PostHeaderView.m */; };
+		61E37EB1173B514900C9F0F7 /* PostFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EB0173B514900C9F0F7 /* PostFooterView.m */; };
+		61E37EB3173B516400C9F0F7 /* PostHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB2173B516400C9F0F7 /* PostHeaderView.xib */; };
+		61E37EB5173B51A900C9F0F7 /* PostFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB4173B51A900C9F0F7 /* PostFooterView.xib */; };
+		61E37EB7173B87D800C9F0F7 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E37EB6173B87D800C9F0F7 /* CoreText.framework */; };
+		61E37EBD173BAA2200C9F0F7 /* jwall_btn_add_buddy.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB8173BAA2200C9F0F7 /* jwall_btn_add_buddy.png */; };
+		61E37EBE173BAA2200C9F0F7 /* jwall_btn_add_photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB9173BAA2200C9F0F7 /* jwall_btn_add_photo.png */; };
+		61E37EBF173BAA2200C9F0F7 /* jwall_btn_comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EBA173BAA2200C9F0F7 /* jwall_btn_comment.png */; };
+		61E37EC0173BAA2200C9F0F7 /* jwall_btn_option.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EBB173BAA2200C9F0F7 /* jwall_btn_option.png */; };
+		61E37EC1173BAA2200C9F0F7 /* jwall_btn_post.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EBC173BAA2200C9F0F7 /* jwall_btn_post.png */; };
+		61E37F0A1740964D00C9F0F7 /* MyPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37F091740964D00C9F0F7 /* MyPopupView.m */; };
+		61E37F111740C44300C9F0F7 /* DetailPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37F0F1740C44300C9F0F7 /* DetailPostViewController.m */; };
+		61E37F121740C44300C9F0F7 /* DetailPostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37F101740C44300C9F0F7 /* DetailPostViewController.xib */; };
 		61E59C9716AE5753002E7DDC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9616AE5753002E7DDC /* EventKit.framework */; };
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
@@ -1240,6 +1261,35 @@
 		61E37E70173A30FB00C9F0F7 /* NewChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewChatViewController.h; sourceTree = "<group>"; };
 		61E37E71173A30FB00C9F0F7 /* NewChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewChatViewController.m; sourceTree = "<group>"; };
 		61E37E72173A30FB00C9F0F7 /* NewChatViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NewChatViewController.xib; sourceTree = "<group>"; };
+		61E37E8D173B3E2000C9F0F7 /* PublicViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PublicViewController.h; path = JWall/PublicViewController.h; sourceTree = "<group>"; };
+		61E37E8E173B3E2000C9F0F7 /* PublicViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PublicViewController.m; path = JWall/PublicViewController.m; sourceTree = "<group>"; };
+		61E37E8F173B3E2000C9F0F7 /* PublicViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PublicViewController.xib; path = JWall/PublicViewController.xib; sourceTree = "<group>"; };
+		61E37E92173B3E4900C9F0F7 /* PersonalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PersonalViewController.h; path = JWall/PersonalViewController.h; sourceTree = "<group>"; };
+		61E37E93173B3E4900C9F0F7 /* PersonalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PersonalViewController.m; path = JWall/PersonalViewController.m; sourceTree = "<group>"; };
+		61E37E94173B3E4900C9F0F7 /* PersonalViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PersonalViewController.xib; path = JWall/PersonalViewController.xib; sourceTree = "<group>"; };
+		61E37E97173B3EAC00C9F0F7 /* JWallViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JWallViewController.h; sourceTree = "<group>"; };
+		61E37E98173B3EAC00C9F0F7 /* JWallViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JWallViewController.m; sourceTree = "<group>"; };
+		61E37E99173B3EAC00C9F0F7 /* JWallViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JWallViewController.xib; sourceTree = "<group>"; };
+		61E37EA3173B4BB900C9F0F7 /* PostTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostTextCell.h; path = JWall/WallCustomCell/PostTextCell.h; sourceTree = "<group>"; };
+		61E37EA4173B4BB900C9F0F7 /* PostTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostTextCell.m; path = JWall/WallCustomCell/PostTextCell.m; sourceTree = "<group>"; };
+		61E37EA8173B4C2B00C9F0F7 /* PostTextCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostTextCell.xib; path = JWall/WallCustomCell/PostTextCell.xib; sourceTree = "<group>"; };
+		61E37EAC173B511300C9F0F7 /* PostHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostHeaderView.h; path = JWall/PostHeaderView.h; sourceTree = "<group>"; };
+		61E37EAD173B511300C9F0F7 /* PostHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostHeaderView.m; path = JWall/PostHeaderView.m; sourceTree = "<group>"; };
+		61E37EAF173B514900C9F0F7 /* PostFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostFooterView.h; path = JWall/PostFooterView.h; sourceTree = "<group>"; };
+		61E37EB0173B514900C9F0F7 /* PostFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostFooterView.m; path = JWall/PostFooterView.m; sourceTree = "<group>"; };
+		61E37EB2173B516400C9F0F7 /* PostHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostHeaderView.xib; path = JWall/PostHeaderView.xib; sourceTree = "<group>"; };
+		61E37EB4173B51A900C9F0F7 /* PostFooterView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostFooterView.xib; path = JWall/PostFooterView.xib; sourceTree = "<group>"; };
+		61E37EB6173B87D800C9F0F7 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		61E37EB8173BAA2200C9F0F7 /* jwall_btn_add_buddy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jwall_btn_add_buddy.png; sourceTree = "<group>"; };
+		61E37EB9173BAA2200C9F0F7 /* jwall_btn_add_photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jwall_btn_add_photo.png; sourceTree = "<group>"; };
+		61E37EBA173BAA2200C9F0F7 /* jwall_btn_comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jwall_btn_comment.png; sourceTree = "<group>"; };
+		61E37EBB173BAA2200C9F0F7 /* jwall_btn_option.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jwall_btn_option.png; sourceTree = "<group>"; };
+		61E37EBC173BAA2200C9F0F7 /* jwall_btn_post.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = jwall_btn_post.png; sourceTree = "<group>"; };
+		61E37F081740964D00C9F0F7 /* MyPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyPopupView.h; path = JWall/MyPopupView.h; sourceTree = "<group>"; };
+		61E37F091740964D00C9F0F7 /* MyPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyPopupView.m; path = JWall/MyPopupView.m; sourceTree = "<group>"; };
+		61E37F0E1740C44300C9F0F7 /* DetailPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailPostViewController.h; path = JWall/DetailPost/DetailPostViewController.h; sourceTree = "<group>"; };
+		61E37F0F1740C44300C9F0F7 /* DetailPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailPostViewController.m; path = JWall/DetailPost/DetailPostViewController.m; sourceTree = "<group>"; };
+		61E37F101740C44300C9F0F7 /* DetailPostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DetailPostViewController.xib; path = JWall/DetailPost/DetailPostViewController.xib; sourceTree = "<group>"; };
 		61E59C9616AE5753002E7DDC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		61E59C9816AE5F22002E7DDC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
@@ -1357,6 +1407,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				61E37EB7173B87D800C9F0F7 /* CoreText.framework in Frameworks */,
 				618052CD164CD6F3009620DE /* AudioToolbox.framework in Frameworks */,
 				61F0B430172917C30075054F /* Security.framework in Frameworks */,
 				61F0B42E172917B80075054F /* libicucore.dylib in Frameworks */,
@@ -1500,6 +1551,9 @@
 				61F0B3BF172916300075054F /* JBuddyViewController.h */,
 				61F0B3C0172916300075054F /* JBuddyViewController.m */,
 				61F0B3C1172916300075054F /* JBuddyViewController.xib */,
+				61E37E97173B3EAC00C9F0F7 /* JWallViewController.h */,
+				61E37E98173B3EAC00C9F0F7 /* JWallViewController.m */,
+				61E37E99173B3EAC00C9F0F7 /* JWallViewController.xib */,
 			);
 			name = MainView;
 			sourceTree = "<group>";
@@ -1507,6 +1561,11 @@
 		612007E816F9A948005227FB /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				61E37EB8173BAA2200C9F0F7 /* jwall_btn_add_buddy.png */,
+				61E37EB9173BAA2200C9F0F7 /* jwall_btn_add_photo.png */,
+				61E37EBA173BAA2200C9F0F7 /* jwall_btn_comment.png */,
+				61E37EBB173BAA2200C9F0F7 /* jwall_btn_option.png */,
+				61E37EBC173BAA2200C9F0F7 /* jwall_btn_post.png */,
 				E0963841172E3EEC0011BBA1 /* addGroupChat.png */,
 				E096383F172E265D0011BBA1 /* groupTabBar.png */,
 				61F9204E172A629E00F9B644 /* buddy_no.png */,
@@ -2104,6 +2163,7 @@
 		6180D8411649F24600D9C74D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				61E37EB6173B87D800C9F0F7 /* CoreText.framework */,
 				61F0B42F172917C30075054F /* Security.framework */,
 				61F0B42D172917B80075054F /* libicucore.dylib */,
 				FF19ACA216E73028002F36A1 /* Social.framework */,
@@ -2144,6 +2204,7 @@
 		6180D8481649F24600D9C74D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				61E37E8C173B3DB300C9F0F7 /* JWall */,
 				61E37E4B173A30FB00C9F0F7 /* JBuddy */,
 				21426ED317179AD500B766BE /* Shop > NearMe */,
 				6139632616EF8EFF0056B314 /* Shop */,
@@ -2607,6 +2668,65 @@
 			path = BuddyCustomCell;
 			sourceTree = "<group>";
 		};
+		61E37E8C173B3DB300C9F0F7 /* JWall */ = {
+			isa = PBXGroup;
+			children = (
+				61E37F001740907D00C9F0F7 /* PopupView */,
+				61E37E9C173B4A4300C9F0F7 /* WallCustomCells */,
+				61E37F0C1740C3E100C9F0F7 /* HeaderFooter */,
+				61E37F0D1740C40B00C9F0F7 /* DetailPost */,
+				61E37E8D173B3E2000C9F0F7 /* PublicViewController.h */,
+				61E37E8E173B3E2000C9F0F7 /* PublicViewController.m */,
+				61E37E8F173B3E2000C9F0F7 /* PublicViewController.xib */,
+				61E37E92173B3E4900C9F0F7 /* PersonalViewController.h */,
+				61E37E93173B3E4900C9F0F7 /* PersonalViewController.m */,
+				61E37E94173B3E4900C9F0F7 /* PersonalViewController.xib */,
+			);
+			name = JWall;
+			sourceTree = "<group>";
+		};
+		61E37E9C173B4A4300C9F0F7 /* WallCustomCells */ = {
+			isa = PBXGroup;
+			children = (
+				61E37EA3173B4BB900C9F0F7 /* PostTextCell.h */,
+				61E37EA4173B4BB900C9F0F7 /* PostTextCell.m */,
+				61E37EA8173B4C2B00C9F0F7 /* PostTextCell.xib */,
+			);
+			name = WallCustomCells;
+			sourceTree = "<group>";
+		};
+		61E37F001740907D00C9F0F7 /* PopupView */ = {
+			isa = PBXGroup;
+			children = (
+				61E37F081740964D00C9F0F7 /* MyPopupView.h */,
+				61E37F091740964D00C9F0F7 /* MyPopupView.m */,
+			);
+			name = PopupView;
+			sourceTree = "<group>";
+		};
+		61E37F0C1740C3E100C9F0F7 /* HeaderFooter */ = {
+			isa = PBXGroup;
+			children = (
+				61E37EAC173B511300C9F0F7 /* PostHeaderView.h */,
+				61E37EAD173B511300C9F0F7 /* PostHeaderView.m */,
+				61E37EB2173B516400C9F0F7 /* PostHeaderView.xib */,
+				61E37EAF173B514900C9F0F7 /* PostFooterView.h */,
+				61E37EB0173B514900C9F0F7 /* PostFooterView.m */,
+				61E37EB4173B51A900C9F0F7 /* PostFooterView.xib */,
+			);
+			name = HeaderFooter;
+			sourceTree = "<group>";
+		};
+		61E37F0D1740C40B00C9F0F7 /* DetailPost */ = {
+			isa = PBXGroup;
+			children = (
+				61E37F0E1740C44300C9F0F7 /* DetailPostViewController.h */,
+				61E37F0F1740C44300C9F0F7 /* DetailPostViewController.m */,
+				61E37F101740C44300C9F0F7 /* DetailPostViewController.xib */,
+			);
+			name = DetailPost;
+			sourceTree = "<group>";
+		};
 		61F0B3C41729163D0075054F /* SMMessageViewTableCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -3064,6 +3184,18 @@
 				61E37E86173A30FB00C9F0F7 /* EditGroupViewController.xib in Resources */,
 				61E37E88173A30FB00C9F0F7 /* GroupChatViewController.xib in Resources */,
 				61E37E8B173A30FB00C9F0F7 /* NewChatViewController.xib in Resources */,
+				61E37E91173B3E2000C9F0F7 /* PublicViewController.xib in Resources */,
+				61E37E96173B3E4900C9F0F7 /* PersonalViewController.xib in Resources */,
+				61E37E9B173B3EAC00C9F0F7 /* JWallViewController.xib in Resources */,
+				61E37EA9173B4C2B00C9F0F7 /* PostTextCell.xib in Resources */,
+				61E37EB3173B516400C9F0F7 /* PostHeaderView.xib in Resources */,
+				61E37EB5173B51A900C9F0F7 /* PostFooterView.xib in Resources */,
+				61E37EBD173BAA2200C9F0F7 /* jwall_btn_add_buddy.png in Resources */,
+				61E37EBE173BAA2200C9F0F7 /* jwall_btn_add_photo.png in Resources */,
+				61E37EBF173BAA2200C9F0F7 /* jwall_btn_comment.png in Resources */,
+				61E37EC0173BAA2200C9F0F7 /* jwall_btn_option.png in Resources */,
+				61E37EC1173BAA2200C9F0F7 /* jwall_btn_post.png in Resources */,
+				61E37F121740C44300C9F0F7 /* DetailPostViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3295,6 +3427,14 @@
 				61E37E87173A30FB00C9F0F7 /* GroupChatViewController.m in Sources */,
 				61E37E89173A30FB00C9F0F7 /* MBuddy.m in Sources */,
 				61E37E8A173A30FB00C9F0F7 /* NewChatViewController.m in Sources */,
+				61E37E90173B3E2000C9F0F7 /* PublicViewController.m in Sources */,
+				61E37E95173B3E4900C9F0F7 /* PersonalViewController.m in Sources */,
+				61E37E9A173B3EAC00C9F0F7 /* JWallViewController.m in Sources */,
+				61E37EA5173B4BB900C9F0F7 /* PostTextCell.m in Sources */,
+				61E37EAE173B511300C9F0F7 /* PostHeaderView.m in Sources */,
+				61E37EB1173B514900C9F0F7 /* PostFooterView.m in Sources */,
+				61E37F0A1740964D00C9F0F7 /* MyPopupView.m in Sources */,
+				61E37F111740C44300C9F0F7 /* DetailPostViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,6 +18,7 @@
 #import "AboutViewController.h"
 #import "SettingsViewController.h"
 #import "JBuddyViewController.h"
+#import "JWallViewController.h"
 
 #define kTableCellHeightA 110
 @interface SidebarView ()
@@ -108,6 +109,11 @@
     UITapGestureRecognizer *tapJBuddyRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleBuddy)];
     [self.jBuddyLabel addGestureRecognizer:tapJBuddyRecognizer];
     [tapJBuddyRecognizer release];
+    
+    self.jWallLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapJWallRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleWall)];
+    [self.jWallLabel addGestureRecognizer:tapJWallRecognizer];
+    [tapJWallRecognizer release];
     
     self.faqLabel.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapFAQRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleFAQ)];
@@ -230,6 +236,7 @@
     [self setEmailLabel:nil];
     [self setTableView:nil];
     [self setJBuddyLabel:nil];
+    [self setJWallLabel:nil];
     [super viewDidUnload];
     self.contentView = nil;
     
@@ -315,6 +322,15 @@
     JBuddyViewController *buddyListVc = [[JBuddyViewController alloc] init];
     [self showViewControllerWithLoadingView:buddyListVc];
     [buddyListVc release];
+}
+
+- (void)handleWall
+{
+    NSLog(@"handleWall");
+    
+    JWallViewController *jWall = [[JWallViewController alloc] init];
+    [self showViewControllerWithLoadingView:jWall];
+    [jWall release];
 }
 
 - (void)handleSwipeRight
@@ -456,6 +472,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     [_jBuddyLabel release];
+    [_jWallLabel release];
     [super dealloc];
 }
 
