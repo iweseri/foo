@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AddBuddyViewController : UIViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
+@interface AddPhonebookViewController : UIViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
 {
     BOOL searching;
     BOOL selectRowEnabled;
-    NSMutableArray *copyListOfItems;
-    NSMutableArray *tableData;
+    NSMutableArray *copyListOfJoin;
+    NSMutableArray *copyListOfInvite;
+    NSMutableArray *joinTableData;
+    NSMutableArray *inviteTableData;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;

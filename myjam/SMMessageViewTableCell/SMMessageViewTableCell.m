@@ -11,7 +11,7 @@
 
 @implementation SMMessageViewTableCell
 
-@synthesize senderAndTimeLabel, messageContentView, bgImageView, notifyDesc;
+@synthesize senderAndTimeLabel, messageContentView, bgImageView, notifyDesc, dateDesc;
 
 - (void)dealloc {
 	
@@ -19,6 +19,7 @@
 	[messageContentView release];
 	[bgImageView release];
     [notifyDesc release];
+    [dateDesc release];
     [super dealloc];
 	
 }
@@ -46,11 +47,19 @@
 		[self.contentView addSubview:messageContentView];
         
         notifyDesc = [[UILabel alloc] init];
-		notifyDesc.font = [UIFont systemFontOfSize:11.0];
-		notifyDesc.textColor = [UIColor darkGrayColor];
+		[notifyDesc setTextColor:[UIColor darkGrayColor]];
+        [notifyDesc setFont:[UIFont italicSystemFontOfSize:11.0f]];
         [notifyDesc setBackgroundColor:[UIColor clearColor]];
         [notifyDesc setNumberOfLines:1];
 		[self.contentView addSubview:notifyDesc];
+        
+        dateDesc = [[UILabel alloc] init];
+        [dateDesc setTextColor:[UIColor whiteColor]];
+        [dateDesc setTextAlignment:NSTextAlignmentCenter];
+        [dateDesc setFont:[UIFont boldSystemFontOfSize:12.0f]];
+        [dateDesc setBackgroundColor:[UIColor grayColor]];
+        [dateDesc setNumberOfLines:1];
+		[self.contentView addSubview:dateDesc];
     }
 	
     return self;

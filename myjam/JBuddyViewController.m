@@ -7,7 +7,8 @@
 //
 
 #import "JBuddyViewController.h"
-#import "AddBuddyViewController.h"
+//#import "AddBuddyViewController.h"
+#import "OptionAddBuddyViewController.h"
 #import "NewChatViewController.h"
 
 #define kNewChat    1
@@ -115,9 +116,9 @@
     }else{
         refreshPageDisabled = YES;
         if (plusPage == kAddBuddy) {
-            AddBuddyViewController *addBuddy = [[AddBuddyViewController alloc] initWithNibName:@"AddBuddyViewController" bundle:nil];
-            [self.navigationController pushViewController:addBuddy animated:YES];
-            [addBuddy release];
+            OptionAddBuddyViewController *optionAdd = [[OptionAddBuddyViewController alloc] initWithNibName:@"OptionAddBuddyViewController" bundle:nil];
+            [self.navigationController pushViewController:optionAdd animated:YES];
+            [optionAdd release];
         }else if (plusPage == kNewChat) {
             NewChatViewController *newChat = [[NewChatViewController alloc] init];
             [self.navigationController pushViewController:newChat animated:YES];

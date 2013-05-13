@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PostHeaderView.h"
 
 @interface PersonalViewController : UIViewController
 

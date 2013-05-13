@@ -1,13 +1,15 @@
 //
-//  AddBuddyViewController.m
+//  AddPhonebookViewController.m
 //  myjam
 //
 //  Created by Mohd Hafiz on 4/1/13.
 //  Copyright (c) 2013 me-tech. All rights reserved.
 //
 
-#import "AddBuddyViewController.h"
+#import "AddPhonebookViewController.h"
+#import "AddBuddyHeader.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <AddressBook/AddressBook.h>
 #import "BuddyCell.h"
 #import "ASIWrapper.h"
 #import "CustomAlertView.h"
@@ -16,11 +18,11 @@
 
 #define kBuddyCellHeight 64
 
-@interface AddBuddyViewController ()
+@interface AddPhonebookViewController ()
 
 @end
 
-@implementation AddBuddyViewController
+@implementation AddPhonebookViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -38,23 +40,25 @@
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
-    tableData = [[NSMutableArray alloc] init];
-    copyListOfItems = [[NSMutableArray alloc] init];
+    joinTableData = [[NSMutableArray alloc] init];
+    inviteTableData = [[NSMutableArray alloc] init];
+    copyListOfJoin = [[NSMutableArray alloc] init];
+    copyListOfInvite = [[NSMutableArray alloc] init];
     
     self.searchBar.delegate = self;
     UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
     [overlayView setBackgroundColor:[UIColor whiteColor]];
     [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
-    [overlayView release];
+    //[overlayView release];
     
-    //[self retrieveDataFromAPI];
+    //[self getAutorizedForContact];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     //[self retrieveDataFromAPI];
     [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
-    [self performSelector:@selector(retrieveDataFromAPI) withObject:nil afterDelay:0.1];
+    [self performSelector:@selector(getAutorizedForContact) withObject:nil afterDelay:0.1];
     [self.tableView reloadData];
     searching = NO;
     selectRowEnabled = YES; NSLog(@"vda-addBuddy");
@@ -66,9 +70,97 @@
     [self clearSearchBar:self.searchBar];
 }
 
-- (void)retrieveDataFromAPI
+#pragma mark -
+#pragma mark Get Contact Person
+
+-(void)getAutorizedForContact
 {
-    [tableData removeAllObjects];
+    ABAddressBookRef addressBookRef = ABAddressBookCreateWithOptions(NULL, NULL);
+    
+    if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusNotDetermined) {
+        ABAddressBookRequestAccessWithCompletion(addressBookRef, ^(bool granted, CFErrorRef error) {
+            // First time access has been granted, add the contact
+            [self getPersonOutOfAddressBook];
+        });
+    }
+    else if (ABAddressBookGetAuthorizationStatus() == kABAuthorizationStatusAuthorized) {
+        // The user has previously given access, add the contact
+        [self getPersonOutOfAddressBook];
+    }
+    else {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Notifications are OFF" message:@"To add new buddy, you must enable Push Notifications. Go to your iPhone's Settings screen to enable. Return to Jam-bu, press 'OK' and enter again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        // The user has previously denied access
+        // Send an alert telling user to change privacy setting in settings app
+    }
+}
+
+- (void)getPersonOutOfAddressBook
+{
+    CFErrorRef error = NULL;
+    NSMutableArray *mobileData = [[NSMutableArray alloc] init];
+    NSMutableArray *emailData = [[NSMutableArray alloc] init];
+    
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
+    if (addressBook != nil)
+    {
+        NSArray *allContacts = (__bridge_transfer NSArray *)ABAddressBookCopyArrayOfAllPeople(addressBook);
+        NSUInteger i = 0;
+        for (i = 0; i < [allContacts count]; i++)
+        {
+            ABRecordRef contactPerson = (__bridge ABRecordRef)allContacts[i];
+            //mobile
+            ABMultiValueRef mob = ABRecordCopyValue(contactPerson, kABPersonPhoneProperty);
+            NSUInteger k = 0;
+            for (k = 0; k < ABMultiValueGetCount(mob); k++) {
+                NSString *mobile = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(mob, k);
+                if (k == 0) {
+                    [mobileData addObject:mobile];
+                }
+            }
+            //email
+            ABMultiValueRef emails = ABRecordCopyValue(contactPerson, kABPersonEmailProperty);
+            NSUInteger j = 0;
+            for (j = 0; j < ABMultiValueGetCount(emails); j++) {
+                NSString *email = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emails, j);
+                if (j == 0) {
+                    [emailData addObject:email];
+                }
+            }
+        }
+    }
+    CFRelease(addressBook);
+    
+    int i = 0;
+    NSMutableString *mobData = [NSMutableString stringWithFormat:@""];
+    NSMutableString *emData = [NSMutableString stringWithFormat:@""];
+    for (id row in mobileData) {
+        if (i == 0) {
+            mobData = [NSString stringWithFormat:@"%@",row];
+        } else {
+            mobData = [NSString stringWithFormat:@"%@,%@",mobData,row];
+        } i++;
+    }
+    i = 0;
+    for (id row in emailData) {
+        if (i == 0) {
+            emData = [NSString stringWithFormat:@"%@",row];
+        } else {
+            emData = [NSString stringWithFormat:@"%@,%@",emData,row];
+        } i++;
+    }
+    NSLog(@"GROUP :%@\nEM :%@",mobData,emData);
+    [self retrieveDataFromAPIWithPast:mobData and:emData];
+}
+
+#pragma mark -
+#pragma mark retrieve Data From API
+
+- (void)retrieveDataFromAPIWithPast:(NSString*)mobile and:(NSString*)email
+{
+    //[tableData removeAllObjects];
+    [joinTableData removeAllObjects];
+    [inviteTableData removeAllObjects];
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"\"}"];
     
@@ -76,22 +168,24 @@
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     
-    if([resultsDictionary count])
-    {
+    if([resultsDictionary count]) {
         NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"])
-        {
-            for (id data in [resultsDictionary objectForKey:@"list"])
-            {
-                [tableData addObject:data];
+        if ([status isEqualToString:@"ok"]) {
+            for (id data in [resultsDictionary objectForKey:@"list"]) {
+                [joinTableData addObject:data];
             }
-            
+            for (id data in [resultsDictionary objectForKey:@"list"]) {
+                [inviteTableData addObject:data];
+            }
+        } else {
+            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Buddy" message:[[resultsDictionary objectForKey:@"status"] string] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
         }
         
     }
     [self.tableView reloadData];
     [DejalBezelActivityView removeViewAnimated:YES];
-    [resultsDictionary release];
+    //[resultsDictionary release];
 }
 
 #pragma mark -
@@ -126,57 +220,48 @@
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [copyListOfItems removeAllObjects];
-    
-    if([searchBar.text length] > 0) {
-        
-        searching = YES;
-        selectRowEnabled = YES;
-        //        self.tableView.scrollEnabled = YES;
-        [self searchTableView];
-    }
-    else {
-        
-        searching = NO;
-        //        selectRowEnabled = NO;
-        //        self.tableView.scrollEnabled = NO;
-    }
-    [self.tableView reloadData];
     [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
     
-//    [copyListOfItems removeAllObjects];
-//    
-//    if([searchText length] > 0) {
-//        
-//        searching = YES;
-//        selectRowEnabled = YES;
-//        //        self.tableView.scrollEnabled = YES;
-//        [self searchTableView];
-//    }
-//    else {
-//        
-//        searching = NO;
-//        //        selectRowEnabled = NO;
-//        //        self.tableView.scrollEnabled = NO;
-//    }
-//    [self.tableView reloadData];
+    //[copyListOfItems removeAllObjects];
+    [copyListOfJoin removeAllObjects];
+    [copyListOfInvite removeAllObjects];
+    
+    if([searchText length] > 0) {
+        searching = YES;
+        selectRowEnabled = YES;
+        //self.tableView.scrollEnabled = YES;
+        [self searchTableView];
+    }
+    else {
+        searching = NO;
+        //selectRowEnabled = NO;
+        //self.tableView.scrollEnabled = NO;
+    }
+    [self.tableView reloadData];
 }
 
 - (void) searchTableView {
     
     NSString *searchText = self.searchBar.text;
-    NSMutableArray *srchTemp = [[NSMutableArray alloc]init];
-    srchTemp = [[self processSearch] copy]; NSLog(@"DATA:%@",[self processSearch]);
-    for (id row in srchTemp) {
+    //NSMutableArray *srchTemp = [[NSMutableArray alloc]init];
+    //srchTemp = [[self processSearch] copy]; NSLog(@"DATA:%@",[self processSearch]);
+    for (id row in joinTableData) {
         NSString *username = [row objectForKey:@"username"];
         NSRange titleResultsRange = [username rangeOfString:searchText options:NSCaseInsensitiveSearch];
         
         if (titleResultsRange.length > 0)
-            [copyListOfItems addObject:row];
+            [copyListOfJoin addObject:row];
+    }
+    for (id row in inviteTableData) {
+        NSString *username = [row objectForKey:@"username"];
+        NSRange titleResultsRange = [username rangeOfString:searchText options:NSCaseInsensitiveSearch];
+        
+        if (titleResultsRange.length > 0)
+            [copyListOfInvite addObject:row];
     }
 }
 
@@ -215,46 +300,63 @@
 #pragma mark -
 #pragma mark TableView delegate
 
-- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 20;
+}
+
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    AddBuddyHeader *header = [[[NSBundle mainBundle] loadNibNamed:@"AddBuddyHeader" owner:self options:nil]objectAtIndex:0];
     
+    if (section == 0) {
+        [header.contactLabel setHidden:NO];
+        [header.inviteLabel setHidden:YES];
+    } else {
+        [header.contactLabel setHidden:YES];
+        [header.inviteLabel setHidden:NO];
+    }
+    return header;
+}
+
+- (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if(selectRowEnabled)
         return indexPath;
     else
         return nil;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return 1;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
     int totalRow;
-    
     if (searching){
-        totalRow = [copyListOfItems count];
+        if (section == 0) {
+            totalRow = [copyListOfJoin count];
+        } else {
+            totalRow = [copyListOfInvite count];
+        }
     }
     else {
-        totalRow = [tableData count];
+        if (section == 0) {
+            totalRow = [joinTableData count];
+        } else {
+            totalRow = [inviteTableData count];
+        }
     }
     
-    if (totalRow)
-    {
+    if (totalRow) {
         [self.tableView setHidden:NO];
         [self.recordLabel setHidden:YES];
-    }else{
+    } else {
         [self.tableView setHidden:YES];
         [self.recordLabel setHidden:NO];
     }
-    
     return totalRow;
 }
-
-#pragma mark -
-#pragma mark TableView delegate
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -268,9 +370,17 @@
     }
     NSDictionary *cellData = nil;
     if (searching) {
-        cellData = [copyListOfItems objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            cellData = [copyListOfJoin objectAtIndex:indexPath.row];
+        } else {
+            cellData = [copyListOfInvite objectAtIndex:indexPath.row];
+        }
     }else{
-        cellData = [tableData objectAtIndex:indexPath.row];
+        if (indexPath.section == 1) {
+            cellData = [joinTableData objectAtIndex:indexPath.row];
+        } else {
+            cellData = [inviteTableData objectAtIndex:indexPath.row];
+        }
     }
     NSLog(@"cell data %@",cellData);
     [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
@@ -293,11 +403,17 @@
     [cell.addButtton.layer setCornerRadius:10.0f];
     [cell.addButtton.layer setBorderWidth:2];
     [cell.addButtton.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-    [cell.addButtton setBackgroundImage:[UIImage imageNamed:@"addBuddy"]
-                              forState:UIControlStateNormal];
     [cell.addButtton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
     [cell.addButtton setTintColor:[UIColor whiteColor]];
-    [cell.addButtton addTarget:self action:@selector(handleAddButtons:) forControlEvents:UIControlEventTouchUpInside];
+    if (indexPath.section == 0) {
+        [cell.addButtton setBackgroundImage:[UIImage imageNamed:@"addBuddy"]
+                                   forState:UIControlStateNormal];
+        [cell.addButtton addTarget:self action:@selector(handleAddButtons:) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [cell.addButtton setBackgroundImage:[UIImage imageNamed:@"inviteBuddy"]
+                                   forState:UIControlStateNormal];
+        [cell.addButtton addTarget:self action:@selector(handleAddButtons:) forControlEvents:UIControlEventTouchUpInside];
+    }
     [cell addSubview:cell.addButtton];
     NSLog(@"TAG:%d",indexPath.row);
     return cell;
@@ -306,40 +422,24 @@
 - (void)handleAddButtons:(UIButton*)addBtn
 {
     [self clearSearchBar:self.searchBar];
-    NSString *username = [[tableData objectAtIndex:addBtn.tag] objectForKey:@"username"];
-    NSInteger userId = [[tableData objectAtIndex:addBtn.tag] objectForKey:@"jambu_user_id"];
+    NSString *username = [[joinTableData objectAtIndex:addBtn.tag] objectForKey:@"username"];
+    NSInteger userId = [[joinTableData objectAtIndex:addBtn.tag] objectForKey:@"jambu_user_id"];
     NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
     CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     alert.tag = userId;
     [alert show];
-    [alert release];
+    //[alert release];
 }
 
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    [self clearSearchBar:self.searchBar];
-//    NSLog(@"tapped at index %d",indexPath.row);
-//    NSString *username = [[tableData objectAtIndex:indexPath.row] objectForKey:@"username"];
-//    NSString *userId = [[tableData objectAtIndex:indexPath.row] objectForKey:@"jambu_user_id"];
-//    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
-//    
-//    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-//    alert.tag = [userId intValue];
-//    [alert show];
-//    [alert release];
-//}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return kBuddyCellHeight;
 }
 
 #pragma mark -
 #pragma mark AlertView delegate
 
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 1)
-    {
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
         [self processAddBuddy:alertView.tag];
     }
 }
@@ -365,8 +465,7 @@
         }
         
     }
-    
-    [resultsDictionary release];
+    //[resultsDictionary release];
 }
 
 - (void)didReceiveMemoryWarning
@@ -375,16 +474,31 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)dealloc {
-    [_tableView release];
-    [_loadingIndicator release];
-    [_noRecordLabel release];
-    [super dealloc];
-}
 - (void)viewDidUnload {
     [self setTableView:nil];
     [self setLoadingIndicator:nil];
     [self setNoRecordLabel:nil];
     [super viewDidUnload];
 }
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    [self clearSearchBar:self.searchBar];
+//    NSLog(@"tapped at index %d",indexPath.row);
+//    NSString *username = [[tableData objectAtIndex:indexPath.row] objectForKey:@"username"];
+//    NSString *userId = [[tableData objectAtIndex:indexPath.row] objectForKey:@"jambu_user_id"];
+//    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
+//
+//    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+//    alert.tag = [userId intValue];
+//    [alert show];
+//    [alert release];
+//}
+
+//- (void)dealloc {
+//    [_tableView release];
+//    [_loadingIndicator release];
+//    [_noRecordLabel release];
+//    [super dealloc];
+//}
 @end

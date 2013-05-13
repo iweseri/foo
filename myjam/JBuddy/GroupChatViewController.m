@@ -187,7 +187,6 @@
             for (id data in [resultsDictionary objectForKey:@"list"])
             {
                 [self.tableData addObject:data];
-                
             }
             [self.tableView reloadData];
             textView.text = @"";
@@ -361,47 +360,49 @@ static CGFloat kMinCellHeight = 40;
 	NSString *message = [conversation valueForKey:@"message"];
 	NSString *time = [conversation valueForKey:@"datetime"];
 	
-	CGSize  textSize = { 205.0, 10000.0 };
+    CGSize  textSize = {0,0};
+    if([sender intValue] == 1) {
+        textSize = CGSizeMake(255.0, 10000.0);
+    } else {
+        textSize = CGSizeMake(205.0, 10000.0);
+    }
 	CGSize size = [message sizeWithFont:[UIFont boldSystemFontOfSize:13]
 					  constrainedToSize:textSize
 						  lineBreakMode:UILineBreakModeWordWrap];
-	
 	size.width += (padding/2);
+    
 	[cell.senderAndTimeLabel setHidden:NO];
     [cell.messageContentView setHidden:NO];
+    [cell.dateDesc setHidden:YES];
     [cell.notifyDesc setHidden:YES];
+    
 	cell.messageContentView.text = message;
 	cell.accessoryType = UITableViewCellAccessoryNone;
 	cell.userInteractionEnabled = NO;
-    
 	UIImage *bgImage = nil;
 
-	if([sender intValue] == 1) {
+	if([sender intValue] == 1) { //display notification
         [cell.senderAndTimeLabel setHidden:YES];
         [cell.messageContentView setHidden:YES];
         [cell.notifyDesc setHidden:NO];
         [cell.notifyDesc setText:message];
-        [cell.notifyDesc setFrame:CGRectMake(10, kTailHeight, textSize.width+50, size.height)];
-        
-    } else if([sender intValue] == 0) { // left aligned
-        cell.senderAndTimeLabel.textAlignment = UITextAlignmentLeft;
-        cell.senderAndTimeLabel.frame = CGRectMake(240, 10, 70, 28);
-		bgImage = [[UIImage imageNamed:@"pink_conversation"] stretchableImageWithLeftCapWidth:24  topCapHeight:15];
-
-		[cell.messageContentView setFrame:CGRectMake(padding, padding/2+kTailHeight, textSize.width, size.height)];
-		
-		[cell.bgImageView setFrame:CGRectMake( cell.messageContentView.frame.origin.x - padding/2,
-											  cell.messageContentView.frame.origin.y - padding/2-kTailHeight,
-											  textSize.width+padding,
-											  size.height+padding)];
-        
-	} else {
+        [cell.notifyDesc setFrame:CGRectMake(10, 2, textSize.width+50, size.height)];
+    }
+    else if([sender intValue] == 2) { //display date
+        [cell.senderAndTimeLabel setHidden:YES];
+        [cell.messageContentView setHidden:YES];
+        [cell.dateDesc setHidden:NO];
+        [cell.dateDesc setText:message];
+        [cell.dateDesc setFrame:CGRectMake((320-(textSize.width+50))/2, kTailHeight, textSize.width+50, size.height)];
+    }
+    else if([sender intValue] == 3) { //display your chat (right aligned)
+        username = @"Me";
         cell.senderAndTimeLabel.textAlignment = UITextAlignmentRight;
-        cell.senderAndTimeLabel.frame = CGRectMake(10, 0, 70, 28);
+        cell.senderAndTimeLabel.frame = CGRectMake(10, 0+10, 70, 28);
 		bgImage = [[UIImage imageNamed:@"gray_conversation"] stretchableImageWithLeftCapWidth:24  topCapHeight:15];
 		
 		[cell.messageContentView setFrame:CGRectMake(320 - textSize.width - padding,
-													 padding/2-kTailHeight,
+													 padding-kTailHeight,
 													 textSize.width,
 													 size.height)];
 		
@@ -409,7 +410,19 @@ static CGFloat kMinCellHeight = 40;
 											  cell.messageContentView.frame.origin.y - padding/2+kTailHeight,
 											  textSize.width+padding,
 											  size.height+padding)];
+        
+	} else { //display your buddy (left aligned)
+        cell.senderAndTimeLabel.textAlignment = UITextAlignmentLeft;
+        cell.senderAndTimeLabel.frame = CGRectMake(240, 10+8, 70, 28);
+		bgImage = [[UIImage imageNamed:@"green_conversation"] stretchableImageWithLeftCapWidth:24  topCapHeight:15];
+        
+		[cell.messageContentView setFrame:CGRectMake(padding, (padding+kTailHeight), textSize.width, size.height)];
 		
+		[cell.bgImageView setFrame:CGRectMake( cell.messageContentView.frame.origin.x - padding/2,
+											  cell.messageContentView.frame.origin.y - padding/2-kTailHeight,
+											  textSize.width+padding,
+											  size.height+padding)];
+        NSLog(@"SIZE:%f|%f",size.height,cell.messageContentView.frame.origin.y);
 	}
     if ([message isEqualToString:@"Request timed out."] || [message isEqualToString:@"Connection failure occured."]) {
         // Not yet error handling
@@ -434,7 +447,9 @@ static CGFloat kMinCellHeight = 40;
     tableHeight += height;
     
     if ([[dict objectForKey:@"message_type"]intValue] == 1) {
-        height = 20;
+        height = 20; //height for notification
+    } else if ([[dict objectForKey:@"message_type"]intValue] == 2) {
+        height = 26; //height for displaying date
     }
     
     // Set tableview to last row

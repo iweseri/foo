@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "BuddyCell.h"
 
-@interface BuddyListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface BuddyListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>
 {
     BOOL searching;
     BOOL selectRowEnabled;

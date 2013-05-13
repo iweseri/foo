@@ -34,6 +34,7 @@
     [_noButton release];
     [_yesButton release];
     [_loadingIndicator release];
+    [_addButtton release];
     [super dealloc];
 }
 @end

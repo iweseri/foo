@@ -41,6 +41,7 @@
 				<int key="NSvFlags">268</int>
 				<string key="NSFrame">{{0, 20}, {320, 460}}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSNextKeyView"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<bool key="IBUIAutoresizesSubviews">NO</bool>
 				<bool key="IBUIClipsSubviews">YES</bool>
@@ -141,7 +142,7 @@
 							<object class="IBUILabel" id="542684611">
 								<reference key="NSNextResponder" ref="934158814"/>
 								<int key="NSvFlags">292</int>
-								<string key="NSFrame">{{25, 1}, {242, 21}}</string>
+								<string key="NSFrame">{{25, 3}, {242, 21}}</string>
 								<reference key="NSSuperview" ref="934158814"/>
 								<reference key="NSNextKeyView" ref="959421150"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -150,7 +151,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string key="IBUIText">Add Buddy To Chat</string>
+								<string key="IBUIText">ADD BUDDY TO CHAT</string>
 								<object class="NSColor" key="IBUITextColor" id="543268056">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MQA</bytes>
@@ -169,7 +170,7 @@
 								<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
 							</object>
 						</array>
-						<string key="NSFrameSize">{320, 24}</string>
+						<string key="NSFrameSize">{320, 27}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSNextKeyView" ref="350305027"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -204,6 +205,7 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{0, 303}, {320, 40}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>

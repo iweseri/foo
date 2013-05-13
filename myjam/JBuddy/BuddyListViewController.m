@@ -49,6 +49,11 @@
          searching = NO;
          selectRowEnabled = YES;
     }
+    self.searchBar.delegate = self;
+    UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
+    [overlayView setBackgroundColor:[UIColor whiteColor]];
+    [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
+    [overlayView release];
 }
 
 - (void)reloadBuddyList
@@ -57,7 +62,7 @@
     [self.tableView reloadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [self retrieveDataFromAPI];
     [self.tableView reloadData];
@@ -68,6 +73,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     NSLog(@"vwd-newchat"); //[self.tableData removeAllObjects];
+    [self clearSearchBar:self.searchBar];
 }
 
 - (void)retrieveDataFromAPI
@@ -100,20 +106,37 @@
 #pragma mark -
 #pragma mark SearchBar delegate
 
+- (void)clearSearchBar:(UISearchBar*)sBar
+{
+    sBar.text = @"";
+    [sBar setShowsCancelButton:NO animated:YES];
+    searching = NO;
+    [self.tableView reloadData];
+    [sBar resignFirstResponder];
+}
+
 - (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
     
-    searching = YES;
-    selectRowEnabled = NO;
+//    searching = YES;
+//    selectRowEnabled = NO;
 //    self.tableView.scrollEnabled = NO;
     [self.searchBar setShowsCancelButton:YES animated:NO];
+    UIButton *cancelButton = nil;
+    for(UIView *subView in theSearchBar.subviews){
+        if([subView isKindOfClass:UIButton.class]){
+            cancelButton = (UIButton*)subView;
+        }
+    }
+    [cancelButton setTintColor:[UIColor lightGrayColor]];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    searchBar.text = @"";
+    [self clearSearchBar:searchBar];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar setShowsCancelButton:NO animated:YES];
-    searching = NO;
-    [self.tableView reloadData];
     [searchBar resignFirstResponder];
 }
 
@@ -131,7 +154,7 @@
     else {
         
         searching = NO;
-        selectRowEnabled = NO;
+//        selectRowEnabled = NO;
 //        self.tableView.scrollEnabled = NO;
     }
     
@@ -265,6 +288,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self clearSearchBar:self.searchBar];
+    
     NSLog(@"tapped at index %d",indexPath.row);
     
     NSString *status = [[self.tableData objectAtIndex:indexPath.row] objectForKey:@"status"];
