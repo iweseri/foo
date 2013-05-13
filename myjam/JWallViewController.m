@@ -7,6 +7,7 @@
 //
 
 #import "JWallViewController.h"
+#import "CreatePostViewController.h"
 
 #define kPublic     1
 #define kPersonal   2
@@ -109,11 +110,14 @@
         plusPage = kPersonal;
     }else{
         refreshPageDisabled = YES;
-        if (plusPage == kPublic) {
-            NSLog(@"public");
-        }else if (plusPage == kPersonal) {
-            NSLog(@"personal");
-        }
+//        if (plusPage == kPublic) {
+//            NSLog(@"public");
+//        }else if (plusPage == kPersonal) {
+//            NSLog(@"personal");
+//        }
+        CreatePostViewController *createPost = [[CreatePostViewController alloc] init];
+        [self.navigationController pushViewController:createPost animated:YES];
+        [createPost release];
         
         return;
     }

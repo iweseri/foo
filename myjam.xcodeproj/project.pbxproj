@@ -531,6 +531,8 @@
 		61E380BD1740C7DF00C9F0F7 /* XX_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E3800D1740C7DE00C9F0F7 /* XX_button.png */; };
 		61E380BE1740C7DF00C9F0F7 /* XXL_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E3800E1740C7DE00C9F0F7 /* XXL_button.png */; };
 		61E380BF1740C7DF00C9F0F7 /* yes_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E3800F1740C7DE00C9F0F7 /* yes_btn.png */; };
+		61E380C31740CA4800C9F0F7 /* CreatePostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */; };
+		61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */; };
 		61E59C9716AE5753002E7DDC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9616AE5753002E7DDC /* EventKit.framework */; };
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
@@ -1329,6 +1331,9 @@
 		61E3800D1740C7DE00C9F0F7 /* XX_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XX_button.png; sourceTree = "<group>"; };
 		61E3800E1740C7DE00C9F0F7 /* XXL_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XXL_button.png; sourceTree = "<group>"; };
 		61E3800F1740C7DE00C9F0F7 /* yes_btn.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yes_btn.png; sourceTree = "<group>"; };
+		61E380C01740CA4600C9F0F7 /* CreatePostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatePostViewController.h; path = JWall/CreatePostViewController.h; sourceTree = "<group>"; };
+		61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreatePostViewController.m; path = JWall/CreatePostViewController.m; sourceTree = "<group>"; };
+		61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CreatePostViewController.xib; path = JWall/CreatePostViewController.xib; sourceTree = "<group>"; };
 		61E59C9616AE5753002E7DDC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		61E59C9816AE5F22002E7DDC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
@@ -2470,6 +2475,9 @@
 				61E37E92173B3E4900C9F0F7 /* PersonalViewController.h */,
 				61E37E93173B3E4900C9F0F7 /* PersonalViewController.m */,
 				61E37E94173B3E4900C9F0F7 /* PersonalViewController.xib */,
+				61E380C01740CA4600C9F0F7 /* CreatePostViewController.h */,
+				61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */,
+				61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */,
 			);
 			name = JWall;
 			sourceTree = "<group>";
@@ -3246,6 +3254,7 @@
 				61E380BD1740C7DF00C9F0F7 /* XX_button.png in Resources */,
 				61E380BE1740C7DF00C9F0F7 /* XXL_button.png in Resources */,
 				61E380BF1740C7DF00C9F0F7 /* yes_btn.png in Resources */,
+				61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3487,6 +3496,7 @@
 				61E37F591740C7A100C9F0F7 /* MBuddy.m in Sources */,
 				61E37F5A1740C7A100C9F0F7 /* NewChatViewController.m in Sources */,
 				61E37F5C1740C7A100C9F0F7 /* OptionAddBuddyViewController.m in Sources */,
+				61E380C31740CA4800C9F0F7 /* CreatePostViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
