@@ -12,11 +12,15 @@
 #import "PostTextCell.h"
 #import "MyPopupView.h"
 
-@interface PublicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, MyPopupViewDelegate>
+@interface PublicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, PostFooterDelegate , MyPopupViewDelegate>
 {
     NSMutableArray *tableData;
-    NSArray *options1;
+    NSArray *options;
+    int pageCounter;
+    BOOL isLastPage;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (retain, nonatomic) IBOutlet UILabel *loadingLabel;
 
 @end

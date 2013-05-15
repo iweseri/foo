@@ -533,6 +533,9 @@
 		61E380BF1740C7DF00C9F0F7 /* yes_btn.png in Resources */ = {isa = PBXBuildFile; fileRef = 61E3800F1740C7DE00C9F0F7 /* yes_btn.png */; };
 		61E380C31740CA4800C9F0F7 /* CreatePostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */; };
 		61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */; };
+		61E3810F1741D70A00C9F0F7 /* PostClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E3810E1741D70900C9F0F7 /* PostClass.m */; };
+		61E38125174343A300C9F0F7 /* WallCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E38124174343A200C9F0F7 /* WallCommentCell.m */; };
+		61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */; };
 		61E59C9716AE5753002E7DDC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9616AE5753002E7DDC /* EventKit.framework */; };
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
@@ -1334,6 +1337,11 @@
 		61E380C01740CA4600C9F0F7 /* CreatePostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CreatePostViewController.h; path = JWall/CreatePostViewController.h; sourceTree = "<group>"; };
 		61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CreatePostViewController.m; path = JWall/CreatePostViewController.m; sourceTree = "<group>"; };
 		61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = CreatePostViewController.xib; path = JWall/CreatePostViewController.xib; sourceTree = "<group>"; };
+		61E3810D1741D70800C9F0F7 /* PostClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostClass.h; path = JWall/PostClass.h; sourceTree = "<group>"; };
+		61E3810E1741D70900C9F0F7 /* PostClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostClass.m; path = JWall/PostClass.m; sourceTree = "<group>"; };
+		61E38123174343A200C9F0F7 /* WallCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WallCommentCell.h; path = JWall/WallCustomCell/WallCommentCell.h; sourceTree = "<group>"; };
+		61E38124174343A200C9F0F7 /* WallCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WallCommentCell.m; path = JWall/WallCustomCell/WallCommentCell.m; sourceTree = "<group>"; };
+		61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = WallCommentCell.xib; path = JWall/WallCustomCell/WallCommentCell.xib; sourceTree = "<group>"; };
 		61E59C9616AE5753002E7DDC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		61E59C9816AE5F22002E7DDC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
@@ -2478,6 +2486,8 @@
 				61E380C01740CA4600C9F0F7 /* CreatePostViewController.h */,
 				61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */,
 				61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */,
+				61E3810D1741D70800C9F0F7 /* PostClass.h */,
+				61E3810E1741D70900C9F0F7 /* PostClass.m */,
 			);
 			name = JWall;
 			sourceTree = "<group>";
@@ -2488,6 +2498,9 @@
 				61E37EA3173B4BB900C9F0F7 /* PostTextCell.h */,
 				61E37EA4173B4BB900C9F0F7 /* PostTextCell.m */,
 				61E37EA8173B4C2B00C9F0F7 /* PostTextCell.xib */,
+				61E38123174343A200C9F0F7 /* WallCommentCell.h */,
+				61E38124174343A200C9F0F7 /* WallCommentCell.m */,
+				61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */,
 			);
 			name = WallCustomCells;
 			sourceTree = "<group>";
@@ -3255,6 +3268,7 @@
 				61E380BE1740C7DF00C9F0F7 /* XXL_button.png in Resources */,
 				61E380BF1740C7DF00C9F0F7 /* yes_btn.png in Resources */,
 				61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */,
+				61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3497,6 +3511,8 @@
 				61E37F5A1740C7A100C9F0F7 /* NewChatViewController.m in Sources */,
 				61E37F5C1740C7A100C9F0F7 /* OptionAddBuddyViewController.m in Sources */,
 				61E380C31740CA4800C9F0F7 /* CreatePostViewController.m in Sources */,
+				61E3810F1741D70A00C9F0F7 /* PostClass.m in Sources */,
+				61E38125174343A300C9F0F7 /* WallCommentCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

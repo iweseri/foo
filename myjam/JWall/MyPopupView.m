@@ -26,7 +26,7 @@
         
         self.tag = tag;
         
-        CGFloat currHeight = 20;
+        CGFloat currHeight = 10;
         CGFloat padding = 30;
         CGFloat labelHeight = 40;
         CGFloat labelWidth = 160;
@@ -45,7 +45,7 @@
             [tapGesture release];
         }
         
-        self.frame = CGRectMake(0, 0, labelWidth+padding*2, currHeight+20);
+        self.frame = CGRectMake(0, 0, labelWidth+padding*2, currHeight+10);
         [self setBackgroundColor:[UIColor whiteColor]];
         
     }

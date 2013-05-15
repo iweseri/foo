@@ -34,11 +34,6 @@
     return self;
 }
 
-//- (void)initView
-//{
-//    
-//}
-
 - (void)onClickOptionButton:(UIButton *)sender
 {
     [self.delegate tableHeaderView:self didClickOptionButton:sender];
@@ -95,7 +90,7 @@
 					  constrainedToSize:textSize
 						  lineBreakMode:UILineBreakModeWordWrap];
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.textPostView.bounds.origin.x, self.textPostView.bounds.origin.y+size.height+2, self.textPostView.frame.size.width, 20)];
-    
+    [timeLabel setBackgroundColor:[UIColor clearColor]];
     [self.textPostView addSubview:timeLabel];
     [timeLabel setFont:[UIFont systemFontOfSize:12]];
     [timeLabel setText:timeText];

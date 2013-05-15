@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface PostTextCell : UITableViewCell
+@property (retain, nonatomic) IBOutlet UILabel *postTextLabel;
 
 @end
