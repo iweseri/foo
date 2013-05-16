@@ -198,7 +198,7 @@ static CGFloat kFavCellHeight = 64;
     
     commLabel.userInteractionEnabled = YES;
     favLabel.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showfavs)];
+    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFavs)];
     [favLabel addGestureRecognizer:tapGesture];
     [tapGesture release];
     
@@ -210,6 +210,18 @@ static CGFloat kFavCellHeight = 64;
     [commLabel release];
     
     return countingHolderView;
+}
+
+- (void)showComments
+{
+    self.currentView = kCommentView;
+    [self.tableView reloadData];
+}
+
+- (void)showFavs
+{
+    self.currentView = kFavView;
+    [self.tableView reloadData];
 }
 
 #pragma mark -
@@ -299,7 +311,7 @@ static CGFloat kFavCellHeight = 64;
     UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
     
     CGRect tmp = countsView.frame;
-    tmp.origin.y = self.postContentView.frame.size.height-countsView.frame.size.height;
+    tmp.origin.y = self.postContentView.frame.size.height-countsView.frame.size.height-4;
     countsView.frame = tmp;
     [self.postContentView addSubview:countsView];
     [countsView release];
@@ -324,7 +336,7 @@ static CGFloat kFavCellHeight = 64;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"section %d, row %d", indexPath.section, indexPath.row);
+//    NSLog(@"section %d, row %d", indexPath.section, indexPath.row);
     
     WallCommentCell *cell = (WallCommentCell *)[tableView dequeueReusableCellWithIdentifier:@"WallCommentCell"];
     if (cell == nil)
@@ -333,20 +345,28 @@ static CGFloat kFavCellHeight = 64;
         cell = [nibs objectAtIndex:0];
     }
     
-    PostClass *aData = [commentArray objectAtIndex:indexPath.row];
+    PostClass *aData = nil;
+    if (self.currentView == kCommentView) {
+        aData = [commentArray objectAtIndex:indexPath.row];
+        
+        [cell.commentLabel setHidden:NO];
+        CGRect tmp = cell.commentLabel.frame;
+        tmp.size.height = kMinCommentCellHeight;
+        cell.commentLabel.frame = tmp;
+        
+        [cell.commentLabel setFont:[UIFont systemFontOfSize:14]];
+        [cell.commentLabel setText:aData.text];
+        [cell.commentLabel setNumberOfLines:0];
+        [cell.commentLabel sizeToFit];
+
+    }else{
+        aData = [favArray objectAtIndex:indexPath.row];
+        [cell.commentLabel setHidden:YES];
+    }
     
     cell.username.text = aData.username;
     [cell.username setTextColor:[UIColor colorWithHex:@"#D22042"]];
-//    cell.commentLabel.frame = CGRectMake(0, 0, tableView.frame.size.width-20, kMinCommentCellHeight);
     
-    CGRect tmp = cell.commentLabel.frame;
-    tmp.size.height = kMinCommentCellHeight;
-    cell.commentLabel.frame = tmp;
-    
-    [cell.commentLabel setFont:[UIFont systemFontOfSize:14]];
-    [cell.commentLabel setText:aData.text];
-    [cell.commentLabel setNumberOfLines:0];
-    [cell.commentLabel sizeToFit];
     [cell.statusLabel setText:@"About 1 minutes ago"];
     [cell.thumbImageView setImageWithURL:[NSURL URLWithString:aData.avatarURL]
                      placeholderImage:[UIImage imageNamed:@"blank_avatar"]

@@ -536,6 +536,8 @@
 		61E3810F1741D70A00C9F0F7 /* PostClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E3810E1741D70900C9F0F7 /* PostClass.m */; };
 		61E38125174343A300C9F0F7 /* WallCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E38124174343A200C9F0F7 /* WallCommentCell.m */; };
 		61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */; };
+		61E3812F1743969800C9F0F7 /* PostImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E3812E1743969700C9F0F7 /* PostImageCell.m */; };
+		61E38131174396BC00C9F0F7 /* PostImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E38130174396BB00C9F0F7 /* PostImageCell.xib */; };
 		61E59C9716AE5753002E7DDC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9616AE5753002E7DDC /* EventKit.framework */; };
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
@@ -1342,6 +1344,9 @@
 		61E38123174343A200C9F0F7 /* WallCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WallCommentCell.h; path = JWall/WallCustomCell/WallCommentCell.h; sourceTree = "<group>"; };
 		61E38124174343A200C9F0F7 /* WallCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WallCommentCell.m; path = JWall/WallCustomCell/WallCommentCell.m; sourceTree = "<group>"; };
 		61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = WallCommentCell.xib; path = JWall/WallCustomCell/WallCommentCell.xib; sourceTree = "<group>"; };
+		61E3812D1743969600C9F0F7 /* PostImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostImageCell.h; path = JWall/WallCustomCell/PostImageCell.h; sourceTree = "<group>"; };
+		61E3812E1743969700C9F0F7 /* PostImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostImageCell.m; path = JWall/WallCustomCell/PostImageCell.m; sourceTree = "<group>"; };
+		61E38130174396BB00C9F0F7 /* PostImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostImageCell.xib; path = JWall/WallCustomCell/PostImageCell.xib; sourceTree = "<group>"; };
 		61E59C9616AE5753002E7DDC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		61E59C9816AE5F22002E7DDC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
@@ -2501,6 +2506,9 @@
 				61E38123174343A200C9F0F7 /* WallCommentCell.h */,
 				61E38124174343A200C9F0F7 /* WallCommentCell.m */,
 				61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */,
+				61E3812D1743969600C9F0F7 /* PostImageCell.h */,
+				61E3812E1743969700C9F0F7 /* PostImageCell.m */,
+				61E38130174396BB00C9F0F7 /* PostImageCell.xib */,
 			);
 			name = WallCustomCells;
 			sourceTree = "<group>";
@@ -3269,6 +3277,7 @@
 				61E380BF1740C7DF00C9F0F7 /* yes_btn.png in Resources */,
 				61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */,
 				61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */,
+				61E38131174396BC00C9F0F7 /* PostImageCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3513,6 +3522,7 @@
 				61E380C31740CA4800C9F0F7 /* CreatePostViewController.m in Sources */,
 				61E3810F1741D70A00C9F0F7 /* PostClass.m in Sources */,
 				61E38125174343A300C9F0F7 /* WallCommentCell.m in Sources */,
+				61E3812F1743969800C9F0F7 /* PostImageCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

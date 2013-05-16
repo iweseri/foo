@@ -14,6 +14,7 @@
 static CGFloat kHeaderHeight = 80;
 static CGFloat kFooterHeight = 100;
 static CGFloat kMinCellHeight = 22;
+static CGFloat kImageCellHeight = 220;
 
 @interface PublicViewController ()
 
@@ -100,7 +101,7 @@ static CGFloat kMinCellHeight = 22;
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
 //    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
+    NSLog(@"%@", resultsDictionary);
     if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
         
         // If already reached the last page in loadmore function
@@ -124,6 +125,7 @@ static CGFloat kMinCellHeight = 22;
             data.isFavourite = [row objectForKey:@"is_fav"];
             data.totalComment = [row objectForKey:@"comment_count"];
             data.totalFavourite = [row objectForKey:@"fav_count"];
+            data.imageURL = [row objectForKey:@"post_photo"];
             [tableData addObject:data];
         }
         
@@ -149,6 +151,11 @@ static CGFloat kMinCellHeight = 22;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    PostClass *data = [tableData objectAtIndex:section];
+    if (![data.type isEqualToString:@"DEFAULT"]) {
+        return 2;
+    }
+    
     return 1;
 }
 
@@ -165,17 +172,27 @@ static CGFloat kMinCellHeight = 22;
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     PostClass *data = [tableData objectAtIndex:indexPath.section];
-//    NSLog(@"data text %@", data.text);
     
-    // Get appropriate height for cell based on word / characters counting
-    CGSize  textSize = { 300, 10000.0 };
-	CGSize size = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
-				  constrainedToSize:textSize
-					  lineBreakMode:UILineBreakModeWordWrap];
+    if (indexPath.row == 0) { // for text
+        
+        // Get appropriate height for cell based on word / characters counting
+        CGSize  textSize = { 300, 10000.0 };
+        CGSize size = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
+                            constrainedToSize:textSize
+                                lineBreakMode:UILineBreakModeWordWrap];
+        
+        CGFloat height = size.height < kMinCellHeight ? kMinCellHeight : size.height;
+        
+        return height;
+    }
+    else{ // row 2 for image, url, website thumbnail & description
+        if ([data.type isEqualToString:@"PHOTO"]) {
+            return kImageCellHeight;
+        }
+    }
     
-    CGFloat height = size.height < kMinCellHeight ? kMinCellHeight : size.height;
+    return 0;
     
-    return height;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -224,33 +241,55 @@ static CGFloat kMinCellHeight = 22;
 {
 //    NSLog(@"section %d, row %d", indexPath.section, indexPath.row);
     
-    PostTextCell *cell = (PostTextCell *)[tableView dequeueReusableCellWithIdentifier:@"PostTextCell"];
-    if (cell == nil)
-    {
-        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostTextCell" owner:nil options:nil];
-        cell = [nib objectAtIndex:0];
-    }
-    
     PostClass *data = [tableData objectAtIndex:indexPath.section];
     
-    cell.postTextLabel.frame = CGRectMake(0, 0, tableView.frame.size.width-20, kMinCellHeight);
-    [cell.postTextLabel setFont:[UIFont systemFontOfSize:14]];
-    [cell.postTextLabel setText:data.text];
-    [cell.postTextLabel sizeToFit];
+    if (indexPath.row == 0) // populate text data
+    {
+        PostTextCell *cell = (PostTextCell *)[tableView dequeueReusableCellWithIdentifier:@"PostTextCell"];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostTextCell" owner:nil options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        
+        cell.postTextLabel.frame = CGRectMake(0, 0, tableView.frame.size.width-20, kMinCellHeight);
+        [cell.postTextLabel setFont:[UIFont systemFontOfSize:14]];
+        [cell.postTextLabel setText:data.text];
+        [cell.postTextLabel sizeToFit];
+        
+        // To remove group cell border
+        cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+        return cell;
+    }
+    else{
+        // for other types such as images, url , etc.
+        if ([data.type isEqualToString:@"PHOTO"]) {
+            PostImageCell *cell = (PostImageCell *)[tableView dequeueReusableCellWithIdentifier:@"PostImageCell"];
+            if (cell == nil)
+            {
+                NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostImageCell" owner:nil options:nil];
+                cell = [nib objectAtIndex:0];
+            }
+            
+            [cell.postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
+                             placeholderImage:[UIImage imageNamed:@"default_icon"]
+                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                        if (!error) {
+                                            
+                                        }else{
+                                            NSLog(@"error retrieve image: %@",error);
+                                        }
+                                        
+                                    }];
+            
+            // To remove group cell border
+            cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+            return cell;
+        }
+    }
     
-    // Create dinamic label
-//    UILabel *postLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, cell.frame.size.width-20, kMinCellHeight)];
-//    [postLabel setBackgroundColor:[UIColor clearColor]];
-//    [postLabel setFont:[UIFont systemFontOfSize:14]];
-//    [postLabel setText:data.text];
-//    [postLabel setNumberOfLines:0];
-//    [postLabel sizeToFit];
-//    
-//    [cell addSubview:postLabel];
-//    [postLabel release];
-    // To remove group cell border
-    cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
-    return cell;
+    return nil;
+    
 }
 
 - (void)addBlackView

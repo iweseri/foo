@@ -10,6 +10,7 @@
 #import "PostFooterView.h"
 #import "PostHeaderView.h"
 #import "PostTextCell.h"
+#import "PostImageCell.h"
 #import "MyPopupView.h"
 
 @interface PublicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, PostFooterDelegate , MyPopupViewDelegate>
