@@ -14,6 +14,7 @@
 
 #define kCommentView    1
 #define kFavView        2
+#define kCountingHolderViewTag 100
 
 static CGFloat kPostHeaderHeight = 80;
 static CGFloat kHeaderHeight = 250;
@@ -84,6 +85,8 @@ static CGFloat kImageViewHeight = 200;
     
     // Add footer view for comment and fav
     self.footerView.frame = CGRectMake(0, self.view.frame.size.height-self.footerView.frame.size.height-44*3-2, self.footerView.frame.size.width, self.footerView.frame.size.height);
+    [self.commentButton addTarget:self action:@selector(onClickedComment) forControlEvents:UIControlEventTouchUpInside];
+    [self.favouriteButton addTarget:self action:@selector(onClickedFav) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.footerView];
     
     // resize tableView
@@ -128,6 +131,42 @@ static CGFloat kImageViewHeight = 200;
     }
 }
 
+-(void)onClickedFav
+{
+    [self.footerLoadingIndicator setHidden:NO];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_fav.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+        NSString *dataContent = [NSString stringWithFormat:@"{\"post_id\":\"%d\"}",(int)data.postId];
+        
+        NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+        NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+            NSLog(@"%@", resultsDictionary);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"])
+            {
+                if ([[resultsDictionary valueForKey:@"is_fav"] intValue] == 1) {
+                    [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-unfav-mr"] forState:UIControlStateNormal];
+                }else{
+                    [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-mr"] forState:UIControlStateNormal];
+                }
+                
+//                [footerView setupWithFav:[resultsDictionary valueForKey:@"fav_count"] andComment:@""];
+            }
+            
+            [self.footerLoadingIndicator setHidden:YES];
+        });
+    });
+}
+
+-(void)onClickedComment
+{
+    
+}
+
 - (BOOL)retrieveData
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
@@ -152,6 +191,12 @@ static CGFloat kImageViewHeight = 200;
         data.totalFavourite = [postDetails objectForKey:@"fav_count"];
         data.totalComment = [postDetails objectForKey:@"comment_count"];
         data.imageURL = [postDetails objectForKey:@"post_photo"];
+        
+        if ([data.isFavourite intValue] == 1) {
+            [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-unfav-mr"] forState:UIControlStateNormal];
+        }else{
+            [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-mr"] forState:UIControlStateNormal];
+        }
 
         NSDictionary *comments = [resultsDictionary objectForKey:@"comment"];
                                   
@@ -189,12 +234,15 @@ static CGFloat kImageViewHeight = 200;
 
 - (UIView *)setupViewWithFav:(NSString *)fav andComment:(NSString *)comment
 {
-    UIView *countingHolderView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 260, 24)];
+    [self removeCountView]; // remove if exist
     
-    for (UILabel *label in countingHolderView.subviews) {
-        [label removeFromSuperview];
-        [label release];
-    }
+    UIView *countingHolderView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 260, 24)];
+    countingHolderView.tag = kCountingHolderViewTag;
+    
+//    for (UILabel *label in countingHolderView.subviews) {
+//        [label removeFromSuperview];
+//        [label release];
+//    }
     
     CGFloat totalWidth = 0;
     
@@ -247,6 +295,15 @@ static CGFloat kImageViewHeight = 200;
     return countingHolderView;
 }
 
+- (void)removeCountView
+{
+    for (UIView *v in self.postContentView.subviews) {
+        if (v.tag == kCountingHolderViewTag) {
+            [v removeFromSuperview];
+        }
+    }
+}
+
 - (void)showComments
 {
     self.currentView = kCommentView;
@@ -288,6 +345,8 @@ static CGFloat kImageViewHeight = 200;
     
     if ([data.type isEqualToString:@"PHOTO"]) {
         size.height += kImageViewHeight + kPostHeaderHeight + 40;
+    }else{
+        size.height += kPostHeaderHeight + 40;
     }
     
     height = kHeaderHeight > size.height ? kHeaderHeight : size.height;
@@ -353,6 +412,7 @@ static CGFloat kImageViewHeight = 200;
 //    ypoint += header.frame.size.height;
     
 //    [self.postContentView setBackgroundColor:[UIColor yellowColor]];
+    self.postContentLabel.frame = CGRectMake(10, ypoint, 250, self.postContentLabel.frame.size.height);
     [self.postContentLabel setFont:[UIFont systemFontOfSize:14]];
     [self.postContentLabel setNumberOfLines:0];
     [self.postContentLabel setText:data.text];
@@ -361,11 +421,9 @@ static CGFloat kImageViewHeight = 200;
     
     // start post contentview below header
     self.postContentView.frame = CGRectMake(0, header.frame.size.height, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
-//    ypoint = 0;
-    self.postContentLabel.frame = CGRectMake(10, ypoint, self.postContentLabel.frame.size.width, self.postContentLabel.frame.size.height);
-//    NSLog(@"%f", ypoint);
+
     ypoint += self.postContentLabel.frame.size.height + 10;
-//    NSLog(@"%f", ypoint);
+
     
     if ([data.type isEqualToString:@"PHOTO"] && [data.imageURL length]) {
         UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 270, kImageViewHeight)];
@@ -390,21 +448,27 @@ static CGFloat kImageViewHeight = 200;
         
     }
     
-//    NSLog(@"%f", ypoint);
-    CGRect tmp = self.postContentView.frame;
-    tmp.size.height = kHeaderHeight > (ypoint + 25) ? kHeaderHeight : ypoint + 25;
-    self.postContentView.frame = tmp;
+    NSLog(@"%f", ypoint);
     
-    [headerView addSubview:self.postContentView];
     
     UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
-
-    CGRect tmp2 = countsView.frame;
-    tmp2.origin.y = self.postContentView.frame.size.height-countsView.frame.size.height-4;
-    countsView.frame = tmp2;
+    CGFloat countsViewHeight = ypoint > kHeaderHeight - kPostHeaderHeight ? ypoint : kHeaderHeight - kPostHeaderHeight - countsView.frame.size.height;
+    countsView.frame = CGRectMake(10, countsViewHeight, 240, 25);
+//    CGRect tmp2 = countsView.frame;
+//    tmp2.origin.y = headerView.frame.size.height-countsView.frame.size.height-4;
+//    countsView.frame = tmp2;
     
     [self.postContentView addSubview:countsView];
     [countsView release];
+    
+    ypoint += countsView.frame.size.height;
+    
+    
+    CGRect tmp = self.postContentView.frame;
+    tmp.size.height = kHeaderHeight > (ypoint) ? kHeaderHeight : ypoint;
+    self.postContentView.frame = tmp;
+    
+    [headerView addSubview:self.postContentView];
     
     self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
     [self.postQRCodeContentView setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
@@ -421,6 +485,8 @@ static CGFloat kImageViewHeight = 200;
                                 
                             }];
 //    NSLog(@"%f", ypoint);
+    
+    
     return [headerView autorelease];
 }
 
@@ -534,6 +600,7 @@ static CGFloat kImageViewHeight = 200;
     [_qrcodeImage release];
     [_tableLoadingIndicator release];
     [_tableLoadingLabel release];
+    [_footerLoadingIndicator release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -547,6 +614,7 @@ static CGFloat kImageViewHeight = 200;
     [self setQrcodeImage:nil];
     [self setTableLoadingIndicator:nil];
     [self setTableLoadingLabel:nil];
+    [self setFooterLoadingIndicator:nil];
     [super viewDidUnload];
 }
 - (IBAction)handlePostContentRightButton:(id)sender

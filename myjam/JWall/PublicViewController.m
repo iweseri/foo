@@ -390,9 +390,7 @@ static CGFloat kImageCellHeight = 220;
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteLinkAtIndex:(NSInteger)index
 {
-    [footerView.loadingIndicator setHidden:NO];
     [self pushDetailPost:index withOption:kFavView];
-    [footerView.loadingIndicator setHidden:YES];
 }
 
 - (void)pushDetailPost:(NSInteger)index withOption:(int)option
