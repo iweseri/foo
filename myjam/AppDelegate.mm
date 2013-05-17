@@ -847,8 +847,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 - (void)connectNodeJS
 {
-    NSLog(@"connect nodejs");
-    [socketIO connectToHost:@"202.71.110.204" onPort:80];
+//    NSLog(@"connect nodejs");
+//    [socketIO connectToHost:@"202.71.110.204" onPort:80];
 }
 
 - (void)sendTokenNodeJS

@@ -18,6 +18,7 @@
 static CGFloat kHeaderHeight = 250;
 static CGFloat kMinCommentCellHeight = 90;
 static CGFloat kFavCellHeight = 64;
+static CGFloat kImageViewHeight = 200;
 
 @interface DetailPostViewController ()
 
@@ -57,6 +58,16 @@ static CGFloat kFavCellHeight = 64;
         self.currentView = kCommentView; // Default view
     }
     
+    self.tableLoadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.tableLoadingIndicator.frame.size.width/2,
+                                             self.view.frame.size.height/2-self.tableLoadingIndicator.frame.size.height/2-100,
+                                             self.tableLoadingIndicator.frame.size.width,
+                                             self.tableLoadingIndicator.frame.size.height);
+    
+    self.tableLoadingLabel.frame = CGRectMake(self.view.frame.size.width/2-self.tableLoadingLabel.frame.size.width/2,
+                                         self.tableLoadingIndicator.frame.origin.y+self.tableLoadingIndicator.frame.size.height+10,
+                                         240,
+                                         55);
+    
     favArray = [[NSMutableArray alloc] init];
     commentArray = [[NSMutableArray alloc] init];
     
@@ -80,19 +91,37 @@ static CGFloat kFavCellHeight = 64;
     self.tableView.frame = tmp;
     
     [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#f8f8f8"]];
+    [self.tableView setHidden:YES];
     
-    [self setup];
+//    [self setup];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-
+    [self.tableLoadingLabel setHidden:YES];
+    [self.tableLoadingIndicator setHidden:YES];
+    
+    [self setup];
 }
 
 - (void)setup
 {
     BOOL success = [self retrieveData];
     if (success) {
+//        if ([commentArray count] > 0 || [favArray count] > 0) {
+//            
+//        }else{
+//            CGRect frame = self.tableView.frame;
+//            
+//            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height+5, 300, 24)];
+//            [label setFont:[UIFont systemFontOfSize:14]];
+//            label.tag = 5;
+//            label.text = @"No comments. Be the first.";
+//            [self.view insertSubview:label aboveSubview:self.tableView];
+//            [label release];
+//        }
+        [self.tableLoadingLabel setHidden:YES];
+        [self.tableLoadingIndicator setHidden:YES];
         [self.tableView setHidden:NO];
         [self.tableView reloadData];
     }
@@ -121,8 +150,8 @@ static CGFloat kFavCellHeight = 64;
         data.isFavourite = [postDetails objectForKey:@"is_fav"];
         data.totalFavourite = [postDetails objectForKey:@"fav_count"];
         data.totalComment = [postDetails objectForKey:@"comment_count"];
-        
-        
+        data.imageURL = [postDetails objectForKey:@"post_photo"];
+
         NSDictionary *comments = [resultsDictionary objectForKey:@"comment"];
                                   
         // Store comment in table data
@@ -243,6 +272,20 @@ static CGFloat kFavCellHeight = 64;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    CGFloat height = 0;
+    
+    // Get appropriate height for cell based on word / characters counting
+    CGSize  textSize = { 251, 10000.0 };
+    CGSize size = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
+                         constrainedToSize:textSize
+                             lineBreakMode:UILineBreakModeWordWrap];
+    
+    if ([data.type isEqualToString:@"PHOTO"]) {
+        size.height += kImageViewHeight;
+    }
+    
+    height = kHeaderHeight > size.height ? kHeaderHeight : size.height;
+    
     return kHeaderHeight;
 }
 
@@ -254,12 +297,13 @@ static CGFloat kFavCellHeight = 64;
         PostClass *aData = [commentArray objectAtIndex:indexPath.row];
         
         // Get appropriate height for cell based on word / characters counting
-        CGSize  textSize = { 300, 10000.0 };
+        CGSize  textSize = { 251, 10000.0 };
         CGSize size = [aData.text sizeWithFont:[UIFont systemFontOfSize:14]
                             constrainedToSize:textSize
                                 lineBreakMode:UILineBreakModeWordWrap];
         
         height = size.height < kMinCommentCellHeight ? kMinCommentCellHeight : size.height;
+        
     }else{
         height = kFavCellHeight;
     }
@@ -282,6 +326,9 @@ static CGFloat kFavCellHeight = 64;
     if ([data.type isEqualToString:@"DEFAULT"]) {
         [fullText appendString:@"says"];
     }
+    else if ([data.type isEqualToString:@"PHOTO"]) {
+        [fullText appendString:@"shared a photo"];
+    }
     
     [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
     [header.imageView setImageWithURL:[NSURL URLWithString:data.avatarURL]
@@ -297,22 +344,56 @@ static CGFloat kFavCellHeight = 64;
     
     [headerView setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
     [headerView addSubview:header];
-    ypoint += header.frame.size.height;
+//    ypoint += header.frame.size.height;
     
-    self.postContentView.frame = CGRectMake(0, ypoint, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
 //    [self.postContentView setBackgroundColor:[UIColor yellowColor]];
     [self.postContentLabel setFont:[UIFont systemFontOfSize:14]];
     [self.postContentLabel setNumberOfLines:0];
     [self.postContentLabel setText:data.text];
     [self.postContentLabel sizeToFit];
+    [self.postContentLabel setBackgroundColor:[UIColor yellowColor]];
     
-    [headerView addSubview:self.postContentView];
+    // start post contentview below header
+    self.postContentView.frame = CGRectMake(0, header.frame.size.height, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
+//    ypoint = 0;
+    self.postContentLabel.frame = CGRectMake(10, ypoint, self.postContentLabel.frame.size.width, self.postContentLabel.frame.size.height);
+    NSLog(@"%f", ypoint);
+    ypoint += self.postContentLabel.frame.size.height + 10;
+    NSLog(@"%f", ypoint);
+    
+    if ([data.type isEqualToString:@"PHOTO"] && [data.imageURL length]) {
+        UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 270, kImageViewHeight)];
+        [postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
+                      placeholderImage:[UIImage imageNamed:@"default_icon"]
+                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                 if (!error) {
+                                     
+                                 }else{
+                                     NSLog(@"error retrieve image: %@",error);
+                                 }
+                                 
+                             }];
+        
+        [self.postContentView insertSubview:postImageView belowSubview:self.postQRCodeContentView];
+        ypoint += postImageView.frame.size.height;
+
+        CGRect tmp = self.postContentView.frame;
+        tmp.size.height = ypoint;
+        self.postContentView.frame = tmp;
+        
+    }
+    
+    NSLog(@"%f", ypoint);
+    CGRect tmp = self.postContentView.frame;
+    tmp.size.height = kHeaderHeight > (ypoint + 25) ? kHeaderHeight : ypoint + 25;
+    self.postContentView.frame = tmp;
     
     UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
+
+    CGRect tmp2 = countsView.frame;
+    tmp2.origin.y = self.postContentView.frame.size.height-countsView.frame.size.height-4;
+    countsView.frame = tmp2;
     
-    CGRect tmp = countsView.frame;
-    tmp.origin.y = self.postContentView.frame.size.height-countsView.frame.size.height-4;
-    countsView.frame = tmp;
     [self.postContentView addSubview:countsView];
     [countsView release];
     
@@ -330,7 +411,8 @@ static CGFloat kFavCellHeight = 64;
                                 }
                                 
                             }];
-    
+    NSLog(@"%f", ypoint);
+    [headerView addSubview:self.postContentView];
     return [headerView autorelease];
 }
 
@@ -442,6 +524,8 @@ static CGFloat kFavCellHeight = 64;
     [_postContentLabel release];
     [_postQRCodeContentView release];
     [_qrcodeImage release];
+    [_tableLoadingIndicator release];
+    [_tableLoadingLabel release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -453,6 +537,8 @@ static CGFloat kFavCellHeight = 64;
     [self setPostContentLabel:nil];
     [self setPostQRCodeContentView:nil];
     [self setQrcodeImage:nil];
+    [self setTableLoadingIndicator:nil];
+    [self setTableLoadingLabel:nil];
     [super viewDidUnload];
 }
 - (IBAction)handlePostContentRightButton:(id)sender

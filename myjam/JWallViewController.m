@@ -8,6 +8,7 @@
 
 #import "JWallViewController.h"
 #import "CreatePostViewController.h"
+#import "UnblockUsersViewController.h"
 
 #define kPublic     1
 #define kPersonal   2
@@ -44,6 +45,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    optionPersonal = [[NSArray alloc] initWithObjects:@"Create Post", @"Unblock Users", @"Cancel", nil];
 
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
@@ -93,12 +96,12 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     // To deselect 3rd button (+)
-    int i = 0;
-    for (UIButton* b in tabBar.buttons) {
-        if (i++ == 2) {
-            [b setSelected:NO];
-        }
-    }
+//    int i = 0;
+//    for (UIButton* b in tabBar.buttons) {
+//        if (i++ == 2) {
+//            [b setSelected:NO];
+//        }
+//    }
 }
 
 - (void)switchViewController:(UIViewController *)viewController
@@ -110,15 +113,13 @@
         plusPage = kPersonal;
     }else{
         refreshPageDisabled = YES;
-//        if (plusPage == kPublic) {
-//            NSLog(@"public");
-//        }else if (plusPage == kPersonal) {
-//            NSLog(@"personal");
-//        }
-        CreatePostViewController *createPost = [[CreatePostViewController alloc] init];
-        [self.navigationController pushViewController:createPost animated:YES];
-        [createPost release];
-        
+        if (plusPage == kPublic) {
+            NSLog(@"public");
+            [self popupPlusPersonal];
+        }else if (plusPage == kPersonal) {
+            NSLog(@"personal");
+            [self popupPlusPersonal];
+        }
         return;
     }
     
@@ -129,6 +130,67 @@
     
     viewController.view.tag = SELECTED_VIEW_CONTROLLER_TAG;
     [self.view insertSubview:viewController.view belowSubview:tabBar];
+}
+
+- (void)popupPlusPersonal
+{
+    MyPopupView *popup = [[MyPopupView alloc] initWithDataList:optionPersonal andTag:nil];
+    popup.delegate = self;
+    CGFloat popupYPoint = self.view.frame.size.height/2-popup.frame.size.height/2;
+    CGFloat popupXPoint = self.view.frame.size.width/2-popup.frame.size.width/2;
+    popup.frame = CGRectMake(popupXPoint, popupYPoint, popup.frame.size.width, popup.frame.size.height);
+    [self addBlackView];
+    [self.view addSubview:popup];
+}
+
+#pragma mark -
+#pragma mark MyPopupViewDelegate
+
+- (void)popView:(MyPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
+{
+    NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
+    
+    [self removeBlackView];
+    [self optionSelectedPopup:index];
+}
+
+- (void)optionSelectedPopup:(NSInteger)option
+{
+    if (option == 0) {
+        NSLog(@"goto CreatePost");
+        CreatePostViewController *createPost = [[CreatePostViewController alloc] initWithPlaceholderText:@"What's on your mind?" andWithLabel:@"CREATE POST"];
+        //CreatePostViewController *createPost = [[CreatePostViewController alloc] init];
+        [self.navigationController pushViewController:createPost animated:YES];
+        [createPost release];
+    }
+    else if (option == 1) {
+        NSLog(@"goto unblockUsers");
+        UnblockUsersViewController *unblock = [[UnblockUsersViewController alloc] init];
+        [self.navigationController pushViewController:unblock animated:YES];
+        [unblock release];
+    }
+    [[tabBar.buttons objectAtIndex:2] setSelected:NO];
+    if (plusPage == kPublic) {
+        [[tabBar.buttons objectAtIndex:0] setSelected:YES];
+    } else if (plusPage == kPersonal) {
+        [[tabBar.buttons objectAtIndex:1] setSelected:YES];
+    }
+}
+
+- (void)addBlackView
+{
+    UIView *blackView = [[UIView alloc] initWithFrame:self.view.frame];
+    [blackView setTag:99];
+    [blackView setBackgroundColor:[UIColor blackColor]];
+    [blackView setAlpha:0.3];
+    [self.view addSubview:blackView];
+    [blackView release];
+}
+
+- (void)removeBlackView
+{
+    UIView *blackView = [self.view viewWithTag:99];
+    [blackView removeFromSuperview];
 }
 
 - (void)didReceiveMemoryWarning

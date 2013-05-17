@@ -11,6 +11,11 @@
 @protocol PostFooterDelegate;
 
 @interface PostFooterView : UIView
+{
+    NSString *aComment;
+    NSString *aFav;
+    UILabel *dotLabel;
+}
 
 @property (retain, nonatomic) IBOutlet UIView *countingHolderView;
 @property (retain, nonatomic) IBOutlet UIButton *favoriteButton;
@@ -19,6 +24,8 @@
 @property (retain, nonatomic) UILabel *commentLabel;
 @property (retain, nonatomic) id<PostFooterDelegate> delegate;
 @property (retain, nonatomic) IBOutlet UIView *bottomLineView;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (retain, nonatomic) IBOutlet UIButton *deleteButton;
 
 - (void)setupWithFav:(NSString *)fav andComment:(NSString *)comment;
 

@@ -11,6 +11,9 @@
 #import "AppDelegate.h"
 #import "PostClass.h"
 
+#define kCommentView    1
+#define kFavView        2
+
 static CGFloat kHeaderHeight = 80;
 static CGFloat kFooterHeight = 100;
 static CGFloat kMinCellHeight = 22;
@@ -49,8 +52,8 @@ static CGFloat kImageCellHeight = 220;
     options = [[NSArray alloc] initWithObjects:@"Share Facebook", @"Share Twitter", @"Share Email", @"Share to J-Wall", @"Report", @"Block User", @"Cancel", nil];
     
     
-    [self.view setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
-    [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
+    [self.view setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
+    [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
 
     [self.tableView setHidden:YES];
     
@@ -76,6 +79,7 @@ static CGFloat kImageCellHeight = 220;
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [tableData removeAllObjects];
     [self setup];
 }
 
@@ -90,6 +94,9 @@ static CGFloat kImageCellHeight = 220;
         
         [self.loadingLabel setHidden:YES];
         [self.loadingIndicator setHidden:YES];
+        
+//        CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height);
+//        [self.tableView setContentOffset:bottomOffset animated:YES];
     }
 }
 
@@ -229,10 +236,16 @@ static CGFloat kImageCellHeight = 220;
 {
     PostFooterView *footer = [[PostFooterView alloc] init];
     footer.tag = section;
+    [footer.deleteButton setHidden:YES]; // Not shown in public
     footer.delegate = self;
     
     PostClass *data = [tableData objectAtIndex:section];
     [footer setupWithFav:data.totalFavourite andComment:data.totalComment];
+    if ([data.isFavourite intValue] == 1) {
+        [footer.favoriteButton setImage:[UIImage imageNamed:@"btn-fav-unfav-mr"] forState:UIControlStateNormal];
+    }else{
+        [footer.favoriteButton setImage:[UIImage imageNamed:@"btn-fav-mr"] forState:UIControlStateNormal];
+    }
     
     return footer;
 }
@@ -336,25 +349,64 @@ static CGFloat kImageCellHeight = 220;
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteAtIndex:(NSInteger)index
 {
-    NSLog(@"f index %d", index);
+    // Do fav or unfav the selected post
+    
+    [footerView.loadingIndicator setHidden:NO];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        PostClass *data = [tableData objectAtIndex:index];
+        
+        NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_fav.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+        NSString *dataContent = [NSString stringWithFormat:@"{\"post_id\":\"%d\"}",(int)data.postId];
+        
+        NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+        NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"])
+            {
+                if ([[resultsDictionary valueForKey:@"is_fav"] intValue] == 1) {
+                    [footerView.favoriteButton setImage:[UIImage imageNamed:@"btn-fav-unfav-mr"] forState:UIControlStateNormal];
+                }else{
+                    [footerView.favoriteButton setImage:[UIImage imageNamed:@"btn-fav-mr"] forState:UIControlStateNormal];
+                }
+                
+                [footerView setupWithFav:[resultsDictionary valueForKey:@"fav_count"] andComment:@""];
+            }
+            
+            [footerView.loadingIndicator setHidden:YES];
+        });
+    });
+
 }
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedCommentLinkAtIndex:(NSInteger)index
 {
-    NSLog(@"cl index %d", index);
+    [self pushDetailPost:index withOption:kCommentView];
+    
+}
+
+- (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteLinkAtIndex:(NSInteger)index
+{
+    [footerView.loadingIndicator setHidden:NO];
+    [self pushDetailPost:index withOption:kFavView];
+    [footerView.loadingIndicator setHidden:YES];
+}
+
+- (void)pushDetailPost:(NSInteger)index withOption:(int)option
+{
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     DetailPostViewController *detailvc = [[DetailPostViewController alloc] init];
     PostClass *data = [tableData objectAtIndex:index];
     detailvc.postId = data.postId;
+    detailvc.currentView = option;
     [mydelegate.otherNavController pushViewController:detailvc animated:YES];
     [detailvc release];
-}
-
-- (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteLinkAtIndex:(NSInteger)index
-{
-    NSLog(@"fl index %d", index);
+    
 }
 
 #pragma mark -

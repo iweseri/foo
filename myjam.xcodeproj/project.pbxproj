@@ -538,6 +538,10 @@
 		61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E3812B1743441D00C9F0F7 /* WallCommentCell.xib */; };
 		61E3812F1743969800C9F0F7 /* PostImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E3812E1743969700C9F0F7 /* PostImageCell.m */; };
 		61E38131174396BC00C9F0F7 /* PostImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E38130174396BB00C9F0F7 /* PostImageCell.xib */; };
+		61E3813C1746103600C9F0F7 /* TagBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E381361746102D00C9F0F7 /* TagBuddyViewController.m */; };
+		61E3813D1746103600C9F0F7 /* TagBuddyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E381371746102F00C9F0F7 /* TagBuddyViewController.xib */; };
+		61E3813E1746103600C9F0F7 /* UnblockUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E3813A1746103600C9F0F7 /* UnblockUsersViewController.m */; };
+		61E3813F1746103600C9F0F7 /* UnblockUsersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E3813B1746103600C9F0F7 /* UnblockUsersViewController.xib */; };
 		61E59C9716AE5753002E7DDC /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9616AE5753002E7DDC /* EventKit.framework */; };
 		61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61E59C9816AE5F22002E7DDC /* EventKitUI.framework */; };
 		61EF563A17052C30008706C7 /* ProductTableViewCellwoCat.m in Sources */ = {isa = PBXBuildFile; fileRef = 61EF563817052C30008706C7 /* ProductTableViewCellwoCat.m */; };
@@ -1347,6 +1351,12 @@
 		61E3812D1743969600C9F0F7 /* PostImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PostImageCell.h; path = JWall/WallCustomCell/PostImageCell.h; sourceTree = "<group>"; };
 		61E3812E1743969700C9F0F7 /* PostImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PostImageCell.m; path = JWall/WallCustomCell/PostImageCell.m; sourceTree = "<group>"; };
 		61E38130174396BB00C9F0F7 /* PostImageCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostImageCell.xib; path = JWall/WallCustomCell/PostImageCell.xib; sourceTree = "<group>"; };
+		61E381351746102B00C9F0F7 /* TagBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TagBuddyViewController.h; path = JWall/TagBuddyViewController.h; sourceTree = "<group>"; };
+		61E381361746102D00C9F0F7 /* TagBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TagBuddyViewController.m; path = JWall/TagBuddyViewController.m; sourceTree = "<group>"; };
+		61E381371746102F00C9F0F7 /* TagBuddyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = TagBuddyViewController.xib; path = JWall/TagBuddyViewController.xib; sourceTree = "<group>"; };
+		61E381391746103600C9F0F7 /* UnblockUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UnblockUsersViewController.h; sourceTree = "<group>"; };
+		61E3813A1746103600C9F0F7 /* UnblockUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UnblockUsersViewController.m; sourceTree = "<group>"; };
+		61E3813B1746103600C9F0F7 /* UnblockUsersViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UnblockUsersViewController.xib; sourceTree = "<group>"; };
 		61E59C9616AE5753002E7DDC /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = System/Library/Frameworks/EventKit.framework; sourceTree = SDKROOT; };
 		61E59C9816AE5F22002E7DDC /* EventKitUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKitUI.framework; path = System/Library/Frameworks/EventKitUI.framework; sourceTree = SDKROOT; };
 		61EF563717052C30008706C7 /* ProductTableViewCellwoCat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductTableViewCellwoCat.h; sourceTree = "<group>"; };
@@ -2482,6 +2492,7 @@
 				61E37E9C173B4A4300C9F0F7 /* WallCustomCells */,
 				61E37F0C1740C3E100C9F0F7 /* HeaderFooter */,
 				61E37F0D1740C40B00C9F0F7 /* DetailPost */,
+				61E381381746103400C9F0F7 /* UnblockedUsers */,
 				61E37E8D173B3E2000C9F0F7 /* PublicViewController.h */,
 				61E37E8E173B3E2000C9F0F7 /* PublicViewController.m */,
 				61E37E8F173B3E2000C9F0F7 /* PublicViewController.xib */,
@@ -2491,6 +2502,9 @@
 				61E380C01740CA4600C9F0F7 /* CreatePostViewController.h */,
 				61E380C11740CA4700C9F0F7 /* CreatePostViewController.m */,
 				61E380C21740CA4700C9F0F7 /* CreatePostViewController.xib */,
+				61E381351746102B00C9F0F7 /* TagBuddyViewController.h */,
+				61E381361746102D00C9F0F7 /* TagBuddyViewController.m */,
+				61E381371746102F00C9F0F7 /* TagBuddyViewController.xib */,
 				61E3810D1741D70800C9F0F7 /* PostClass.h */,
 				61E3810E1741D70900C9F0F7 /* PostClass.m */,
 			);
@@ -2794,6 +2808,17 @@
 				61E37FCF1740C7DE00C9F0F7 /* login_page.png */,
 			);
 			path = loginpage;
+			sourceTree = "<group>";
+		};
+		61E381381746103400C9F0F7 /* UnblockedUsers */ = {
+			isa = PBXGroup;
+			children = (
+				61E381391746103600C9F0F7 /* UnblockUsersViewController.h */,
+				61E3813A1746103600C9F0F7 /* UnblockUsersViewController.m */,
+				61E3813B1746103600C9F0F7 /* UnblockUsersViewController.xib */,
+			);
+			name = UnblockedUsers;
+			path = JWall/UnblockedUsers;
 			sourceTree = "<group>";
 		};
 		61F0B3C41729163D0075054F /* SMMessageViewTableCell */ = {
@@ -3278,6 +3303,8 @@
 				61E380C41740CA4800C9F0F7 /* CreatePostViewController.xib in Resources */,
 				61E3812C1743441E00C9F0F7 /* WallCommentCell.xib in Resources */,
 				61E38131174396BC00C9F0F7 /* PostImageCell.xib in Resources */,
+				61E3813D1746103600C9F0F7 /* TagBuddyViewController.xib in Resources */,
+				61E3813F1746103600C9F0F7 /* UnblockUsersViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3523,6 +3550,8 @@
 				61E3810F1741D70A00C9F0F7 /* PostClass.m in Sources */,
 				61E38125174343A300C9F0F7 /* WallCommentCell.m in Sources */,
 				61E3812F1743969800C9F0F7 /* PostImageCell.m in Sources */,
+				61E3813C1746103600C9F0F7 /* TagBuddyViewController.m in Sources */,
+				61E3813E1746103600C9F0F7 /* UnblockUsersViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3573,8 +3602,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "FD612A5F-50F3-400B-A4CF-E37DCF5493C4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FD612A5F-50F3-400B-A4CF-E37DCF5493C4";
+				PROVISIONING_PROFILE = "64783E4B-092C-4C1F-B919-FFAA1489ADE0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "64783E4B-092C-4C1F-B919-FFAA1489ADE0";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -3597,8 +3626,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "FD612A5F-50F3-400B-A4CF-E37DCF5493C4";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FD612A5F-50F3-400B-A4CF-E37DCF5493C4";
+				PROVISIONING_PROFILE = "64783E4B-092C-4C1F-B919-FFAA1489ADE0";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "64783E4B-092C-4C1F-B919-FFAA1489ADE0";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};

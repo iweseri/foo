@@ -11,12 +11,14 @@
 #import "PublicViewController.h"
 #import "PersonalViewController.h"
 #import "TBTabButton.h"
+#import "MyPopupView.h"
 
 
-@interface JWallViewController : UIViewController<TBTabBarDelegate> {
+@interface JWallViewController : UIViewController<TBTabBarDelegate, MyPopupViewDelegate> {
     TBTabBar *tabBar;
     int plusPage;
     BOOL refreshPageDisabled;
+    NSArray *optionPersonal;
 }
 
 @property (retain, nonatomic) PublicViewController *publicVc;

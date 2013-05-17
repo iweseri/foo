@@ -74,7 +74,6 @@
 								</object>
 								<int key="IBUIBaselineAdjustment">0</int>
 								<float key="IBUIMinimumFontSize">11</float>
-								<bool key="IBUIAdjustsLetterSpacingToFitWidth">YES</bool>
 								<int key="IBUINumberOfLines">3</int>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
 									<string key="name">Verdana-Bold</string>
@@ -227,6 +226,7 @@
 								<int key="NSvFlags">292</int>
 								<string key="NSFrame">{{207, 105}, {104, 21}}</string>
 								<reference key="NSSuperview" ref="734914737"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="IBUIOpaque">NO</bool>
 								<bool key="IBUIClipsSubviews">YES</bool>

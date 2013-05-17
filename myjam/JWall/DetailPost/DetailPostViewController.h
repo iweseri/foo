@@ -31,6 +31,8 @@
 @property (retain, nonatomic) IBOutlet UILabel *postContentLabel;
 @property (retain, nonatomic) IBOutlet UIView *postQRCodeContentView;
 @property (retain, nonatomic) IBOutlet UIImageView *qrcodeImage;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *tableLoadingIndicator;
+@property (retain, nonatomic) IBOutlet UILabel *tableLoadingLabel;
 
 @property (nonatomic) NSInteger postId;
 @property int currentView;

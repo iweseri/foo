@@ -156,7 +156,7 @@
     [footerView release];
     
     //    self.view.frame = CGRectMake(0, 0, self.tableView.frame.size.width, self.tableView.frame.size.height);
-    [self performSelectorInBackground:@selector(setupCompareRelated) withObject:self];
+//    [self performSelectorInBackground:@selector(setupCompareRelated) withObject:self];
     
     [self setupCarousel];
     [DejalBezelActivityView removeViewAnimated:YES];
