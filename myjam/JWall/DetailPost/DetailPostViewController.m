@@ -15,6 +15,7 @@
 #define kCommentView    1
 #define kFavView        2
 
+static CGFloat kPostHeaderHeight = 80;
 static CGFloat kHeaderHeight = 250;
 static CGFloat kMinCommentCellHeight = 90;
 static CGFloat kFavCellHeight = 64;
@@ -190,6 +191,11 @@ static CGFloat kImageViewHeight = 200;
 {
     UIView *countingHolderView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 260, 24)];
     
+    for (UILabel *label in countingHolderView.subviews) {
+        [label removeFromSuperview];
+        [label release];
+    }
+    
     CGFloat totalWidth = 0;
     
     CGFloat favLabelWidth = [fav sizeWithFont:[UIFont boldSystemFontOfSize:14 ]].width;
@@ -281,12 +287,12 @@ static CGFloat kImageViewHeight = 200;
                              lineBreakMode:UILineBreakModeWordWrap];
     
     if ([data.type isEqualToString:@"PHOTO"]) {
-        size.height += kImageViewHeight;
+        size.height += kImageViewHeight + kPostHeaderHeight + 40;
     }
     
     height = kHeaderHeight > size.height ? kHeaderHeight : size.height;
-    
-    return kHeaderHeight;
+    NSLog(@"height %f", height);
+    return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -357,9 +363,9 @@ static CGFloat kImageViewHeight = 200;
     self.postContentView.frame = CGRectMake(0, header.frame.size.height, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
 //    ypoint = 0;
     self.postContentLabel.frame = CGRectMake(10, ypoint, self.postContentLabel.frame.size.width, self.postContentLabel.frame.size.height);
-    NSLog(@"%f", ypoint);
+//    NSLog(@"%f", ypoint);
     ypoint += self.postContentLabel.frame.size.height + 10;
-    NSLog(@"%f", ypoint);
+//    NSLog(@"%f", ypoint);
     
     if ([data.type isEqualToString:@"PHOTO"] && [data.imageURL length]) {
         UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 270, kImageViewHeight)];
@@ -374,19 +380,22 @@ static CGFloat kImageViewHeight = 200;
                                  
                              }];
         
-        [self.postContentView insertSubview:postImageView belowSubview:self.postQRCodeContentView];
-        ypoint += postImageView.frame.size.height;
-
+        [self.postContentView addSubview:postImageView];
+        ypoint += postImageView.frame.size.height + 10;
+        [postImageView release];
+        
         CGRect tmp = self.postContentView.frame;
         tmp.size.height = ypoint;
         self.postContentView.frame = tmp;
         
     }
     
-    NSLog(@"%f", ypoint);
+//    NSLog(@"%f", ypoint);
     CGRect tmp = self.postContentView.frame;
     tmp.size.height = kHeaderHeight > (ypoint + 25) ? kHeaderHeight : ypoint + 25;
     self.postContentView.frame = tmp;
+    
+    [headerView addSubview:self.postContentView];
     
     UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
 
@@ -411,8 +420,7 @@ static CGFloat kImageViewHeight = 200;
                                 }
                                 
                             }];
-    NSLog(@"%f", ypoint);
-    [headerView addSubview:self.postContentView];
+//    NSLog(@"%f", ypoint);
     return [headerView autorelease];
 }
 
