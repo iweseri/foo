@@ -81,8 +81,8 @@
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateMessageList)
-                                                 name:@"updateMessageList"
+                                             selector:@selector(updateGroupMessageList)
+                                                 name:@"updateGroupMessageList"
                                                object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -170,7 +170,7 @@
 #pragma mark -
 #pragma mark updae message from nodejs
 
-- (void)updateMessageList
+- (void)updateGroupMessageList
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group_message.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"group_id\":\"%@\",\"last_message_id\":\"%d\",\"action\":\"get_new\"}",self.buddyGroupId,[[self getLastMessageId] intValue]];

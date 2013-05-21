@@ -8,6 +8,7 @@
 
 #import "Banner.h"
 #import "ASIWrapper.h"
+#import "AppDelegate.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 #define kAnimateDuration 15
@@ -43,6 +44,8 @@
 -(void)animateFunction
 {
     [self performSelectorInBackground:@selector(refreshBanner) withObject:nil];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [mydelegate connectNodeJS]; // connect to nodejs every 10 second
 }
 
 - (void)refreshBanner

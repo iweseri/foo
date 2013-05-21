@@ -22,6 +22,13 @@
     NSMutableArray *tableDataFavourite;
     NSArray *options;
     
+    UILabel *commLabel;
+    UILabel *favLabel;
+    UILabel *dotLabel;
+    
+    NSString *commStr;
+    NSString *favStr;
+    
 }
 @property (retain, nonatomic) IBOutlet UIView *footerView;
 @property (retain, nonatomic) IBOutlet UIButton *commentButton;

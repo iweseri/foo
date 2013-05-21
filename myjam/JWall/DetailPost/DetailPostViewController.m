@@ -110,6 +110,9 @@ static CGFloat kImageViewHeight = 200;
 
 - (void)setup
 {
+    [favArray removeAllObjects];
+    [commentArray removeAllObjects];
+    
     BOOL success = [self retrieveData];
     if (success) {
 //        if ([commentArray count] > 0 || [favArray count] > 0) {
@@ -154,7 +157,9 @@ static CGFloat kImageViewHeight = 200;
                     [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-mr"] forState:UIControlStateNormal];
                 }
                 
-//                [footerView setupWithFav:[resultsDictionary valueForKey:@"fav_count"] andComment:@""];
+                [self updateViewForFav:[resultsDictionary valueForKey:@"fav_count"] andComment:@""];
+                [favArray removeAllObjects];
+                [self setup];
             }
             
             [self.footerLoadingIndicator setHidden:YES];
@@ -232,13 +237,43 @@ static CGFloat kImageViewHeight = 200;
     return YES;
 }
 
+- (void)updateViewForFav:(NSString *)fav andComment:(NSString *)comment
+{
+    if ([fav length] > 0 && [comment length] > 0) {
+        favStr = fav;
+        commStr = comment;
+    }else if ([fav length] == 0){
+        fav = favStr;
+    }else if ([comment length] == 0){
+        comment = commStr;
+    }
+    
+    UIView *countingHolderView = [self.view viewWithTag:kCountingHolderViewTag];
+    CGFloat totalWidth = 0;
+    
+    CGFloat favLabelWidth = [fav sizeWithFont:[UIFont boldSystemFontOfSize:14 ]].width;
+    [favLabel setText:fav];
+    favLabel.frame = CGRectMake(0, 0, favLabelWidth, countingHolderView.frame.size.height);
+    totalWidth += favLabel.frame.size.width + 10;
+    
+    dotLabel.frame = CGRectMake(totalWidth, -6, 14, countingHolderView.frame.size.height);
+    totalWidth += dotLabel.frame.size.width + 10;
+    
+    CGFloat commentLabelWidth = [comment sizeWithFont:[UIFont boldSystemFontOfSize:14 ]].width;
+    [commLabel setText:comment];
+    commLabel.frame = CGRectMake(totalWidth, 0, commentLabelWidth, countingHolderView.frame.size.height);
+}
+
 - (UIView *)setupViewWithFav:(NSString *)fav andComment:(NSString *)comment
 {
-    [self removeCountView]; // remove if exist
-    
+    [self removeCountView]; // remove previous if exist
+
     UIView *countingHolderView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 260, 24)];
     countingHolderView.tag = kCountingHolderViewTag;
     
+    // store current label value
+    commStr = comment;
+    favStr = fav;
 //    for (UILabel *label in countingHolderView.subviews) {
 //        [label removeFromSuperview];
 //        [label release];
@@ -247,7 +282,7 @@ static CGFloat kImageViewHeight = 200;
     CGFloat totalWidth = 0;
     
     CGFloat favLabelWidth = [fav sizeWithFont:[UIFont boldSystemFontOfSize:14 ]].width;
-    UILabel *favLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, favLabelWidth, countingHolderView.frame.size.height)];
+    favLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, favLabelWidth, countingHolderView.frame.size.height)];
     [favLabel setBackgroundColor:[UIColor clearColor]];
     [favLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     [favLabel setFont:[UIFont boldSystemFontOfSize:14]];
@@ -258,7 +293,7 @@ static CGFloat kImageViewHeight = 200;
     
     totalWidth += favLabel.frame.size.width + 10;
     
-    UILabel *dotLabel = [[UILabel alloc] initWithFrame:CGRectMake(totalWidth, -6, 14, countingHolderView.frame.size.height)];
+    dotLabel = [[UILabel alloc] initWithFrame:CGRectMake(totalWidth, -6, 14, countingHolderView.frame.size.height)];
     [dotLabel setBackgroundColor:[UIColor clearColor]];
     [dotLabel setTextColor:[UIColor blackColor]];
     [dotLabel setFont:[UIFont boldSystemFontOfSize:30]];
@@ -270,7 +305,7 @@ static CGFloat kImageViewHeight = 200;
     totalWidth += dotLabel.frame.size.width + 10;
     
     CGFloat commentLabelWidth = [comment sizeWithFont:[UIFont boldSystemFontOfSize:14 ]].width;
-    UILabel *commLabel = [[UILabel alloc] initWithFrame:CGRectMake(totalWidth, 0, commentLabelWidth, countingHolderView.frame.size.height)];
+    commLabel = [[UILabel alloc] initWithFrame:CGRectMake(totalWidth, 0, commentLabelWidth, countingHolderView.frame.size.height)];
     [commLabel setBackgroundColor:[UIColor clearColor]];
     [commLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     [commLabel setFont:[UIFont boldSystemFontOfSize:14]];

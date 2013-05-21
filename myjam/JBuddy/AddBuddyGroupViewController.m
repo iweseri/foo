@@ -93,7 +93,7 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"updateSubjectName" object:self.subjectTextField.text];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMessageList" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateGroupMessageList" object:nil];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatList" object:nil];
             [self.navigationController popViewControllerAnimated:YES];
         } else {

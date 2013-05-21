@@ -126,7 +126,7 @@
         if ([status isEqualToString:@"ok"]) {
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
             [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:2] animated:YES];
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMessageList" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateGroupMessageList" object:nil];
             //GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:self.groupId andGroupname:self.groupName];
             //[mydelegate.otherNavController pushViewController:newChat animated:YES];
             //[newChat release];

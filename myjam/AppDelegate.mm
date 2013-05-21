@@ -18,6 +18,8 @@
 #import "NewsViewController.h"
 #import "MoreViewController.h"
 #import "CreateViewController.h"
+#import "GroupChatViewController.h"
+#import "ChatListViewController.h"
 #import "SidebarView.h"
 #import "ASIWrapper.h"
 #import "ConnectionClass.h"
@@ -848,7 +850,10 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (void)connectNodeJS
 {
 //    NSLog(@"connect nodejs");
-//    [socketIO connectToHost:@"202.71.110.204" onPort:80];
+    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+    if ([conn isEqualToString:@"NO"]) {
+        [socketIO connectToHost:@"202.71.110.204" onPort:80];
+    }
 }
 
 - (void)sendTokenNodeJS
@@ -874,29 +879,62 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     NSLog(@"packet: %@",[packet data]);
     
     NSDictionary *data = [packet dataAsJSON];
-    //    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
-    //    if ([conn isEqualToString:@"NO"]) {
-    //        if ([[data objectForKey:@"name"] isEqualToString:@"connected"]) {
-    //            [self sendTokenNodeJS];
-    //            [[NSUserDefaults standardUserDefaults] setObject:@"YES" forKey:@"connectedToNodeJS"];
-    //        }
-    //    }
     
     if ([[data objectForKey:@"name"] isEqualToString:@"server_to_client"]) {
+        
         NSDictionary *msg = [[data objectForKey:@"args"] objectAtIndex:0];
+        
         if ([[msg objectForKey:@"message"] isEqualToString:@"conversation_list_updated"]) {
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"updateMessageList"
              object:nil];
-            [self playAlertSound];
+
+        }
+        else if ([[msg objectForKey:@"message"] isEqualToString:@"group_message_list_updated"])
+        {
+            [[NSNotificationCenter defaultCenter]
+                 postNotificationName:@"updateGroupMessageList"
+                 object:nil];
+            
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"reloadChatList"
+             object:nil];
+            
+            
         }
         else if ([[msg objectForKey:@"message"] isEqualToString:@"buddy_list_updated"])
         {
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"reloadBuddyList"
              object:nil];
-            [self playAlertSound];
         }
+        else if ([[msg objectForKey:@"message"] isEqualToString:@"new_group_created"])
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"reloadChatList"
+             object:nil];
+        }
+        else if ([[msg objectForKey:@"message"] isEqualToString:@"group_title_changed"])
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"reloadChatList"
+             object:nil];
+            
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"updateSubjectName"
+             object:nil];
+
+        }
+        else if ([[msg objectForKey:@"message"] isEqualToString:@"new_group_member_added"])
+        {
+            [[NSNotificationCenter defaultCenter]
+             postNotificationName:@"updateGroupMessageList"
+             object:nil];
+        }
+        
+        
+        [self playAlertSound];
+        
     }
     
 }
@@ -914,7 +952,6 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     NSLog(@"Nodejs disconnect. Reconnecting ..");
     [[NSUserDefaults standardUserDefaults] setObject:@"NO" forKey:@"connectedToNodeJS"];
-    //        [self connectNodeJS];
     
     if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"] isEqualToString:@"YES"]) {
         [self connectNodeJS];

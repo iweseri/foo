@@ -75,7 +75,6 @@
 
 - (void)setupWithFav:(NSString *)fav andComment:(NSString *)comment
 {
-    // Initialization code
     if ([fav length] > 0 && [comment length] > 0) {
         aFav = fav;
         aComment = comment;
