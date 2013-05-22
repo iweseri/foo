@@ -8,6 +8,7 @@
 
 #import "PublicViewController.h"
 #import "DetailPostViewController.h"
+#import "CreatePostViewController.h"
 #import "AppDelegate.h"
 #import "PostClass.h"
 
@@ -344,7 +345,13 @@ static CGFloat kImageCellHeight = 260;
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedCommentAtIndex:(NSInteger)index
 {
-    NSLog(@"c index %d", index);
+    PostClass *data = [tableData objectAtIndex:index];
+//    NSString *idForComment = [NSString stringWithFormat:@"%d",data.postId];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
+    [mydelegate.otherNavController pushViewController:createComment animated:YES];
+    [createComment release];
+//    NSLog(@"commentPostId %@ index %d", idForComment, index);
 }
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteAtIndex:(NSInteger)index

@@ -30,6 +30,7 @@
     NSString *favStr;
     
     CGFloat tmpValue;
+    BOOL isShownQRImage;
     
 }
 @property (retain, nonatomic) IBOutlet UIView *footerView;

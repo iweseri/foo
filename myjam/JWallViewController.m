@@ -158,7 +158,7 @@
 {
     if (option == 0) {
         NSLog(@"goto CreatePost");
-        CreatePostViewController *createPost = [[CreatePostViewController alloc] initWithPlaceholderText:@"What's on your mind?" andWithLabel:@"CREATE POST"];
+        CreatePostViewController *createPost = [[CreatePostViewController alloc] initWithPlaceholderText:@"What's on your mind?" withLabel:@"CREATE POST" andComment:nil];
         //CreatePostViewController *createPost = [[CreatePostViewController alloc] init];
         [self.navigationController pushViewController:createPost animated:YES];
         [createPost release];

@@ -31,14 +31,16 @@
     return self;
 }
 
-// push from JWallViewController
-- (id)initWithPlaceholderText:(NSString*)holderText andWithLabel:(NSString*)type
+// push from JWallViewController (postId nil) | push from PublicViewController (postId mandatory)
+- (id)initWithPlaceholderText:(NSString*)holderText withLabel:(NSString*)type andComment:(NSInteger)postId
 {
-    self = [super initWithNibName:@"CreatePostViewController" bundle:nil];
+    self = [super init];
     if (self) {
         placeHolderText = holderText;
         textType = type;
+        postIdComment = postId;
     }
+    NSLog(@"ID:%d",postIdComment);
     return self;
 }
 
@@ -84,6 +86,8 @@
     
     self.textData.delegate = self;
     self.textData.text = placeHolderText;
+    //[self.textData setContentSize:CGSizeMake(220, 60)];
+    //self.textData.contentInset = UIEdgeInsetsZero;
     self.typeLabel.text = textType;
     
     UIButton *nameButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -317,23 +321,26 @@
 
 - (void)processPost
 {
-    NSString *type = @"DEFAULT";
+    NSString *typePost = @"postStatus";
     if ([self.textData.text isEqualToString:placeHolderText]) {
         self.textData.text = @"";
     }
     if (self.uploadImage == nil && [self.textData.text isEqual: @""] && self.tagId == nil) {
-        NSLog(@"No data,cannot post.");
+        [self presentAlert:@"No data, cannot post."];
         self.textData.text = placeHolderText;
     }
     if ([self.textData.text isEqual: @""]) {
-        NSLog(@"Status is required.");
+        [self presentAlert:@"Status is required."];
+        self.textData.text = placeHolderText;
     }else {
-        if (self.uploadImage != nil) {
-            type = @"PHOTO";
+        NSNumber *tempId = postIdComment;
+        if (tempId != nil) {
+            typePost = @"postComment";
         }
+        NSLog(@"ID:%d",postIdComment);
         NSLog(@"\nText :%@\nImage :%@\nTag :%@",self.textData.text,self.uploadImage,self.tagId);
         [self.loadingIndicator startAnimating];
-        [self performSelector:@selector(processPostToAPI:) withObject:type afterDelay:0.1f];
+        [self performSelector:@selector(processPostToAPI:) withObject:typePost afterDelay:0.1f];
     }
 }
 
@@ -347,17 +354,35 @@
 
 - (void)processPostToAPI:(NSString*)typePost
 {
+    NSString *apiFile = nil;
+    NSString *type = @"DEFAULT";
+    if ([typePost isEqualToString:@"postStatus"]) {
+        NSLog(@"POST");
+        apiFile = @"wall_post.php";
+    } else {
+        NSLog(@"COMMENT:%d",postIdComment);
+        apiFile = @"wall_post_comment.php";
+    }
     NSData *imgData = UIImageJPEGRepresentation(self.uploadImage.image, 70);
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/%@?token=%@",APP_API_URL,apiFile,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     
     ASIFormDataRequest *asiRequest = [ASIFormDataRequest requestWithURL:url];
     [asiRequest addRequestHeader:@"Accept" value:@"application/json"];
     [asiRequest addRequestHeader:@"Content-Type" value:@"application/json"];
-    [asiRequest addPostValue:self.textData.text forKey:@"post_text"];
-    [asiRequest addPostValue:self.tagId forKey:@"post_tagged_user_ids"];
-    [asiRequest addPostValue:typePost forKey:@"post_type"];
-    [asiRequest addData:imgData withFileName:@"currImage.jpg" andContentType:@"image/jpeg" forKey:@"image"];
+    
+    if ([typePost isEqualToString:@"postStatus"]) {
+        [asiRequest addPostValue:self.textData.text forKey:@"post_text"];
+        [asiRequest addPostValue:self.tagId forKey:@"post_tagged_user_ids"];
+    } else {
+        [asiRequest addPostValue:self.textData.text forKey:@"comment_text"];
+        [asiRequest addPostValue:[NSString stringWithFormat:@"%d",postIdComment] forKey:@"post_id"];
+    }
+    if (self.uploadImage != nil) {
+        type = @"PHOTO";
+        [asiRequest addData:imgData withFileName:@"currImage.jpg" andContentType:@"image/jpeg" forKey:@"image"];
+    }
+    [asiRequest addPostValue:type forKey:@"post_type"];
     [asiRequest setTimeOutSeconds:20];
     [asiRequest setShouldContinueWhenAppEntersBackground:YES];
     [asiRequest startSynchronous];
@@ -393,7 +418,7 @@
 
 - (void)presentAlert:(NSString*)msg
 {
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Wall" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     [alert release];
 }

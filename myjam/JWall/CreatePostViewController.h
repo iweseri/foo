@@ -17,6 +17,7 @@
     NSArray *optionPhoto;
     NSString *placeHolderText;
     NSString *textType;
+    NSInteger postIdComment;
     CGFloat kContentSize;
     CGFloat kTagSize;
     int photoType;
@@ -37,6 +38,6 @@
 @property (nonatomic, retain) NSString *tagName;
 @property (nonatomic, retain) NSString *tagId;
 
-- (id)initWithPlaceholderText:(NSString*)holderText andWithLabel:(NSString*)type;
+- (id)initWithPlaceholderText:(NSString*)holderText withLabel:(NSString*)type andComment:(NSInteger)postId;
 
 @end

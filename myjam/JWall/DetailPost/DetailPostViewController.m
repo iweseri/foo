@@ -496,13 +496,18 @@ static CGFloat kImageViewHeight = 260-20;
     
     [self.postContentView addSubview:countsView];
     [countsView release];
-    
+    isShownQRImage = YES;
     ypoint += countsView.frame.size.height;
     
-    
-    CGRect tmp = self.postContentView.frame;
-    tmp.size.height = kHeaderHeight > (ypoint) ? kHeaderHeight : ypoint;
-    self.postContentView.frame = tmp;
+    if (isShownQRImage == YES) {
+        CGRect tmp = self.postContentView.frame;
+        tmp.size.height = self.postQRCodeContentView.frame.size.height;
+        self.postContentView.frame = tmp;
+    }else{
+        CGRect tmp = self.postContentView.frame;
+        tmp.size.height = kHeaderHeight > (ypoint) ? kHeaderHeight : ypoint;
+        self.postContentView.frame = tmp;
+    }
     
     [headerView addSubview:self.postContentView];
     self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
@@ -662,7 +667,9 @@ static CGFloat kImageViewHeight = 260-20;
      {
          self.postQRCodeContentView.frame = CGRectMake(0, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
      }
-                     completion:^(BOOL finished){}];
+                     completion:^(BOOL finished){
+                     
+                     }];
 }
 
 - (IBAction)handlePostContentLeftButton:(id)sender
