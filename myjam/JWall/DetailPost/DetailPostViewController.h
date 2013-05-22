@@ -29,6 +29,8 @@
     NSString *commStr;
     NSString *favStr;
     
+    CGFloat tmpValue;
+    
 }
 @property (retain, nonatomic) IBOutlet UIView *footerView;
 @property (retain, nonatomic) IBOutlet UIButton *commentButton;
@@ -44,6 +46,7 @@
 
 @property (nonatomic) NSInteger postId;
 @property int currentView;
+@property (retain, nonatomic) IBOutlet UIButton *rightButton;
 
 - (IBAction)handlePostContentRightButton:(id)sender;
 - (IBAction)handlePostContentLeftButton:(id)sender;

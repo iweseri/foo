@@ -41,23 +41,23 @@
 
 -(void)setBoldText:(NSString *)prefix withFullText:(NSString *)text andTime:(NSString *)timeText{
     
-//    NSString *prefix = NSLocalizedString(@"Updated", nil);
-//    NSString *text = [NSString stringWithFormat:@"%@: %@",prefix, dateString];
-//    [df release];
+    CGSize  textSize = {self.textPostView.frame.size.width, self.textPostView.frame.size.height };
+    CGSize size = [text sizeWithFont:[UIFont boldSystemFontOfSize:16]
+                   constrainedToSize:textSize
+                       lineBreakMode:UILineBreakModeWordWrap];
     
-    /* Create the text layer on demand */
-//    if (!_textLayer) {
     CATextLayer *_textLayer = [[CATextLayer alloc] init];
-//    _textLayer.lineBreakMode = UILineBreakModeWordWrap;
     //_textLayer.font = [UIFont boldSystemFontOfSize:13].fontName; // not needed since `string` property will be an NSAttributedString
     _textLayer.backgroundColor = [UIColor clearColor].CGColor;
     _textLayer.wrapped = NO;
 
     CALayer *layer = self.textPostView.layer; //self is a view controller contained by a uiview
-//        _textLayer.frame = CGRectMake((layer.bounds.size.width-180)/2 + 10, (layer.bounds.size.height-30)/2 + 10, 180, 30);
-    _textLayer.frame = CGRectMake(0, 0, self.textPostView.frame.size.width, self.textPostView.frame.size.height);
+    _textLayer.frame = CGRectMake(0, 0, size.width, size.height);
     _textLayer.contentsScale = [[UIScreen mainScreen] scale]; // looks nice in retina displays too :)
     _textLayer.alignmentMode = kCAAlignmentLeft;
+//    _textLayer.truncationMode = kCATruncationEnd;
+    _textLayer.wrapped = YES;
+//    _textLayer.backgroundColor = [[UIColor yellowColor] CGColor];
     [layer addSublayer:_textLayer];
 //    }
     
@@ -77,7 +77,7 @@
     
     /* Create the attributed string (text + attributes) */
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:text attributes:attributes];
-    [attrStr addAttributes:subAttributes range:NSMakeRange(prefix.length, text.length-prefix.length)]; //12 is the length of " MM/dd/yyyy/ "
+    [attrStr addAttributes:subAttributes range:NSMakeRange(prefix.length, text.length-prefix.length)];
     
     /* Set the attributes string in the text layer :) */
     _textLayer.string = attrStr;
@@ -85,14 +85,11 @@
     
     _textLayer.opacity = 1.0;
     
-    CGSize  textSize = {self.textPostView.frame.size.width, self.textPostView.frame.size.height };
-    CGSize size = [text sizeWithFont:[UIFont boldSystemFontOfSize:16]
-					  constrainedToSize:textSize
-						  lineBreakMode:UILineBreakModeWordWrap];
     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(self.textPostView.bounds.origin.x, self.textPostView.bounds.origin.y+size.height+2, self.textPostView.frame.size.width, 20)];
+    [timeLabel setTextColor:[UIColor darkGrayColor]];
     [timeLabel setBackgroundColor:[UIColor clearColor]];
     [self.textPostView addSubview:timeLabel];
-    [timeLabel setFont:[UIFont systemFontOfSize:12]];
+    [timeLabel setFont:[UIFont systemFontOfSize:11]];
     [timeLabel setText:timeText];
     [timeLabel release];
 }

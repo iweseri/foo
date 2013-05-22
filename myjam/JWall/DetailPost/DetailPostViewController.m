@@ -17,10 +17,10 @@
 #define kCountingHolderViewTag 100
 
 static CGFloat kPostHeaderHeight = 80;
-static CGFloat kHeaderHeight = 250;
+static CGFloat kHeaderHeight = 260;
 static CGFloat kMinCommentCellHeight = 90;
 static CGFloat kFavCellHeight = 64;
-static CGFloat kImageViewHeight = 200;
+static CGFloat kImageViewHeight = 260-20;
 
 @interface DetailPostViewController ()
 
@@ -186,6 +186,7 @@ static CGFloat kImageViewHeight = 200;
         NSDictionary *postDetails = [[resultsDictionary objectForKey:@"list"] objectAtIndex:0];
         data = [[PostClass alloc] init];
         data.postId = [[postDetails objectForKey:@"id"] integerValue];
+        data.qrcodeId = [[postDetails objectForKey:@"qrcode_id"] integerValue]; 
         data.text = [NSString stringWithFormat:@"%@", [postDetails objectForKey:@"post_text"]];
         data.type = [postDetails objectForKey:@"post_type"];
         data.userId = [postDetails objectForKey:@"user_id"];
@@ -379,7 +380,7 @@ static CGFloat kImageViewHeight = 200;
                              lineBreakMode:UILineBreakModeWordWrap];
     
     if ([data.type isEqualToString:@"PHOTO"]) {
-        size.height += kImageViewHeight + kPostHeaderHeight + 40;
+        size.height += kImageViewHeight + kPostHeaderHeight + 40 + 10;
     }else{
         size.height += kPostHeaderHeight + 40;
     }
@@ -413,7 +414,7 @@ static CGFloat kImageViewHeight = 200;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    CGFloat ypoint = 0;
+    CGFloat ypoint = 5;
     
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kHeaderHeight)];
     
@@ -442,7 +443,7 @@ static CGFloat kImageViewHeight = 200;
                                 
                             }];
     
-    [headerView setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
+    [headerView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
     [headerView addSubview:header];
 //    ypoint += header.frame.size.height;
     
@@ -452,7 +453,7 @@ static CGFloat kImageViewHeight = 200;
     [self.postContentLabel setNumberOfLines:0];
     [self.postContentLabel setText:data.text];
     [self.postContentLabel sizeToFit];
-    [self.postContentLabel setBackgroundColor:[UIColor yellowColor]];
+//    [self.postContentLabel setBackgroundColor:[UIColor yellowColor]];
     
     // start post contentview below header
     self.postContentView.frame = CGRectMake(0, header.frame.size.height, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
@@ -461,7 +462,7 @@ static CGFloat kImageViewHeight = 200;
 
     
     if ([data.type isEqualToString:@"PHOTO"] && [data.imageURL length]) {
-        UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 270, kImageViewHeight)];
+        UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 320-40, kImageViewHeight)];
         [postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
                       placeholderImage:[UIImage imageNamed:@"default_icon"]
                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -473,7 +474,7 @@ static CGFloat kImageViewHeight = 200;
                                  
                              }];
         
-        [self.postContentView addSubview:postImageView];
+        [self.postContentView insertSubview:postImageView belowSubview:self.rightButton];
         ypoint += postImageView.frame.size.height + 10;
         [postImageView release];
         
@@ -504,12 +505,13 @@ static CGFloat kImageViewHeight = 200;
     self.postContentView.frame = tmp;
     
     [headerView addSubview:self.postContentView];
-    
     self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
-    [self.postQRCodeContentView setBackgroundColor:[UIColor colorWithHex:@"#e8e8e8"]];
     
+//    self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postContentView.frame.size.height-self.postContentLabel.frame.size.height-10);
+    [self.postQRCodeContentView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
+
     [headerView insertSubview:self.postQRCodeContentView aboveSubview:self.postContentView];
-    [self.qrcodeImage setImageWithURL:[NSURL URLWithString:@"http://www.jam-bu.com/qrcode/1254.png"]
+    [self.qrcodeImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId]]
                      placeholderImage:[UIImage imageNamed:@"default_icon"]
                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                 if (!error) {
@@ -636,6 +638,7 @@ static CGFloat kImageViewHeight = 200;
     [_tableLoadingIndicator release];
     [_tableLoadingLabel release];
     [_footerLoadingIndicator release];
+    [_rightButton release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -650,6 +653,7 @@ static CGFloat kImageViewHeight = 200;
     [self setTableLoadingIndicator:nil];
     [self setTableLoadingLabel:nil];
     [self setFooterLoadingIndicator:nil];
+    [self setRightButton:nil];
     [super viewDidUnload];
 }
 - (IBAction)handlePostContentRightButton:(id)sender

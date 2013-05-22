@@ -17,7 +17,7 @@
 static CGFloat kHeaderHeight = 80;
 static CGFloat kFooterHeight = 100;
 static CGFloat kMinCellHeight = 22;
-static CGFloat kImageCellHeight = 220;
+static CGFloat kImageCellHeight = 260;
 
 @interface PublicViewController ()
 
