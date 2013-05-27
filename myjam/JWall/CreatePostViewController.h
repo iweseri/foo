@@ -31,6 +31,8 @@
 @property (retain, nonatomic) UIView *contentView;
 @property (retain, nonatomic) UILabel *tagLabelView;
 @property (retain, nonatomic) IBOutlet UITextView *textData;
+@property (retain, nonatomic) IBOutlet UIImageView *userImageView;
+@property (retain, nonatomic) IBOutlet UIView *keyboardAccessoryView;
 
 @property (nonatomic, retain) UIImageView *uploadImage;
 

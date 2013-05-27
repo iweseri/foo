@@ -52,7 +52,8 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
+//    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
+    [self.loadingIndicator setHidden:NO];
     [self performSelector:@selector(retrieveDataFromAPI) withObject:nil afterDelay:0.1];
     [self.tableView reloadData];
     searching = NO;
@@ -91,31 +92,44 @@
         
     }
     [self.tableView reloadData];
-    [DejalBezelActivityView removeViewAnimated:YES];
+//    [DejalBezelActivityView removeViewAnimated:YES];
+    
+    [self.loadingIndicator setHidden:YES];
     [resultsDictionary release];
 }
 
 - (void)unblockBuddyToAPI:(NSString*)memberId
 {
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_group.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_ids\":\"%@\"}",memberId];
     
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
-    if([resultsDictionary count]) {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"]) {
-            [self triggerRequiredAlert:[resultsDictionary objectForKey:@"message"]];
-            AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:NO];
+    [self.loadingIndicator setHidden:NO];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_user_unblock.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+        NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_ids\":\"%@\"}",memberId];
+        
+        NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+        NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+        NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
             
-        } else {
-            [self triggerRequiredAlert:[resultsDictionary objectForKey:@"message"]];
-        }
-    }
-    [resultsDictionary release];
+            if([resultsDictionary count]) {
+                NSString *status = [resultsDictionary objectForKey:@"status"];
+                if ([status isEqualToString:@"ok"]) {
+//                    [self triggerRequiredAlert:[resultsDictionary objectForKey:@"message"]];
+                    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+                    [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:NO];
+                    
+                } else {
+                    [self triggerRequiredAlert:[resultsDictionary objectForKey:@"message"]];
+                }
+            }
+        });
+        
+        [self.loadingIndicator setHidden:YES];
+        [resultsDictionary release];
+    });
+
 }
 
 #pragma mark -

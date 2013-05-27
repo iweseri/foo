@@ -149,9 +149,7 @@
     NSString *dataContent = [NSString stringWithFormat:@"{\"flag\":\"%@\"}",flag];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    ////NSLog(@"request %@\n%@\n\nresponse retrieveData: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
-    ////NSLog(@"dict %@",resultsDictionary);
     
     if([resultsDictionary count])
     {
@@ -175,7 +173,7 @@
             [localData setObject:mobile forKey:@"mobile"];
             
             NSString *urlImg = [resultProfile objectForKey:@"avatar_url"];
-            //NSLog(@"urlImg :%@",urlImg);
+            [localData setObject:urlImg forKey:@"user_avatar_url"];
             [self.profileImage setImageWithURL:[NSURL URLWithString:urlImg]
                               placeholderImage:[UIImage imageNamed:@"blank_avatar.png"]];
         }

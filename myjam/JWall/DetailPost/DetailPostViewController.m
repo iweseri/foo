@@ -11,16 +11,19 @@
 #import "PostTextCell.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "WallCommentCell.h"
+#import "AppDelegate.h"
+#import "CreatePostViewController.h"
 
 #define kCommentView    1
 #define kFavView        2
 #define kCountingHolderViewTag 100
 
-static CGFloat kPostHeaderHeight = 80;
+static CGFloat kTopHeaderHeight = 80;
 static CGFloat kHeaderHeight = 260;
 static CGFloat kMinCommentCellHeight = 90;
 static CGFloat kFavCellHeight = 64;
-static CGFloat kImageViewHeight = 260-20;
+static CGFloat kPostImageViewHeight = 260-20;
+static CGFloat kCommentImageViewHeight = 120;
 
 @interface DetailPostViewController ()
 
@@ -60,6 +63,7 @@ static CGFloat kImageViewHeight = 260-20;
         self.currentView = kCommentView; // Default view
     }
     
+    // Create loading view before things get loaded in viewDidAppear()
     self.tableLoadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.tableLoadingIndicator.frame.size.width/2,
                                              self.view.frame.size.height/2-self.tableLoadingIndicator.frame.size.height/2-100,
                                              self.tableLoadingIndicator.frame.size.width,
@@ -72,6 +76,7 @@ static CGFloat kImageViewHeight = 260-20;
     
     favArray = [[NSMutableArray alloc] init];
     commentArray = [[NSMutableArray alloc] init];
+    options = [[NSArray alloc] initWithObjects:@"Share Facebook", @"Share Twitter", @"Share Email", @"Share to J-Wall", @"Report", @"Block User", @"Cancel", nil];
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
@@ -89,9 +94,9 @@ static CGFloat kImageViewHeight = 260-20;
     [self.favouriteButton addTarget:self action:@selector(onClickedFav) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.footerView];
     
-    // resize tableView
+    // Resize tableView
     CGRect tmp = self.tableView.frame;
-    tmp.size.height = self.view.frame.size.height-self.footerView.frame.size.height-44-22;
+    tmp.size.height = self.view.frame.size.height-self.footerView.frame.size.height-44-24;
     self.tableView.frame = tmp;
     
     [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#f8f8f8"]];
@@ -105,6 +110,7 @@ static CGFloat kImageViewHeight = 260-20;
     [self.tableLoadingLabel setHidden:YES];
     [self.tableLoadingIndicator setHidden:YES];
     
+    // Start retreive data and setup views
     [self setup];
 }
 
@@ -115,18 +121,6 @@ static CGFloat kImageViewHeight = 260-20;
     
     BOOL success = [self retrieveData];
     if (success) {
-//        if ([commentArray count] > 0 || [favArray count] > 0) {
-//            
-//        }else{
-//            CGRect frame = self.tableView.frame;
-//            
-//            UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, frame.size.height+5, 300, 24)];
-//            [label setFont:[UIFont systemFontOfSize:14]];
-//            label.tag = 5;
-//            label.text = @"No comments. Be the first.";
-//            [self.view insertSubview:label aboveSubview:self.tableView];
-//            [label release];
-//        }
         [self.tableLoadingLabel setHidden:YES];
         [self.tableLoadingIndicator setHidden:YES];
         [self.tableView setHidden:NO];
@@ -136,6 +130,7 @@ static CGFloat kImageViewHeight = 260-20;
 
 -(void)onClickedFav
 {
+    // Submit like to server
     [self.footerLoadingIndicator setHidden:NO];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -169,7 +164,11 @@ static CGFloat kImageViewHeight = 260-20;
 
 -(void)onClickedComment
 {
-    
+    // Open compose comment page
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
+    [mydelegate.otherNavController pushViewController:createComment animated:YES];
+    [createComment release];
 }
 
 - (BOOL)retrieveData
@@ -178,8 +177,9 @@ static CGFloat kImageViewHeight = 260-20;
     NSString *dataContent = [NSString stringWithFormat:@"{\"post_id\":\"%d\"}", self.postId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    
+    NSLog(@"%@", resultsDictionary);
     
     if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
         
@@ -214,6 +214,7 @@ static CGFloat kImageViewHeight = 260-20;
             commentData.username = [row objectForKey:@"user_name"];
             commentData.datetime = [row objectForKey:@"datetime"];
             commentData.avatarURL = [row objectForKey:@"avatar_url"];
+            commentData.imageURL = [row objectForKey:@"comment_photo"];
             [commentArray addObject:commentData];
         }
         
@@ -267,18 +268,14 @@ static CGFloat kImageViewHeight = 260-20;
 
 - (UIView *)setupViewWithFav:(NSString *)fav andComment:(NSString *)comment
 {
-    [self removeCountView]; // remove previous if exist
+    [self removeCountView]; // Remove previous if exist
 
     UIView *countingHolderView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 260, 24)];
     countingHolderView.tag = kCountingHolderViewTag;
     
-    // store current label value
+    // Store current label value
     commStr = comment;
     favStr = fav;
-//    for (UILabel *label in countingHolderView.subviews) {
-//        [label removeFromSuperview];
-//        [label release];
-//    }
     
     CGFloat totalWidth = 0;
     
@@ -352,6 +349,19 @@ static CGFloat kImageViewHeight = 260-20;
     [self.tableView reloadData];
 }
 
+- (int)getNumberOfLinesInString:(NSString *)text
+{
+    int numberOfLines, index, stringLength = [text length];
+    
+    for (index = 0, numberOfLines = 0; index < stringLength; numberOfLines++)
+    {
+        index = NSMaxRange([text lineRangeForRange:NSMakeRange(index, 0)]);
+    }
+    NSLog(@"no line %d", numberOfLines);
+    
+    return numberOfLines;
+}
+
 #pragma mark -
 #pragma mark tableView delegate
 
@@ -379,14 +389,19 @@ static CGFloat kImageViewHeight = 260-20;
                          constrainedToSize:textSize
                              lineBreakMode:UILineBreakModeWordWrap];
     
-    if ([data.type isEqualToString:@"PHOTO"]) {
-        size.height += kImageViewHeight + kPostHeaderHeight + 40 + 10;
+    if (isShownQRImage) {
+        return kHeaderHeight + 30;
     }else{
-        size.height += kPostHeaderHeight + 40;
+        if ([data.type isEqualToString:@"PHOTO"]) {
+            size.height += kPostImageViewHeight + kTopHeaderHeight + 40 + 10;
+        }else{
+            size.height += kTopHeaderHeight + 40;
+        }
+        
+        height = kHeaderHeight + 30 > size.height ? kHeaderHeight + 30 : size.height;
+        NSLog(@"height %f", height);
     }
     
-    height = kHeaderHeight > size.height ? kHeaderHeight : size.height;
-    NSLog(@"height %f", height);
     return height;
 }
 
@@ -403,6 +418,14 @@ static CGFloat kImageViewHeight = 260-20;
                             constrainedToSize:textSize
                                 lineBreakMode:UILineBreakModeWordWrap];
         
+//        int numOfLinesOccured = [self getNumberOfLinesInString:aData.text];
+//        size.height += 24*numOfLinesOccured;
+        
+        // if comment contains image, then add height to cell
+        if ([aData.imageURL length]) {
+            size.height += kCommentImageViewHeight+80;
+        }
+        
         height = size.height < kMinCommentCellHeight ? kMinCommentCellHeight : size.height;
         
     }else{
@@ -414,10 +437,13 @@ static CGFloat kImageViewHeight = 260-20;
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    // Y point dinamically calculate for contentView below the top header
     CGFloat ypoint = 5;
     
+    // Uiview to be return as header view contains top header, content view (text and image post) & counting (favs and comments)
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kHeaderHeight)];
     
+    // Create top header with user's thumbs, time post and status
     PostHeaderView *header = [[PostHeaderView alloc] init];
     header.tag = section;
     header.delegate = self;
@@ -444,25 +470,27 @@ static CGFloat kImageViewHeight = 260-20;
                             }];
     
     [headerView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
-    [headerView addSubview:header];
-//    ypoint += header.frame.size.height;
     
-//    [self.postContentView setBackgroundColor:[UIColor yellowColor]];
+    // Add top header to subview
+    [headerView addSubview:header];
+
+    
+    // Create Textlabel for post with text
     self.postContentLabel.frame = CGRectMake(10, ypoint, 250, self.postContentLabel.frame.size.height);
     [self.postContentLabel setFont:[UIFont systemFontOfSize:14]];
     [self.postContentLabel setNumberOfLines:0];
     [self.postContentLabel setText:data.text];
     [self.postContentLabel sizeToFit];
-//    [self.postContentLabel setBackgroundColor:[UIColor yellowColor]];
     
-    // start post contentview below header
+    // Start post contentview below header contains text and image (if exist)
     self.postContentView.frame = CGRectMake(0, header.frame.size.height, self.postContentView.frame.size.width, self.postContentView.frame.size.height);
 
     ypoint += self.postContentLabel.frame.size.height + 10;
 
-    
+    // Setup imageView if got photo in post
     if ([data.type isEqualToString:@"PHOTO"] && [data.imageURL length]) {
-        UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 320-40, kImageViewHeight)];
+        UIImageView *postImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, ypoint, 320-40, kPostImageViewHeight)];
+        postImageView.clipsToBounds = YES;
         [postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
                       placeholderImage:[UIImage imageNamed:@"default_icon"]
                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -483,38 +511,50 @@ static CGFloat kImageViewHeight = 260-20;
         self.postContentView.frame = tmp;
         
     }
+
+    [headerView addSubview:self.postContentView];
     
-    NSLog(@"%f", ypoint);
-    
-    
-    UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
-    CGFloat countsViewHeight = ypoint > kHeaderHeight - kPostHeaderHeight ? ypoint : kHeaderHeight - kPostHeaderHeight - countsView.frame.size.height;
-    countsView.frame = CGRectMake(10, countsViewHeight, 240, 25);
-//    CGRect tmp2 = countsView.frame;
-//    tmp2.origin.y = headerView.frame.size.height-countsView.frame.size.height-4;
-//    countsView.frame = tmp2;
-    
-    [self.postContentView addSubview:countsView];
-    [countsView release];
-    isShownQRImage = YES;
-    ypoint += countsView.frame.size.height;
+    // Create slider uiview for display qrcode
+    self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
     
     if (isShownQRImage == YES) {
+        // Get the qrcode view inside and contentview outside
         CGRect tmp = self.postContentView.frame;
         tmp.size.height = self.postQRCodeContentView.frame.size.height;
+        tmp.origin.x = -320;
         self.postContentView.frame = tmp;
+        
+        CGRect tmp2 = self.postQRCodeContentView.frame;
+        tmp2.origin.x = 0;
+        self.postQRCodeContentView.frame = tmp2;
     }else{
+        
+        // display contentview only
         CGRect tmp = self.postContentView.frame;
-        tmp.size.height = kHeaderHeight > (ypoint) ? kHeaderHeight : ypoint;
+        tmp.size.height = kHeaderHeight - kTopHeaderHeight > (ypoint) ? kHeaderHeight - kTopHeaderHeight : ypoint;
         self.postContentView.frame = tmp;
     }
     
-    [headerView addSubview:self.postContentView];
-    self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
+    // Setup Favs and comments label and add to headerView
+    UIView *countsView = [self setupViewWithFav:data.totalFavourite andComment:data.totalComment];
     
-//    self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postContentView.frame.size.height-self.postContentLabel.frame.size.height-10);
+    // Adjust contentView cgpoint
+    if (isShownQRImage) {
+        countsView.frame = CGRectMake(10, kHeaderHeight+5, 240, 25);
+    }else{
+        CGFloat countsViewHeight = ypoint > kHeaderHeight - kTopHeaderHeight ? ypoint : kHeaderHeight - kTopHeaderHeight - countsView.frame.size.height;
+        if (![data.type isEqualToString:@"PHOTO"]) {
+            countsViewHeight += 29;
+        }
+        countsView.frame = CGRectMake(10, kTopHeaderHeight + countsViewHeight, 240, 25);
+    }
+    
+    [headerView addSubview:countsView];
+    [countsView release];
+    
     [self.postQRCodeContentView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
 
+    // Add qrcode to sliderView
     [headerView insertSubview:self.postQRCodeContentView aboveSubview:self.postContentView];
     [self.qrcodeImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId]]
                      placeholderImage:[UIImage imageNamed:@"default_icon"]
@@ -526,16 +566,13 @@ static CGFloat kImageViewHeight = 260-20;
                                 }
                                 
                             }];
-//    NSLog(@"%f", ypoint);
-    
     
     return [headerView autorelease];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//    NSLog(@"section %d, row %d", indexPath.section, indexPath.row);
-    
+    // Setup cell for comments and favs listing
     WallCommentCell *cell = (WallCommentCell *)[tableView dequeueReusableCellWithIdentifier:@"WallCommentCell"];
     if (cell == nil)
     {
@@ -543,12 +580,15 @@ static CGFloat kImageViewHeight = 260-20;
         cell = [nibs objectAtIndex:0];
     }
     
+    cell.clipsToBounds = YES;
+    
     PostClass *aData = nil;
     if (self.currentView == kCommentView) {
         aData = [commentArray objectAtIndex:indexPath.row];
         
         [cell.commentLabel setHidden:NO];
         CGRect tmp = cell.commentLabel.frame;
+        tmp.size.width = 280;
         tmp.size.height = kMinCommentCellHeight;
         cell.commentLabel.frame = tmp;
         
@@ -576,6 +616,23 @@ static CGFloat kImageViewHeight = 260-20;
                                 }
                                 
                             }];
+    
+    // Add image view if photo comment exist
+    if ([aData.imageURL length]) {
+        [cell.commentImageView setHidden:NO];
+//        NSLog(@"cell for row url %@", aData.imageURL);
+        CGFloat photoPointY = cell.commentLabel.frame.origin.y + cell.commentLabel.frame.size.height;
+        CGRect tmp = cell.commentImageView.frame;
+        tmp.origin.y = photoPointY + 5;
+        cell.commentImageView.frame = tmp;
+//        UIImageView *commentImageView = [[UIImageView alloc] initWithFrame:CGRectMake(10, photoPointY + 5, kCommentImageViewHeight+20, kCommentImageViewHeight-10)];
+        cell.commentImageView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+        cell.commentImageView.layer.borderWidth = 0.5;
+        [cell.commentImageView setImageWithURL:[NSURL URLWithString:aData.imageURL]
+                            placeholderImage:[UIImage imageNamed:@"default_icon"]];
+    }else{
+        [cell.commentImageView setHidden:YES];
+    }
     
     cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
     return cell;
@@ -663,21 +720,27 @@ static CGFloat kImageViewHeight = 260-20;
 }
 - (IBAction)handlePostContentRightButton:(id)sender
 {
+    isShownQRImage = YES;
+    
     [UIView animateWithDuration:0.4 delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^
      {
          self.postQRCodeContentView.frame = CGRectMake(0, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
      }
                      completion:^(BOOL finished){
-                     
+                         [self.tableView reloadData];
                      }];
 }
 
 - (IBAction)handlePostContentLeftButton:(id)sender
 {
+    isShownQRImage = NO;
+    
     [UIView animateWithDuration:0.4 delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState animations:^
      {
          self.postQRCodeContentView.frame = CGRectMake(320, self.postContentView.frame.origin.y, self.postQRCodeContentView.frame.size.width, self.postQRCodeContentView.frame.size.height);
      }
-                     completion:^(BOOL finished){}];
+                     completion:^(BOOL finished){
+                         [self.tableView reloadData];
+                     }];
 }
 @end

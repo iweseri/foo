@@ -1,28 +1,18 @@
 //
-//  WallCommentCell.m
+//  PostTaggedCell.m
 //  myjam
 //
-//  Created by Mohd Hafiz on 5/15/13.
+//  Created by Mohd Hafiz on 5/23/13.
 //  Copyright (c) 2013 me-tech. All rights reserved.
 //
 
-#import "WallCommentCell.h"
+#import "PostTaggedCell.h"
 
-@implementation WallCommentCell
+@implementation PostTaggedCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
-    if (self) {
-        // Initialization code
-        
-    }
-    return self;
-}
-
-- (id)init
-{
-    self = [super init];
     if (self) {
         // Initialization code
     }
@@ -37,11 +27,7 @@
 }
 
 - (void)dealloc {
-    [_username release];
-    [_thumbImageView release];
-    [_statusLabel release];
-    [_commentLabel release];
-    [_commentImageView release];
+    [_taggedLabel release];
     [super dealloc];
 }
 @end

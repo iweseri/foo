@@ -22,5 +22,6 @@
 @property (nonatomic, retain) NSString *totalFavourite;
 @property (nonatomic, retain) NSString *totalComment;
 @property (nonatomic, retain) NSString *imageURL;
+@property (nonatomic, retain) NSArray *taggedUsers;
 
 @end

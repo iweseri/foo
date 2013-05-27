@@ -49,23 +49,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    
-    if (screenBounds.size.height == 568) {
-        // code for 4-inch screen
-        self.view.frame = CGRectMake(0,0,self.view.bounds.size.width, 568);
-    } else {
-        // code for 3.5-inch screen
-        self.view.frame = CGRectMake(0,0,self.view.bounds.size.width, 480);
-    }
-
-    
     // Do any additional setup after loading the view from its nib.
     optionPhoto = [[NSArray alloc] initWithObjects:@"Choose from Gallery", @"Capture a photo", @"Cancel", nil];
     
     self.content = (TPKeyboardAvoidingScrollView *)self.view;
-//    [self.content setContentSize:CGSizeMake(self.contentView.frame.size.width, self.contentView.frame.size.height-100)];
+    [self.content setContentSize:CGSizeMake(self.view.frame.size.width, 416)];
     
     // Keyboard stuffings
 //    [[NSNotificationCenter defaultCenter] addObserver:self
@@ -87,26 +75,22 @@
     cameraPicker.delegate = self;
     
     [self setupView];
-//    [self.textData becomeFirstResponder];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     NSLog(@"CP-vda");
-//    [self.textData becomeFirstResponder];
-//    if ([self.textData.text isEqual:placeHolderText]) {
-//        [self.textData setText:@""];
-//    }
+    [self.textData becomeFirstResponder];
 }
 
 - (void)setupView
 {
-//    [self.postView setHidden:YES];
-    self.postView.frame = CGRectMake(0, (self.view.frame.size.height-44*3 - 5)-self.postView.frame.size.height, 320, 40);
-    NSLog(@"postview %f", self.postView.frame.origin.y);
+//    self.postView.frame = CGRectMake(0, self.view.frame.size.height-157, 320, 40);
+//    self.postView.frame = CGRectMake(0, (self.view.frame.size.height-30)-self.postView.frame.size.height, 320, 40);
+    
     self.textData.delegate = self;
     self.textData.text = placeHolderText;
-    self.textData.inputAccessoryView = self.keyboardAccessoryView;
+    self.textData.inputAccessoryView = self.postView;
     //[self.textData setContentSize:CGSizeMake(220, 60)];
     //self.textData.contentInset = UIEdgeInsetsZero;
     self.typeLabel.text = textType;
@@ -124,20 +108,6 @@
     [nameButton setTintColor:[UIColor grayColor]];
     [nameButton addTarget:self action:@selector(processPost) forControlEvents:UIControlEventTouchUpInside];
     [self.postView addSubview:nameButton];
-
-    UIButton *postButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [postButton setFrame:CGRectMake(235, 5, 70, 30)];    //your desired size
-    [postButton setTag:1];
-    [postButton setClipsToBounds:YES];
-    [postButton.layer setCornerRadius:10.0f];
-    [postButton.layer setBorderWidth:2];
-    [postButton.layer setBorderColor:[[UIColor whiteColor] CGColor]];
-    postButton.backgroundColor = [UIColor colorWithHex:@"#D22042"];
-    [postButton setTitle:@"POST" forState:UIControlStateNormal];
-    [postButton.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
-    [postButton setTintColor:[UIColor grayColor]];
-    [postButton addTarget:self action:@selector(processPost) forControlEvents:UIControlEventTouchUpInside];
-    [self.keyboardAccessoryView addSubview:postButton];
     
     NSString *imgURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"user_avatar_url"];
     [self.userImageView setImageWithURL:[NSURL URLWithString:imgURL]
@@ -182,24 +152,18 @@
 #pragma mark textView delegate
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
-//    [self.content adjustOffsetToIdealIfNeeded];
-//    [self.content setContentSize:CGSizeMake(self.contentView.frame.size.width, self.contentView.frame.size.height-44)];
+    [self.content adjustOffsetToIdealIfNeeded];
     
     if ([self.textData.text isEqual:placeHolderText]) {
         [self.textData setText:@""];
     }
-    
-    [self.postView setHidden:YES];
 }
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
     if ([self.textData.text length]==0) {
-        self.textData.text = placeHolderText;
+        self.textData.text = @"What's on your mind?";
     }
-//    NSLog(@"postview %f", self.postView.frame.origin.y);
-    self.postView.frame = CGRectMake(0, (self.view.frame.size.height-44-26)-self.postView.frame.size.height, 320, 40);
-    [self.postView setHidden:NO];
 //    [[NSNotificationCenter defaultCenter ] postNotificationName:UIKeyboardDidHideNotification object:self];
 
 }
@@ -233,6 +197,66 @@
     UIView *blackView = [self.view viewWithTag:99];
     [blackView removeFromSuperview];
 }
+
+#pragma mark -
+//#pragma mark keyboardSetup
+////Code from Brett Schumann
+//-(void) keyboardWillShow:(NSNotification *)note{
+//    // get keyboard size and loctaion
+//	CGRect keyboardBounds;
+//    [[note.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &keyboardBounds];
+//    NSNumber *duration = [note.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+//    NSNumber *curve = [note.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+//    
+//    // Need to translate the bounds to account for rotation.
+//    keyboardBounds = [self.view convertRect:keyboardBounds toView:nil];
+//    
+//    // get a rect for the textView frame
+////	CGRect containerFrame = self.view.frame;
+////    containerFrame.origin.y = -kContentSize-kTagSize;
+////    self.view.frame = containerFrame;
+//    
+////    self.content = (TPKeyboardAvoidingScrollView *)self.view;
+////    [self.content setContentSize:CGSizeMake(self.view.frame.size.width, 460)];
+//    CGPoint bottomOffset = CGPointMake(0, self.contentView.frame.size.height-keyboardBounds.size.height);
+//    [self.content setContentOffset:bottomOffset animated:YES];
+//    
+//	// animations settings
+//	[UIView beginAnimations:nil context:NULL];
+//	[UIView setAnimationBeginsFromCurrentState:YES];
+//    [UIView setAnimationDuration:[duration doubleValue]];
+//    [UIView setAnimationCurve:[curve intValue]];
+//	
+//	// set postView up
+////	self.postView.frame = CGRectMake(0, self.postView.frame.origin.y-143+kContentSize+kTagSize, 320, 40);
+////    self.postView.frame = CGRectMake(0, (self.view.frame.size.height-keyboardBounds.size.height)-self.postView.frame.size.height, 320, 40);
+//    
+//	// commit animations
+//	[UIView commitAnimations];
+//}
+//
+//-(void) keyboardWillHide:(NSNotification *)note{
+//    NSNumber *duration = [note.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+//    NSNumber *curve = [note.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+//    
+//    // get a rect for the textView frame
+//	CGRect containerFrame = self.view.frame;
+//    containerFrame.origin.y = 0;
+//    self.view.frame = containerFrame;
+//	
+//	// animations settings
+//	[UIView beginAnimations:nil context:NULL];
+//	[UIView setAnimationBeginsFromCurrentState:YES];
+//    [UIView setAnimationDuration:[duration doubleValue]];
+//    [UIView setAnimationCurve:[curve intValue]];
+//    
+//    // set postView down
+////    self.postView.frame = CGRectMake(0, self.postView.frame.origin.y+143-kContentSize-kTagSize, 320, 40);
+////    self.postView.frame = CGRectMake(0, (self.view.frame.size.height-44-30)-self.postView.frame.size.height, 320, 40);
+//    
+//	// commit animations
+//	[UIView commitAnimations];
+//}
 
 #pragma mark -
 #pragma mark Add Photo
@@ -320,7 +344,7 @@
         [self presentAlert:@"No data, cannot post."];
         self.textData.text = placeHolderText;
     }
-    if ([self.textData.text isEqualToString: @""]) {
+    if ([self.textData.text isEqual: @""]) {
         [self presentAlert:@"Status is required."];
         self.textData.text = placeHolderText;
     }else {
@@ -439,7 +463,6 @@
 - (void)dealloc
 {
     [_userImageView release];
-    [_keyboardAccessoryView release];
     [super dealloc];
     [cameraPicker release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -453,7 +476,6 @@
 
 - (void)viewDidUnload {
     [self setUserImageView:nil];
-    [self setKeyboardAccessoryView:nil];
     [super viewDidUnload];
 }
 @end

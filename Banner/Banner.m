@@ -44,8 +44,8 @@
 -(void)animateFunction
 {
     [self performSelectorInBackground:@selector(refreshBanner) withObject:nil];
-    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [mydelegate connectNodeJS]; // connect to nodejs every 10 second
+//    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    [mydelegate connectNodeJS]; // connect to nodejs every 10 second
 }
 
 - (void)refreshBanner

@@ -11,6 +11,7 @@
 #import "CreatePostViewController.h"
 #import "AppDelegate.h"
 #import "PostClass.h"
+#import "PostTaggedCell.h"
 
 #define kCommentView    1
 #define kFavView        2
@@ -19,6 +20,7 @@ static CGFloat kHeaderHeight = 80;
 static CGFloat kFooterHeight = 100;
 static CGFloat kMinCellHeight = 22;
 static CGFloat kImageCellHeight = 260;
+static CGFloat kMinCellTagHeight = 26;
 
 @interface PublicViewController ()
 
@@ -38,7 +40,7 @@ static CGFloat kImageCellHeight = 260;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     // Init data array
     tableData = [[NSMutableArray alloc] init];
     self.loadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.loadingIndicator.frame.size.width/2,
@@ -107,7 +109,7 @@ static CGFloat kImageCellHeight = 260;
     NSString *dataContent = @"";
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     NSLog(@"%@", resultsDictionary);
     if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
@@ -121,7 +123,8 @@ static CGFloat kImageCellHeight = 260;
         NSDictionary *posts = [resultsDictionary objectForKey:@"list"];
         
         // Store schedules in table data
-        for (id row in posts) {
+        for (id row in posts)
+        {
             PostClass *data = [[PostClass alloc] init];
             data.postId = [[row objectForKey:@"id"] integerValue];
             data.text = [NSString stringWithFormat:@"%@", [row objectForKey:@"post_text"]];
@@ -134,6 +137,14 @@ static CGFloat kImageCellHeight = 260;
             data.totalComment = [row objectForKey:@"comment_count"];
             data.totalFavourite = [row objectForKey:@"fav_count"];
             data.imageURL = [row objectForKey:@"post_photo"];
+            
+            NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
+            for (id kdata in [row objectForKey:@"tagged_buddies"]) {
+                [tmpArray addObject:kdata];
+            }
+    
+            data.taggedUsers = [tmpArray copy];
+//            [tmpDict release];
             [tableData addObject:data];
         }
         
@@ -159,12 +170,18 @@ static CGFloat kImageCellHeight = 260;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    PostClass *data = [tableData objectAtIndex:section];
-    if (![data.type isEqualToString:@"DEFAULT"]) {
-        return 2;
-    }
+//    int row = 1;
+//    PostClass *data = [tableData objectAtIndex:section];
+//    if (![data.type isEqualToString:@"DEFAULT"]) {
+//        row += 1;
+//    }
+//    if ([data.taggedUsers count]) {
+//        row += 1;
+//    }
+//    
+//    return row;
     
-    return 1;
+    return 3;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -193,11 +210,42 @@ static CGFloat kImageCellHeight = 260;
         
         return height;
     }
-    else{ // row 2 for image, url, website thumbnail & description
-        if ([data.type isEqualToString:@"PHOTO"]) {
-            return kImageCellHeight;
+    else if (indexPath.row == 1)
+    {
+        if ([data.taggedUsers count]) {
+            return kMinCellTagHeight;
+        }else{
+            return 0;
         }
     }
+    else if (indexPath.row == 2){
+        if ([data.type isEqualToString:@"PHOTO"])
+        {
+            return kImageCellHeight;
+        }
+        else{
+            return 0;
+        }
+        
+    }
+//    else { // row 2 for image, url, website thumbnail & description
+//        if ([data.type isEqualToString:@"PHOTO"] && [data.taggedUsers count]) {
+//            
+//            if (indexPath.row == 1) {
+//                return kMinCellTagHeight;
+//            }
+//            else if (indexPath.row == 2)
+//            {
+//                return kImageCellHeight;
+//            }
+//        }
+//        else if ([data.type isEqualToString:@"PHOTO"]) {
+//            
+//            if (indexPath.row == 1) {
+//                return kImageCellHeight;
+//            }
+//        }
+//    }
     
     return 0;
     
@@ -207,8 +255,8 @@ static CGFloat kImageCellHeight = 260;
 {
     
     PostHeaderView *header = [[PostHeaderView alloc] init];
-    header.tag = section;
     header.delegate = self;
+    header.tag = section;
     
     PostClass *data = [tableData objectAtIndex:section];
     
@@ -216,6 +264,8 @@ static CGFloat kImageCellHeight = 260;
     
     if ([data.type isEqualToString:@"DEFAULT"]) {
         [fullText appendString:@"says"];
+    }else{
+        [fullText appendString:@"shared a photo"];
     }
     
     [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
@@ -275,32 +325,107 @@ static CGFloat kImageCellHeight = 260;
         cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
         return cell;
     }
-    else{
-        // for other types such as images, url , etc.
-        if ([data.type isEqualToString:@"PHOTO"]) {
+    else if (indexPath.row == 1)
+    {
+        PostTaggedCell *cell = (PostTaggedCell *)[tableView dequeueReusableCellWithIdentifier:@"PostTaggedCell"];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostTaggedCell" owner:nil options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        
+        if ([data.taggedUsers count]) {
+            [cell.taggedLabel setHidden:NO];
+            [cell.taggedLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
+            [cell.taggedLabel setText:[[data.taggedUsers objectAtIndex:0] valueForKey:@"username"]];
+        }else{
+            [cell.taggedLabel setHidden:YES];
+        }
+        
+        // To remove group cell border
+        cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+        return cell;
+    }
+    else if (indexPath.row == 2){
+//        if ([data.type isEqualToString:@"PHOTO"]) {
             PostImageCell *cell = (PostImageCell *)[tableView dequeueReusableCellWithIdentifier:@"PostImageCell"];
             if (cell == nil)
             {
                 NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostImageCell" owner:nil options:nil];
                 cell = [nib objectAtIndex:0];
             }
-            
-            [cell.postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
-                             placeholderImage:[UIImage imageNamed:@"default_icon"]
-                                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                        if (!error) {
-                                            
-                                        }else{
-                                            NSLog(@"error retrieve image: %@",error);
-                                        }
-                                        
-                                    }];
-            
+            if ([data.type isEqualToString:@"PHOTO"])
+            {
+                [cell.postImageView setHidden:NO];
+                [cell.postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
+                                   placeholderImage:[UIImage imageNamed:@"default_icon"]
+                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+                                              if (!error) {
+                                                  
+                                              }else{
+                                                  NSLog(@"error retrieve image: %@",error);
+                                              }
+                                              
+                                          }];
+            }else{
+                [cell.postImageView setHidden:YES];
+            }
             // To remove group cell border
             cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
             return cell;
-        }
+//        }
     }
+    
+//        {
+//        
+//        int indexForImage = 1;
+//        
+//        if ([data.type isEqualToString:@"PHOTO"] && [data.taggedUsers count]) {
+//            
+//            if (indexPath.row == 1) {
+//                PostTaggedCell *cell = (PostTaggedCell *)[tableView dequeueReusableCellWithIdentifier:@"PostTaggedCell"];
+//                if (cell == nil)
+//                {
+//                    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostTaggedCell" owner:nil options:nil];
+//                    cell = [nib objectAtIndex:0];
+//                }
+//                return cell;
+//            }
+//            
+//            indexForImage = 2;
+//            
+//            
+//        }
+//        
+//        if (indexPath.row == indexForImage)
+//        {
+//            // for other types such as images, url , etc.
+//            if ([data.type isEqualToString:@"PHOTO"]) {
+//                PostImageCell *cell = (PostImageCell *)[tableView dequeueReusableCellWithIdentifier:@"PostImageCell"];
+//                if (cell == nil)
+//                {
+//                    NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"PostImageCell" owner:nil options:nil];
+//                    cell = [nib objectAtIndex:0];
+//                }
+//                
+//                [cell.postImageView setImageWithURL:[NSURL URLWithString:data.imageURL]
+//                                   placeholderImage:[UIImage imageNamed:@"default_icon"]
+//                                          completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+//                                              if (!error) {
+//                                                  
+//                                              }else{
+//                                                  NSLog(@"error retrieve image: %@",error);
+//                                              }
+//                                              
+//                                          }];
+//                
+//                // To remove group cell border
+//                cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+//                return cell;
+//            }
+//        }
+//        
+//    }
     
     return nil;
     
@@ -419,8 +544,40 @@ static CGFloat kImageCellHeight = 260;
 
 - (void)popView:(MyPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
 {
-    NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
-
+    NSLog(@"Clicked at post index %d and selected option %d", popupView.tag, index);
+    
+    PostClass *data = [tableData objectAtIndex:popupView.tag];
+    
+    switch (index) {
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+        {
+            NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_user_block.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
+            
+            NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%@\"}",data.userId];
+            
+            NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+            
+            NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+            NSLog(@"%@", resultsDictionary);
+            if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
+                [tableData removeAllObjects];
+                [self setup];
+            }
+            break;
+        }
+        default:
+            break;
+    }
     [self removeBlackView];
 }
 

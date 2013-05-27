@@ -13,5 +13,6 @@
 @property (retain, nonatomic) IBOutlet UIImageView *thumbImageView;
 @property (retain, nonatomic) IBOutlet UILabel *statusLabel;
 @property (retain, nonatomic) IBOutlet UILabel *commentLabel;
+@property (retain, nonatomic) IBOutlet UIImageView *commentImageView;
 
 @end
