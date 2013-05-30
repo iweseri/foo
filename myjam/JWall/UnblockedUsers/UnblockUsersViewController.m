@@ -108,7 +108,7 @@
         NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_ids\":\"%@\"}",memberId];
         
         NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-        NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+//        NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
         NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
         
         dispatch_async(dispatch_get_main_queue(), ^{

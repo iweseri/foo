@@ -51,7 +51,7 @@
     AppDelegate *myDelegate = (AppDelegate *)[[UIApplication sharedApplication]delegate];
     
     // Mark current page
-    myDelegate.pageIndex = kBoxTab;
+//    myDelegate.pageIndex = kBoxTab;
     
     myDelegate.swipeBottomEnabled = YES;
     myDelegate.swipeOptionString = @"scan";

@@ -37,19 +37,35 @@
     [super viewDidLoad];
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
+    [self.tableView setHidden:YES];
     self.tableData = [[NSMutableArray alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(viewWillAppear:)
                                                  name:@"reloadChatList"
                                                object:nil];
+    
+    [self.recordLabel setHidden:YES];
+    self.loadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.loadingIndicator.frame.size.width/2,
+                                             self.view.frame.size.height/2-self.loadingIndicator.frame.size.height/2-100,
+                                             self.loadingIndicator.frame.size.width,
+                                             self.loadingIndicator.frame.size.height);
+    
+    self.loadingLabel.frame = CGRectMake(self.view.frame.size.width/2-self.loadingLabel.frame.size.width/2,
+                                         self.loadingIndicator.frame.origin.y+self.loadingIndicator.frame.size.height+10,
+                                         240,
+                                         55);
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
     [self.tableData removeAllObjects];
     [self retrieveDataFromAPI];
     [self.tableView reloadData];
+    [self.loadingLabel setHidden:YES];
+    [self.loadingIndicator setHidden:YES];
+
+    
     NSLog(@"vwa-chatList");
 }
 
@@ -84,6 +100,15 @@
         
     }
     
+    if ([self.tableData count])
+    {
+        [self.tableView setHidden:NO];
+        [self.recordLabel setHidden:YES];
+    }else{
+        [self.tableView setHidden:YES];
+        [self.recordLabel setHidden:NO];
+    }
+    
     [resultsDictionary release];
 
 }
@@ -100,14 +125,6 @@
 {
     NSLog(@"rows %d",[self.tableData count]);
     
-    if ([self.tableData count])
-    {
-        [self.tableView setHidden:NO];
-        [self.recordLabel setHidden:YES];
-    }else{
-        [self.tableView setHidden:YES];
-        [self.recordLabel setHidden:NO];
-    }
     return [self.tableData count];
 }
 
@@ -153,11 +170,11 @@
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     if([[buddy valueForKey:@"group_id"]intValue] == 0) {
         ChatViewController *newChat = [[ChatViewController alloc] initWithBuddyId:[buddy valueForKey:@"buddy_user_id"] andUsername:[buddy valueForKey:@"username"]];
-        [mydelegate.otherNavController pushViewController:newChat animated:YES];
+        [mydelegate.buddyNavController pushViewController:newChat animated:YES];
         [newChat release];
     } else {
         GroupChatViewController *newGChat = [[GroupChatViewController alloc] initWithGroupId:[buddy valueForKey:@"group_id"] andGroupname:[buddy valueForKey:@"username"]];
-        [mydelegate.otherNavController pushViewController:newGChat animated:YES];
+        [mydelegate.buddyNavController pushViewController:newGChat animated:YES];
         [newGChat release];
     }
 }
@@ -178,12 +195,16 @@
     [_tableData release];
     [_tableView release];
     [_recordLabel release];
+    [_loadingIndicator release];
+    [_loadingLabel release];
     [super dealloc];
 }
 - (void)viewDidUnload {
     [self setTableData:nil];
     [self setTableView:nil];
     [self setRecordLabel:nil];
+    [self setLoadingIndicator:nil];
+    [self setLoadingLabel:nil];
     [super viewDidUnload];
 }
 @end

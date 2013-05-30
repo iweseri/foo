@@ -35,6 +35,7 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *cartItems;
 @property (retain, nonatomic) IBOutlet UILabel *jWallLabel;
+@property (retain, nonatomic) IBOutlet UILabel *jboxLabel;
 
 - (void) reloadImage;
 - (void)pushProfileViewController;

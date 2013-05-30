@@ -17,7 +17,8 @@
 #import "FeedbackViewController.h"
 #import "AboutViewController.h"
 #import "SettingsViewController.h"
-#import "JBuddyViewController.h"
+//#import "JBuddyViewController.h"
+#import "BoxViewController.h"
 #import "JWallViewController.h"
 
 #define kTableCellHeightA 110
@@ -105,10 +106,15 @@
     [self.socialLabel addGestureRecognizer:tapSocialRecognizer];
     [tapSocialRecognizer release];
     
-    self.jBuddyLabel.userInteractionEnabled = YES;
-    UITapGestureRecognizer *tapJBuddyRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleBuddy)];
-    [self.jBuddyLabel addGestureRecognizer:tapJBuddyRecognizer];
-    [tapJBuddyRecognizer release];
+//    self.jBuddyLabel.userInteractionEnabled = YES;
+//    UITapGestureRecognizer *tapJBuddyRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleBuddy)];
+//    [self.jBuddyLabel addGestureRecognizer:tapJBuddyRecognizer];
+//    [tapJBuddyRecognizer release];
+    
+    self.jboxLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapJBoxRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleJBox)];
+    [self.jboxLabel addGestureRecognizer:tapJBoxRecognizer];
+    [tapJBoxRecognizer release];
     
     self.jWallLabel.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapJWallRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleWall)];
@@ -235,6 +241,7 @@
     [self setTableView:nil];
     [self setJBuddyLabel:nil];
     [self setJWallLabel:nil];
+    [self setJboxLabel:nil];
     [super viewDidUnload];
     self.contentView = nil;
     
@@ -313,13 +320,22 @@
     [mydelegate closeSidebar];
 }
 
-- (void)handleBuddy
+//- (void)handleBuddy
+//{
+//    NSLog(@"handleBuddy");
+//    
+//    JBuddyViewController *buddyListVc = [[JBuddyViewController alloc] init];
+//    [self showViewControllerWithLoadingView:buddyListVc];
+//    [buddyListVc release];
+//}
+
+- (void)handleJBox
 {
-    NSLog(@"handleBuddy");
+    NSLog(@"handleJBox");
     
-    JBuddyViewController *buddyListVc = [[JBuddyViewController alloc] init];
-    [self showViewControllerWithLoadingView:buddyListVc];
-    [buddyListVc release];
+    BoxViewController *boxVC = [[BoxViewController alloc] init];
+    [self showViewControllerWithLoadingView:boxVC];
+    [boxVC release];
 }
 
 - (void)handleWall
@@ -471,6 +487,7 @@
     
     [_jBuddyLabel release];
     [_jWallLabel release];
+    [_jboxLabel release];
     [super dealloc];
 }
 

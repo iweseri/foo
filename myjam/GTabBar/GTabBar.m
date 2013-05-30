@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 
 #define kSelectedTab	@"SelectedTAB"
+
 @implementation GTabBar
 @synthesize tabViewControllers;
 @synthesize tabItemsArray;
@@ -134,11 +135,11 @@
             }else if(i == kBoxTab)
             {
                 //NSLog(@"Box hardcoded clicked");
-                if (mydelegate.isFromScannerTab == YES) {
-                    mydelegate.isFromScannerTab = NO;
-                }else{
-                    [mydelegate.boxNavController popToRootViewControllerAnimated:NO];
-                }
+//                if (mydelegate.isFromScannerTab == YES) {
+//                    mydelegate.isFromScannerTab = NO;
+//                }else{
+//                    [mydelegate.boxNavController popToRootViewControllerAnimated:NO];
+//                }
             }
 //			[[tabViewControllers objectAtIndex:i] view].hidden = NO;
 		} else {

@@ -61,8 +61,10 @@
     CGRect innerViewFrame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(tabBar.frame.size.height)-18-44);
     
     self.publicVc = [[PublicViewController alloc] init];
+    self.publicVc.pageType = kPublic;
     self.publicVc.view.frame = innerViewFrame;
-    self.personalVc = [[PersonalViewController alloc] init];
+    self.personalVc = [[PublicViewController alloc] init];
+    self.personalVc.pageType = kPersonal;
     self.personalVc.view.frame = innerViewFrame;
     
     self.vc1 = [[[TBViewController alloc] init] autorelease];

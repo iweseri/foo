@@ -13,5 +13,7 @@
 @property (nonatomic,retain) NSMutableArray *tableData;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UILabel *recordLabel;
+@property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
+@property (retain, nonatomic) IBOutlet UILabel *loadingLabel;
 
 @end

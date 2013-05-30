@@ -26,6 +26,7 @@
 #import "ErrorViewController.h"
 #import "JSONKit.h"
 #import "SocketIOPacket.h"
+#import "JBuddyViewController.h"
 
 #define kCloseSwipeBottom   1
 #define kCloseSideBar       2
@@ -51,6 +52,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 @synthesize homeNavController, scanNavController, boxNavController, shopNavController;
 @synthesize bannerView;
 @synthesize tutorial;
+@synthesize buddyNavController;
 @synthesize otherNavController;
 @synthesize swipeOptionString;
 @synthesize cartCounter;
@@ -255,6 +257,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     CreateViewController *createVC = [[CreateViewController alloc] init];
     bottomSVJShop = [[BottomSwipeViewJShop alloc] init];
     bottomSVJSPurchase = [[BottomSwipeViewJSPurchase alloc] init];
+    JBuddyViewController *jbuddy = [[JBuddyViewController alloc] init];
     
     // Init navigationControllers for TabbarController
     homeNavController = [[UINavigationController alloc] initWithRootViewController:homeVC];
@@ -262,6 +265,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     scanNavController = [[UINavigationController alloc] initWithRootViewController:scanVC];
     boxNavController = [[UINavigationController alloc] initWithRootViewController:boxVC];
     otherNavController = [[UINavigationController alloc] initWithRootViewController:createVC];
+    buddyNavController = [[UINavigationController alloc] initWithRootViewController:jbuddy];
     
     //    // Init TabBarItem
     //    GTabTabItem *tabItem1 = [[GTabTabItem alloc] initWithFrame:CGRectMake(0, 0, 64, 39) normalState:@"home_selected" toggledState:@"home"];
@@ -328,7 +332,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 	[viewControllersArray addObject:homeNavController];
 	[viewControllersArray addObject:shopNavController];
     [viewControllersArray addObject:scanNavController];
-    [viewControllersArray addObject:boxNavController];
+    [viewControllersArray addObject:buddyNavController];
     [viewControllersArray addObject:otherNavController];
 	
 	NSMutableArray *tabItemsArray = [[NSMutableArray alloc] init];
@@ -844,6 +848,39 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
 }
 
+- (void)setupLocalNotifications {
+    [[UIApplication sharedApplication] cancelAllLocalNotifications];
+    
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    
+    // current time plus 10 secs
+    NSDate *now = [NSDate date];
+    
+    localNotification.fireDate = [now dateByAddingTimeInterval:5];
+    localNotification.alertBody = @"New message received.";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+//    localNotification.applicationIconBadgeNumber = 1; // increment
+    
+    NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
+    localNotification.userInfo = infoDict;
+    
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    
+//    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    NSLog(@"AppDelegate didReceiveLocalNotification %@", notification.userInfo);
+    
+//    UIAlertView *alertView = [[UIAlertView alloc]
+//                              initWithTitle:@"J-Buddy"
+//                              message:notification.alertBody
+//                              delegate:nil
+//                              cancelButtonTitle:@"OK"
+//                              otherButtonTitles:nil];
+//    [alertView show];
+}
+
 #pragma mark -
 #pragma mark SocketIO methods and delegate
 
@@ -933,6 +970,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         }
         
         
+        [self setupLocalNotifications];
         [self playAlertSound];
         
     }
@@ -970,6 +1008,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     NSURL *pathSound = [NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"beep-beep" ofType:@"mp3"] isDirectory:NO];
     AudioServicesCreateSystemSoundID((CFURLRef) pathSound, &audioEffect);
     AudioServicesPlaySystemSound(audioEffect);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     // call the following function when the sound is no longer used
     // (must be done AFTER the sound is done playing)
     //    AudioServicesDisposeSystemSoundID(audioEffect);
@@ -1182,7 +1221,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:productId];
             detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
             detailViewController.productId = [productId mutableCopy];
-            [boxNavController pushViewController:detailViewController animated:YES];
+            [shopNavController pushViewController:detailViewController animated:YES];
         }
         else{
             MoreViewController *more = [[MoreViewController alloc] init];
@@ -1216,7 +1255,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
     if ([[localData objectForKey:@"isProfileUpdated"] isEqualToString:@"NO"])
     {
-        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Update Jambulite Profile" message:@"Do you want to update your Jambulite Profile?" delegate:self cancelButtonTitle:@"       Skip       " otherButtonTitles:@" Jambulite Profile ",nil];
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Update Jambulite Profile" message:@"Do you want to update your Jambulite Profile?" delegate:self cancelButtonTitle:@"Skip" otherButtonTitles:@" Jambulite Profile ",nil];
         [alert show];
         [alert release];
         

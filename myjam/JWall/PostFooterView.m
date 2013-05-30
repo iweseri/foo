@@ -29,6 +29,7 @@
         self = (PostFooterView *)[nibs objectAtIndex:0];
         [self.favoriteButton addTarget:self action:@selector(onClickFavouriteButton) forControlEvents:UIControlEventTouchDown];
         [self.commentButton addTarget:self action:@selector(onClickCommentButton) forControlEvents:UIControlEventTouchDown];
+        [self.deleteButton addTarget:self action:@selector(onClickDeleteButton) forControlEvents:UIControlEventTouchDown];
         [self.bottomLineView setBackgroundColor:[UIColor colorWithHex:@"#c8c8c8"]];
         
         // add fav label
@@ -111,6 +112,12 @@
 {
     [self.delegate tableFooter:self didClickedCommentAtIndex:self.tag];
 }
+
+- (void)onClickDeleteButton
+{
+    [self.delegate tableFooter:self didClickedDeleteAtIndex:self.tag];
+}
+
 - (void)openDetailsPost:(UITapGestureRecognizer *)sender
 {
     if (sender.view.tag == 1) {

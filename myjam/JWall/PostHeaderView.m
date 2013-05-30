@@ -104,6 +104,7 @@
 
 - (void)dealloc {
     [_optionButton release];
+    [_qrcodeImageView release];
     [super dealloc];
 }
 @end

@@ -301,7 +301,8 @@
         
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         
-        [mydelegate.otherNavController pushViewController:newChat animated:YES];
+//        [mydelegate.otherNavController pushViewController:newChat animated:YES];
+        [mydelegate.buddyNavController pushViewController:newChat animated:YES];
         [newChat release];
     }
 }

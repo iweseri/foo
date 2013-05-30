@@ -51,7 +51,7 @@
     [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
     //[overlayView release];
     
-    //[self getAutorizedForContact];
+    [self getAutorizedForContact];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -98,8 +98,9 @@
 - (void)getPersonOutOfAddressBook
 {
     CFErrorRef error = NULL;
-    NSMutableArray *mobileData = [[NSMutableArray alloc] init];
-    NSMutableArray *emailData = [[NSMutableArray alloc] init];
+    NSMutableArray *arrayOfContacts = [[NSMutableArray alloc] init];
+    //    NSMutableArray *mobileData = [[NSMutableArray alloc] init];
+    //    NSMutableArray *emailData = [[NSMutableArray alloc] init];
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, &error);
     if (addressBook != nil)
@@ -109,72 +110,77 @@
         for (i = 0; i < [allContacts count]; i++)
         {
             ABRecordRef contactPerson = (__bridge ABRecordRef)allContacts[i];
-            //mobile
-            ABMultiValueRef mob = ABRecordCopyValue(contactPerson, kABPersonPhoneProperty);
-            NSUInteger k = 0;
-            for (k = 0; k < ABMultiValueGetCount(mob); k++) {
-                NSString *mobile = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(mob, k);
-                if (k == 0) {
-                    [mobileData addObject:mobile];
-                }
-            }
-            //email
+            
+            
+            ABMultiValueRef mobiles = ABRecordCopyValue(contactPerson, kABPersonPhoneProperty);
+            NSString *mobile = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(mobiles, 0);
+            
             ABMultiValueRef emails = ABRecordCopyValue(contactPerson, kABPersonEmailProperty);
-            NSUInteger j = 0;
-            for (j = 0; j < ABMultiValueGetCount(emails); j++) {
-                NSString *email = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emails, j);
-                if (j == 0) {
-                    [emailData addObject:email];
-                }
+            NSString *email = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(emails, 0);
+            
+            NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(contactPerson, kABPersonFirstNameProperty);
+            
+            NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(contactPerson, kABPersonLastNameProperty);
+            NSString *fullname;
+            if (![lastName length]) {
+                fullname = firstName;
+            }else{
+                fullname = [NSString stringWithFormat:@"%@ %@",firstName, lastName];
             }
+//            NSLog(@"-- %@, %@, %@", fullname, email, mobile);
+            if (![fullname length]) {
+                fullname = @"";
+            }
+            if (![email length]) {
+                email = @"";
+            }
+            if (![mobile length]) {
+                mobile = @"";
+            }
+            
+            NSDictionary *contactDict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                         fullname, @"name",
+                                         email, @"email",
+                                         mobile, @"mobile",
+                                         nil];
+            [arrayOfContacts addObject:contactDict];
+
         }
     }
     CFRelease(addressBook);
+    NSError *jsonError;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:arrayOfContacts
+                                                       options:NSJSONWritingPrettyPrinted error:&jsonError];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     
-    int i = 0;
-    NSMutableString *mobData = [NSMutableString stringWithFormat:@""];
-    NSMutableString *emData = [NSMutableString stringWithFormat:@""];
-    for (id row in mobileData) {
-        if (i == 0) {
-            mobData = [NSString stringWithFormat:@"%@",row];
-        } else {
-            mobData = [NSString stringWithFormat:@"%@,%@",mobData,row];
-        } i++;
-    }
-    i = 0;
-    for (id row in emailData) {
-        if (i == 0) {
-            emData = [NSString stringWithFormat:@"%@",row];
-        } else {
-            emData = [NSString stringWithFormat:@"%@,%@",emData,row];
-        } i++;
-    }
-    NSLog(@"GROUP :%@\nEM :%@",mobData,emData);
-    [self retrieveDataFromAPIWithPast:mobData and:emData];
+    NSLog(@"%@", arrayOfContacts);
+    [self retrieveDataFromAPIWithContactJSON:jsonString];
 }
 
 #pragma mark -
 #pragma mark retrieve Data From API
 
-- (void)retrieveDataFromAPIWithPast:(NSString*)mobile and:(NSString*)email
+- (void)retrieveDataFromAPIWithContactJSON:(NSString *)jsonString
 {
     //[tableData removeAllObjects];
     [joinTableData removeAllObjects];
     [inviteTableData removeAllObjects];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"\"}"];
+    
+//    NSLog(@"mobile %@", mobile);
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_match.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"contacts\":%@}",jsonString];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
+    NSLog(@"result %@", resultsDictionary);
     if([resultsDictionary count]) {
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
-            for (id data in [resultsDictionary objectForKey:@"list"]) {
+            for (id data in [resultsDictionary objectForKey:@"matched_list"]) {
                 [joinTableData addObject:data];
             }
-            for (id data in [resultsDictionary objectForKey:@"list"]) {
+            for (id data in [resultsDictionary objectForKey:@"unmatched_list"]) {
                 [inviteTableData addObject:data];
             }
         } else {
@@ -185,7 +191,6 @@
     }
     [self.tableView reloadData];
     [DejalBezelActivityView removeViewAnimated:YES];
-    //[resultsDictionary release];
 }
 
 #pragma mark -
@@ -265,37 +270,37 @@
     }
 }
 
-- (NSMutableArray*)processSearch
-{
-    NSMutableArray *searchTemp = [[NSMutableArray alloc]init];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"%@\"}",self.searchBar.text];
-    
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
-    if([resultsDictionary count]) {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"]) {
-            for (id data in [resultsDictionary objectForKey:@"list"]) {
-                [searchTemp addObject:data];
-            }
-        }
-    }
-    return searchTemp;
-    //[resultsDictionary release];
-    
-//    if ([tableData count] > 0) {
-//        [self.tableView setHidden:NO];
-//        [self.noRecordLabel setHidden:YES];
-//    }else{
-//        [self.noRecordLabel setHidden:NO];
-//        [self.tableView setHidden:YES];
+//- (NSMutableArray*)processSearch
+//{
+//    NSMutableArray *searchTemp = [[NSMutableArray alloc]init];
+//    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+//    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"%@\"}",self.searchBar.text];
+//
+//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+//    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+//
+//    if([resultsDictionary count]) {
+//        NSString *status = [resultsDictionary objectForKey:@"status"];
+//        if ([status isEqualToString:@"ok"]) {
+//            for (id data in [resultsDictionary objectForKey:@"list"]) {
+//                [searchTemp addObject:data];
+//            }
+//        }
 //    }
-    //[self.tableView reloadData];
-    [self.loadingIndicator stopAnimating];
-}
+//    return searchTemp;
+//    //[resultsDictionary release];
+//
+////    if ([tableData count] > 0) {
+////        [self.tableView setHidden:NO];
+////        [self.noRecordLabel setHidden:YES];
+////    }else{
+////        [self.noRecordLabel setHidden:NO];
+////        [self.tableView setHidden:YES];
+////    }
+//    //[self.tableView reloadData];
+//    [self.loadingIndicator stopAnimating];
+//}
 
 #pragma mark -
 #pragma mark TableView delegate
@@ -376,7 +381,7 @@
             cellData = [copyListOfInvite objectAtIndex:indexPath.row];
         }
     }else{
-        if (indexPath.section == 1) {
+        if (indexPath.section == 0) {
             cellData = [joinTableData objectAtIndex:indexPath.row];
         } else {
             cellData = [inviteTableData objectAtIndex:indexPath.row];
@@ -390,7 +395,7 @@
                        placeholderImage:[UIImage imageNamed:@"blank_avatar"]
                               completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                   if (!error) {
-                                      
+
                                   }else{
                                       NSLog(@"error retrieve image: %@",error);
                                   }

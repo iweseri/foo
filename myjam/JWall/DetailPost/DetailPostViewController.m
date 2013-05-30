@@ -557,7 +557,7 @@ static CGFloat kCommentImageViewHeight = 120;
     // Add qrcode to sliderView
     [headerView insertSubview:self.postQRCodeContentView aboveSubview:self.postContentView];
     [self.qrcodeImage setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId]]
-                     placeholderImage:[UIImage imageNamed:@"default_icon"]
+                     placeholderImage:[UIImage imageNamed:@"preview"]
                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
                                 if (!error) {
                                     
@@ -672,16 +672,294 @@ static CGFloat kCommentImageViewHeight = 120;
     [self.view addSubview:popup];
 }
 
+
 #pragma mark -
 #pragma mark MyPopupViewDelegate
 
 - (void)popView:(MyPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
 {
-    NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
-    
+    switch (index) {
+        case 0:
+            [self shareImageOnFB:data.qrcodeId];
+            break;
+        case 1:
+            [self shareImageOnTwitter:data.qrcodeId];
+            break;
+        case 2:
+            [self shareImageOnEmail:data.qrcodeId];
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+        {
+            if ([data.userId isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"userid"]]) {
+                break;
+            }
+            NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_user_block.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
+            
+            NSString *dataContent = [NSString stringWithFormat:@"{\"buddy_user_id\":\"%@\"}",data.userId];
+            
+            NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+            
+            NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+            
+            if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
+                // popnavigation controller
+            }
+            break;
+        }
+        default:
+            break;
+    }
     [self removeBlackView];
 }
 
+#pragma mark -
+#pragma mark share action handler
+
+- (void)addShareItemtoServer:(NSInteger)aQRcodeId withShareType:(NSString *)aType
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/qrcode_share.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
+    
+    NSString *dataContent = [NSString stringWithFormat:@"{\"qrcode_id\":%d,\"share_type\":\"%@\"}",aQRcodeId,aType];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        
+        if ([status isEqualToString:@"ok"])
+        {
+            NSLog(@"Success share");
+        }
+        else{
+            NSLog(@"share error!");
+        }
+    }
+    
+}
+
+- (void)shareImageOnEmail:(NSInteger)qrcodeId
+{
+    
+    if ([MFMailComposeViewController canSendMail])
+    {
+        MFMailComposeViewController *mailer = [[MFMailComposeViewController alloc] init];
+        mailer.mailComposeDelegate = self;
+        [mailer setSubject:@"JAM-BU App"];
+        
+        //        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        //        [imgView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", qrcodeId]]
+        //                         placeholderImage:[UIImage imageNamed:@"preview"]
+        //                                completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        //                                    if (!error) {
+        //
+        //                                    }else{
+        //                                        NSLog(@"error retrieve image: %@",error);
+        //                                    }
+        //
+        //                                }];
+        NSData *imageData = UIImagePNGRepresentation(self.qrcodeImage.image);
+        [mailer addAttachmentData:imageData mimeType:@"image/png" fileName:[NSString stringWithFormat:@"%d", qrcodeId]];
+        NSString *emailBody = [NSString stringWithFormat:@"Scan this QR code. \n\nJAM-BU App: %@/?qrcode_id=%d",APP_API_URL,qrcodeId];
+        [mailer setMessageBody:emailBody isHTML:NO];
+        AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [mydelegate.otherNavController presentModalViewController:mailer animated:YES];
+        [mailer release];
+        
+        [self addShareItemtoServer:qrcodeId withShareType:@"email"];
+    }
+    else
+    {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Save" message:@"Please configure your mail in Mail Application" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
+    
+    
+}
+
+- (void)shareImageOnTwitter:(NSInteger)qrcodeId
+{
+    //CHECK VERSION FIRST. Constant can refer from Constant.h
+    if(SYSTEM_VERSION_EQUAL_TO(@"5.0") || SYSTEM_VERSION_EQUAL_TO(@"5.1"))
+    {
+        [self twitterAPIShare:qrcodeId];
+    }
+    else if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0"))
+    {
+        [self callAPIShare:kOPTION_TWITTER withQRcodeId:qrcodeId];
+    }
+}
+- (void)shareImageOnFB:(NSInteger)qrcodeId
+{
+    //check version first and then call method
+    if(SYSTEM_VERSION_EQUAL_TO(@"5.0") || SYSTEM_VERSION_EQUAL_TO(@"5.1"))
+    {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Unsupported iOS Version" message:@"Sorry. Your iOS version doesn't support Facebook Share." delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
+    else if(SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"6.0"))
+    {
+        [self callAPIShare:kOPTION_FB withQRcodeId:qrcodeId];
+    }
+}
+- (void)twitterAPIShare:(NSInteger)qrcodeId //for iOS 5 and 5.1
+{
+    TWTweetComposeViewController *twitter = [[TWTweetComposeViewController alloc] init];
+    
+    [twitter setInitialText:@""];
+    //    UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    //    [imgView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", qrcodeId]]
+    //            placeholderImage:[UIImage imageNamed:@"preview"]
+    //                   completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    //                       if (!error) {
+    //
+    //                       }else{
+    //                           NSLog(@"error retrieve image: %@",error);
+    //                       }
+    //
+    //                   }];
+    [twitter addImage:self.qrcodeImage.image];
+    
+    [self presentViewController:twitter animated:YES completion:nil];
+    
+    twitter.completionHandler = ^(TWTweetComposeViewControllerResult res) {
+        
+        if(res == TWTweetComposeViewControllerResultDone) {
+            
+            UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Success" message:@"Successfully posted." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            
+            [alert show];
+            [alert release];
+            
+            [self addShareItemtoServer:qrcodeId withShareType:@"twitter"];
+            
+        }
+        if(res == TWTweetComposeViewControllerResultCancelled) {
+            /*
+             UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"Cancelled" message:@"You Cancelled posting the Tweet." delegate:self cancelButtonTitle:@"Dismiss" otherButtonTitles: nil];
+             
+             [alert show];
+             */
+        }
+        [self dismissModalViewControllerAnimated:YES];
+        
+    };
+    
+    
+}
+
+- (void)callAPIShare:(int)option withQRcodeId:(NSInteger)qrcodeId
+{
+    NSString *serviceType = nil;
+    NSString *type = nil;
+    if (option == kOPTION_FB) {
+        serviceType = SLServiceTypeFacebook;
+        type = @"Facebook";
+    }else if (option == kOPTION_TWITTER){
+        serviceType = SLServiceTypeTwitter;
+        type = @"Twitter";
+    }
+    
+    mySLComposerSheet = [[SLComposeViewController alloc] init];
+    mySLComposerSheet = [SLComposeViewController composeViewControllerForServiceType:serviceType];
+    
+    if([SLComposeViewController isAvailableForServiceType:serviceType]) //check if account is linked
+    {
+        //        UIImageView *imgView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+        //        [imgView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", qrcodeId]]
+        //                placeholderImage:[UIImage imageNamed:@"preview"]
+        //                       completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+        //                           if (!error) {
+        //
+        //                           }else{
+        //                               NSLog(@"error retrieve image: %@",error);
+        //                           }
+        //
+        //                       }];
+        
+        [mySLComposerSheet addImage:self.qrcodeImage.image];
+        [self presentViewController:mySLComposerSheet animated:YES completion:nil];
+        
+        [mySLComposerSheet setCompletionHandler:^(SLComposeViewControllerResult result) {
+            NSString *output;
+            switch (result) {
+                case SLComposeViewControllerResultCancelled:
+                    output = @"Action Cancelled";
+                    [self dismissModalViewControllerAnimated:YES];
+                    break;
+                case SLComposeViewControllerResultDone:
+                    output = @"Post Successful";
+                    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Save" message:output delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alert show];
+                    [alert release];
+                    [self dismissModalViewControllerAnimated:YES];
+                    break;
+                    
+                    [self addShareItemtoServer:qrcodeId withShareType:[type lowercaseString]];
+            }
+            
+        }];
+        
+        
+        
+    }else{
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Save" message:[NSString stringWithFormat:@"Please add your %@ account in IOS Device Settings and allow JAM-BU to access your %@ information.",type,type] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
+    
+    
+}
+
+#pragma mark -
+#pragma mark MFMail delegate
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
+{
+    NSString *msg;
+    switch (result)
+    {
+        case MFMailComposeResultCancelled:
+            //NSLog(@"Mail cancelled: you cancelled the operation and no email message was queued.");
+            msg = @"";
+            break;
+        case MFMailComposeResultSaved:
+            //NSLog(@"Mail saved: you saved the email message in the drafts folder.");
+            msg = [NSString stringWithFormat:@"Email has been saved to draft"];
+            break;
+        case MFMailComposeResultSent:
+            //NSLog(@"Mail send: the email message is queued in the outbox. It is ready to send.");
+            msg = [NSString stringWithFormat:@"Email has been successfully sent"];
+            break;
+        case MFMailComposeResultFailed:
+            //NSLog(@"Mail failed: the email message was not saved or queued, possibly due to an error.");
+            msg = [NSString stringWithFormat:@"Email was not sent, possibly due to an error"];
+            break;
+        default:
+            //NSLog(@"Mail not sent.");
+            break;
+    }
+    
+    if (![msg isEqualToString:@""]) {
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Save" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+    }
+    
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    // Remove the mail view
+    [mydelegate.otherNavController dismissModalViewControllerAnimated:YES];
+}
+
+#pragma mark -
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

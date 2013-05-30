@@ -10,8 +10,11 @@
 #import "PostHeaderView.h"
 #import "MyPopupView.h"
 #import "PostClass.h"
+#import <Social/Social.h>
+#import <Accounts/Accounts.h>
+#import <MessageUI/MessageUI.h>
 
-@interface DetailPostViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, MyPopupViewDelegate>
+@interface DetailPostViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, MyPopupViewDelegate, MFMailComposeViewControllerDelegate>
 {
     PostClass *data;
     CGFloat currentHeight;
@@ -31,7 +34,7 @@
     
     CGFloat tmpValue;
     BOOL isShownQRImage;
-    
+    SLComposeViewController *mySLComposerSheet;
 }
 @property (retain, nonatomic) IBOutlet UIView *footerView;
 @property (retain, nonatomic) IBOutlet UIButton *commentButton;

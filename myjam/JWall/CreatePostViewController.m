@@ -331,7 +331,7 @@
         NSLog(@"ID:%d",postIdComment);
         NSLog(@"\nText :%@\nImage :%@\nTag :%@",self.textData.text,self.uploadImage,self.tagId);
         [self.loadingIndicator startAnimating];
-        [self performSelector:@selector(processPostToAPI:) withObject:typePost afterDelay:0.1f];
+        [self performSelector:@selector(processPostToAPI:) withObject:typePost afterDelay:0.0f];
     }
 }
 
@@ -354,7 +354,7 @@
         NSLog(@"COMMENT:%d",postIdComment);
         apiFile = @"wall_post_comment.php";
     }
-    NSData *imgData = UIImageJPEGRepresentation(self.uploadImage.image, 1.0);
+    NSData *imgData = UIImageJPEGRepresentation(self.uploadImage.image, 0.3);
     NSString *urlString = [NSString stringWithFormat:@"%@/api/%@?token=%@",APP_API_URL,apiFile,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
     
@@ -387,6 +387,7 @@
             NSString *status = [resultsDictionary objectForKey:@"status"];
             if ([status isEqualToString:@"ok"]) {
 //                [self presentAlert:[resultsDictionary objectForKey:@"message"]];
+                [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadWall"object:self];
                 [self.navigationController popViewControllerAnimated:YES];
             } else {
 //                [self presentAlert:[resultsDictionary objectForKey:@"message"]];

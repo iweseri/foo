@@ -360,7 +360,7 @@
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:YES];
+            [mydelegate.buddyNavController popToViewController:[mydelegate.buddyNavController.viewControllers objectAtIndex:0] animated:YES];
             //[self.navigationController popViewControllerAnimated:YES];
         }
         

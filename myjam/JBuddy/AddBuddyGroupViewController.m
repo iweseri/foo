@@ -227,7 +227,7 @@
 - (IBAction)addBuddyGroup:(id)sender {
     EditGroupViewController *addBuddy = [[EditGroupViewController alloc] initWithGroupId:self.groupId nGroupNameIs:self.subjectTextField.text];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [mydelegate.otherNavController pushViewController:addBuddy animated:YES];
+    [mydelegate.buddyNavController pushViewController:addBuddy animated:YES];
     [addBuddy release];
 }
 

@@ -96,6 +96,7 @@
     [facebookButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
     [facebookButton setTintColor:[UIColor whiteColor]];
     [facebookButton addTarget:self action:@selector(optionTo:) forControlEvents:UIControlEventTouchUpInside];
+    [facebookButton setEnabled:NO];
     [self.view addSubview:facebookButton];
 }
 

@@ -75,6 +75,20 @@
     [overlayView release];
     
     self.groupArray = [[NSMutableDictionary alloc] init];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadGroupBuddyList:)
+                                                 name:@"updateGroupBuddyList"
+                                               object:nil];
+}
+
+- (void)reloadGroupBuddyList
+{
+    [self.tableData removeAllObjects];
+    [self retrieveDataFromAPI];
+    [self.tableView reloadData];
+    searching = NO;
+    selectRowEnabled = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -125,8 +139,9 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:2] animated:YES];
+            [mydelegate.buddyNavController popToViewController:[mydelegate.buddyNavController.viewControllers objectAtIndex:1] animated:YES];
             [[NSNotificationCenter defaultCenter] postNotificationName:@"updateGroupMessageList" object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatList" object:nil];
             //GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:self.groupId andGroupname:self.groupName];
             //[mydelegate.otherNavController pushViewController:newChat animated:YES];
             //[newChat release];

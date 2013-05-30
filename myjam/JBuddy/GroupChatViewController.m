@@ -471,7 +471,7 @@ static CGFloat kMinCellHeight = 40;
 - (IBAction)editGroup:(id)sender {
     AddBuddyGroupViewController *newChat = [[AddBuddyGroupViewController alloc] initWithGroupId:self.buddyGroupId andGroupname:self.buddyGroupname];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [mydelegate.otherNavController pushViewController:newChat animated:YES];
+    [mydelegate.buddyNavController pushViewController:newChat animated:YES];
     [newChat release];
 }
 

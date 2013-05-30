@@ -371,7 +371,7 @@
         detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
         AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
         [self.navigationController popToRootViewControllerAnimated:NO];
-        [mydelegate.boxNavController pushViewController:detailViewController animated:NO];
+        [mydelegate.shopNavController pushViewController:detailViewController animated:NO];
         //        [self.navigationController pushViewController:detailViewController animated:YES];
         [detailViewController release];
         
@@ -850,7 +850,7 @@
                 [self.navigationController popToRootViewControllerAnimated:NO];
                 AGalleryViewController *gallery = [[AGalleryViewController alloc] init];
                 gallery.qrcodeId = self.detailsData.qrcodeId;
-                [mydelegate.boxNavController pushViewController:gallery animated:NO];
+                [mydelegate.homeNavController pushViewController:gallery animated:NO];
                 [gallery release];
                 return NO;
             }

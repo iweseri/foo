@@ -35,6 +35,7 @@
 
 - (void)tableFooter:(PostFooterView *)footerView didClickedCommentAtIndex:(NSInteger)index;
 - (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteAtIndex:(NSInteger)index;
+- (void)tableFooter:(PostFooterView *)footerView didClickedDeleteAtIndex:(NSInteger)index;
 - (void)tableFooter:(PostFooterView *)footerView didClickedCommentLinkAtIndex:(NSInteger)index;
 - (void)tableFooter:(PostFooterView *)footerView didClickedFavouriteLinkAtIndex:(NSInteger)index;
 

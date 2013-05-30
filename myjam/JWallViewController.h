@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "TBTabBar.h"
 #import "PublicViewController.h"
-#import "PersonalViewController.h"
+//#import "PersonalViewController.h"
 #import "TBTabButton.h"
 #import "MyPopupView.h"
 
@@ -22,7 +22,7 @@
 }
 
 @property (retain, nonatomic) PublicViewController *publicVc;
-@property (retain, nonatomic) PersonalViewController *personalVc;
+@property (retain, nonatomic) PublicViewController *personalVc;
 @property (retain, nonatomic) TBViewController *vc1, *vc2;
 
 

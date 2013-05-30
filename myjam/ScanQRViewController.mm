@@ -21,6 +21,7 @@
 #import "MEvent.h"
 #import "ErrorViewController.h"
 #import "ConnectionClass.h"
+#import "BoxViewController.h"
 
 @interface ScanQRViewController ()
 
@@ -142,7 +143,7 @@
     NSString *dataContent = [NSString stringWithFormat:@"{\"qrcode_id\":%@}",qrcodeId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    //NSLog(@"abc: %@, def:%@",dataContent, response);
+    NSLog(@"abc: %@, def:%@",dataContent, response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
     
     if([resultsDictionary count])
@@ -229,6 +230,7 @@
     
     MoreViewController *more = [[MoreViewController alloc] init];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     mydelegate.isFromScannerTab = YES;
     if (![ConnectionClass connected]) {
         more.noInternetConnection = YES;
@@ -296,9 +298,11 @@
         // Store qrcode in server / scan list
         if ([self addScanToServer:qrcodeId])
         {
+            BoxViewController *boxController = [[BoxViewController alloc] init];
+            [mydelegate.otherNavController pushViewController:boxController animated:NO];
             
             NSString *productId = [self checkQRCodeType:qrcodeId];
-            
+
             if ([productId intValue] > 0)
             {
                 // type of product
@@ -307,23 +311,26 @@
                 detailViewController.productInfo = [[MJModel sharedInstance] getProductInfoFor:productId];
                 detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
                 detailViewController.productId = [productId mutableCopy];
-                [mydelegate.boxNavController pushViewController:detailViewController animated:YES];
+                
+                [mydelegate.otherNavController pushViewController:detailViewController animated:YES];
             }
             else{
             
                 more.qrcodeId = qrcodeId;
-                [mydelegate.boxNavController pushViewController:more animated:YES];
+                [mydelegate.otherNavController pushViewController:more animated:YES];
                 [more release];
             }
-            [mydelegate.tabView activateController:3];
+            [mydelegate.tabView activateController:kOthersTab];
             // Manually change the selected tabButton
             for (int i = 0; i < [mydelegate.tabView.tabItemsArray count]; i++) {
-                if (i == 3) {
+                if (i == kOthersTab) {
                     [[mydelegate.tabView.tabItemsArray objectAtIndex:i] toggleOn:YES];
                 } else {
                     [[mydelegate.tabView.tabItemsArray objectAtIndex:i] toggleOn:NO];
                 }
             }
+            
+            [boxController release];
         }
     }else{
         //NSLog(@"Error occured.");
@@ -713,9 +720,15 @@
         {
             more.qrcodeId = qrcodeId;
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.boxNavController pushViewController:more animated:YES];
-            [mydelegate.tabView activateController:3];
+            
+            BoxViewController *boxController = [[BoxViewController alloc] init];
+            [mydelegate.otherNavController pushViewController:boxController animated:NO];
+            
+            
+            [mydelegate.otherNavController pushViewController:more animated:YES];
+            [mydelegate.tabView activateController:kOthersTab];
             [more release];
+            [boxController release];
         }
     }else{
         //NSLog(@"Error occured.");

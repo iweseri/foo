@@ -105,10 +105,10 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"]) {
             AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:NO];
-            
+//            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:NO];
+            [mydelegate.buddyNavController popToViewController:[mydelegate.buddyNavController.viewControllers objectAtIndex:0] animated:NO];
             GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:[resultsDictionary objectForKey:@"group_id"] andGroupname:self.subjectTextfield.text];
-            [mydelegate.otherNavController pushViewController:newChat animated:YES];
+            [mydelegate.buddyNavController pushViewController:newChat animated:YES];
             [newChat release];
         } else {
             [self triggerRequiredAlert:[[resultsDictionary objectForKey:@"message"] string]];

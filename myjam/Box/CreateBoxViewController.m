@@ -83,7 +83,9 @@
     MoreViewController *detailView = [[MoreViewController alloc] init];
     detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.boxNavController pushViewController:detailView animated:YES];
+//    [mydelegate.boxNavController pushViewController:detailView animated:YES];
+    
+    [mydelegate.otherNavController pushViewController:detailView animated:YES];
     [detailView release];
 }
 

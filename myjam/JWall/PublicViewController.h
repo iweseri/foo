@@ -12,16 +12,22 @@
 #import "PostTextCell.h"
 #import "PostImageCell.h"
 #import "MyPopupView.h"
+#import <Social/Social.h>
+#import <Accounts/Accounts.h>
+#import <MessageUI/MessageUI.h>
 
-@interface PublicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, PostFooterDelegate , MyPopupViewDelegate>
+@interface PublicViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, PostHeaderViewDelegate, PostFooterDelegate , MyPopupViewDelegate, MFMailComposeViewControllerDelegate>
 {
     NSMutableArray *tableData;
-    NSArray *options;
+    NSArray *options, *options2;
     int pageCounter;
     BOOL isLastPage;
+    SLComposeViewController *mySLComposerSheet;
+    UIImage *currImage;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (retain, nonatomic) IBOutlet UILabel *loadingLabel;
+@property (nonatomic) int pageType;
 
 @end

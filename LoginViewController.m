@@ -301,6 +301,7 @@
         NSString *message = [resultsDictionary objectForKey:@"message"];
         NSString *token = [resultsDictionary objectForKey:@"token"];
         NSString *fullname = [resultsDictionary objectForKey:@"fullname"];
+        NSString *userid = [resultsDictionary objectForKey:@"userid"];
         NSString *fname = [resultsDictionary objectForKey:@"first_name"];
         NSString *lname = [resultsDictionary objectForKey:@"last_name"];
         NSString *email = [resultsDictionary objectForKey:@"email"];
@@ -321,6 +322,7 @@
                 [localData setObject:fullname forKey:@"first_name"];
             }
             [localData setObject:lname forKey:@"last_name"];
+            [localData setObject:userid forKey:@"userid"];
             [localData setObject:email forKey:@"email"];
             [localData setObject:mobile forKey:@"mobile"];
             [localData setObject:[NSString stringWithFormat:@"YES"] forKey:@"islogin"];

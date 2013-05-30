@@ -95,13 +95,13 @@
         detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
         detailViewController.productId = [productId mutableCopy];
         AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [mydelegate.boxNavController pushViewController:detailViewController animated:YES];
+        [mydelegate.otherNavController pushViewController:detailViewController animated:YES];
     }
     else{
         MoreViewController *detailView = [[MoreViewController alloc] init];
         detailView.qrcodeId = [[self.tableData objectAtIndex:indexPath.row] qrcodeId];
         AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [mydelegate.boxNavController pushViewController:detailView animated:YES];
+        [mydelegate.otherNavController pushViewController:detailView animated:YES];
         [detailView release];
     }
 }

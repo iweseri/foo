@@ -199,7 +199,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    BoxViewController *box = [mydelegate.boxNavController.viewControllers objectAtIndex:0];
+    BoxViewController *box = [mydelegate.otherNavController.viewControllers objectAtIndex:1];
     NSMutableString *strData = [NSMutableString stringWithFormat:@""];
     int i = 0;
     for (id row in checkedCategories) {
