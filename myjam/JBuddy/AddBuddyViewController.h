@@ -10,10 +10,10 @@
 
 @interface AddBuddyViewController : UIViewController<UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate>
 {
-    BOOL searching;
-    BOOL selectRowEnabled;
+//    BOOL searching;
+//    BOOL selectRowEnabled;
     NSMutableArray *copyListOfItems;
-    NSMutableArray *tableData;
+//    NSMutableArray *tableData;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;

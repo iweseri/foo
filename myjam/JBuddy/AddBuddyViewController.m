@@ -27,6 +27,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-Buddy";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
     }
     return self;
 }
@@ -38,61 +52,66 @@
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
-    tableData = [[NSMutableArray alloc] init];
+//    tableData = [[NSMutableArray alloc] init];
     copyListOfItems = [[NSMutableArray alloc] init];
     
     self.searchBar.delegate = self;
     UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
     [overlayView setBackgroundColor:[UIColor whiteColor]];
-    [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
+    [self.searchBar addSubview:overlayView];
     [overlayView release];
     
-    //[self retrieveDataFromAPI];
+    // set empty table and take up keyboard
+    [self.searchBar becomeFirstResponder];
+    [self.tableView setHidden:YES];
+//    [self.recordLabel setHidden:NO];
+//    self.recordLabel.text = @"Search results.";
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     //[self retrieveDataFromAPI];
-    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
-    [self performSelector:@selector(retrieveDataFromAPI) withObject:nil afterDelay:0.1];
-    [self.tableView reloadData];
-    searching = NO;
-    selectRowEnabled = YES; NSLog(@"vda-addBuddy");
+//    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
+//    [self performSelector:@selector(retrieveDataFromAPI) withObject:nil afterDelay:0.1];
+//    [self.tableView reloadData];
+//    searching = NO;
+//    selectRowEnabled = YES;
+//    NSLog(@"vda-addBuddy");
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     NSLog(@"vwd-addBuddy"); //[self.tableData removeAllObjects];
-    [self clearSearchBar:self.searchBar];
+//    [self clearSearchBar:self.searchBar];
 }
 
-- (void)retrieveDataFromAPI
-{
-    [tableData removeAllObjects];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"\"}"];
-    
-    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
-    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    
-    if([resultsDictionary count])
-    {
-        NSString *status = [resultsDictionary objectForKey:@"status"];
-        if ([status isEqualToString:@"ok"])
-        {
-            for (id data in [resultsDictionary objectForKey:@"list"])
-            {
-                [tableData addObject:data];
-            }
-            
-        }
-        
-    }
-    [self.tableView reloadData];
-    [DejalBezelActivityView removeViewAnimated:YES];
-    [resultsDictionary release];
-}
+//- (void)retrieveDataFromAPI
+//{
+//    [tableData removeAllObjects];
+//    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_search.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+//    NSString *dataContent = [NSString stringWithFormat:@"{\"search\":\"\"}"];
+//    
+//    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+//    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+//    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+//    
+//    if([resultsDictionary count])
+//    {
+//        NSString *status = [resultsDictionary objectForKey:@"status"];
+//        if ([status isEqualToString:@"ok"])
+//        {
+//            for (id data in [resultsDictionary objectForKey:@"list"])
+//            {
+//                [tableData addObject:data];
+//            }
+//            
+//        }
+//        
+//    }
+//    [self.tableView reloadData];
+//    [DejalBezelActivityView removeViewAnimated:YES];
+//    [resultsDictionary release];
+//}
 
 #pragma mark -
 #pragma mark SearchBar delegate
@@ -101,7 +120,7 @@
 {
     sBar.text = @"";
     [sBar setShowsCancelButton:NO animated:YES];
-    searching = NO;
+//    searching = NO;
     [self.tableView reloadData];
     [sBar resignFirstResponder];
 }
@@ -122,22 +141,30 @@
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
-    [self clearSearchBar:searchBar];
+//    [self clearSearchBar:searchBar];
+    searchBar.text = @"";
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [copyListOfItems removeAllObjects];
+    
+    [self.loadingIndicator startAnimating];
+    
+//    [copyListOfItems removeAllObjects];
     
     if([searchBar.text length] > 0) {
         
-        searching = YES;
-        selectRowEnabled = YES;
+//        searching = YES;
+//        selectRowEnabled = YES;
         //        self.tableView.scrollEnabled = YES;
+        
         [self searchTableView];
+//        [self performSelector:@selector(searchTableView) withObject:nil afterDelay:0];
     }
     else {
         
-        searching = NO;
+//        searching = NO;
         //        selectRowEnabled = NO;
         //        self.tableView.scrollEnabled = NO;
     }
@@ -169,8 +196,10 @@
 - (void) searchTableView {
     
     NSString *searchText = self.searchBar.text;
-    NSMutableArray *srchTemp = [[NSMutableArray alloc]init];
-    srchTemp = [[self processSearch] copy]; NSLog(@"DATA:%@",[self processSearch]);
+    NSMutableArray *srchTemp = [[NSMutableArray alloc] init];
+    [copyListOfItems removeAllObjects];
+    srchTemp = [self processSearch];
+    NSLog(@"DATA:%@",srchTemp);
     for (id row in srchTemp) {
         NSString *username = [row objectForKey:@"username"];
         NSRange titleResultsRange = [username rangeOfString:searchText options:NSCaseInsensitiveSearch];
@@ -178,6 +207,8 @@
         if (titleResultsRange.length > 0)
             [copyListOfItems addObject:row];
     }
+    
+    [self.loadingIndicator stopAnimating];
 }
 
 - (NSMutableArray*)processSearch
@@ -198,6 +229,7 @@
             }
         }
     }
+    
     return searchTemp;
     //[resultsDictionary release];
     
@@ -209,7 +241,6 @@
 //        [self.tableView setHidden:YES];
 //    }
     //[self.tableView reloadData];
-    [self.loadingIndicator stopAnimating];
 }
 
 #pragma mark -
@@ -217,10 +248,10 @@
 
 - (NSIndexPath *)tableView :(UITableView *)theTableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    if(selectRowEnabled)
+//    if(selectRowEnabled)
         return indexPath;
-    else
-        return nil;
+//    else
+//        return nil;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -233,12 +264,12 @@
     
     int totalRow;
     
-    if (searching){
-        totalRow = [copyListOfItems count];
-    }
-    else {
-        totalRow = [tableData count];
-    }
+//    if (searching){
+    totalRow = [copyListOfItems count];
+//    }
+//    else {
+//        totalRow = [tableData count];
+//    }
     
     if (totalRow)
     {
@@ -247,6 +278,7 @@
     }else{
         [self.tableView setHidden:YES];
         [self.recordLabel setHidden:NO];
+        self.recordLabel.text = @"No buddies found.";
     }
     
     return totalRow;
@@ -267,11 +299,11 @@
         cell = [nib objectAtIndex:0];
     }
     NSDictionary *cellData = nil;
-    if (searching) {
+//    if (searching) {
         cellData = [copyListOfItems objectAtIndex:indexPath.row];
-    }else{
-        cellData = [tableData objectAtIndex:indexPath.row];
-    }
+//    }else{
+//        cellData = [tableData objectAtIndex:indexPath.row];
+//    }
     NSLog(@"cell data %@",cellData);
     [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     cell.usernameLabel.text = [cellData valueForKey:@"username"];
@@ -303,11 +335,25 @@
     return cell;
 }
 
-- (void)handleAddButtons:(UIButton*)addBtn
+- (void)handleAddButtons:(UIButton *)addBtn
 {
     [self clearSearchBar:self.searchBar];
-    NSString *username = [[tableData objectAtIndex:addBtn.tag] objectForKey:@"username"];
-    NSInteger userId = [[tableData objectAtIndex:addBtn.tag] objectForKey:@"jambu_user_id"];
+    
+    NSDictionary *cellData = nil;
+//    if (searching) {
+//        NSLog(@"searching");
+//    }else{
+//        NSLog(@"not searching");
+//    }
+    
+//    if ([copyListOfItems count]) {
+        cellData = [copyListOfItems objectAtIndex:addBtn.tag];
+//    }else{
+//        cellData = [tableData objectAtIndex:addBtn.tag];
+//    }
+    
+    NSString *username = [cellData objectForKey:@"username"];
+    NSInteger userId = [[cellData objectForKey:@"jambu_user_id"] integerValue];
     NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
     CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     alert.tag = userId;

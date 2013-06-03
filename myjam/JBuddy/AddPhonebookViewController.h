@@ -16,6 +16,7 @@
     NSMutableArray *copyListOfInvite;
     NSMutableArray *joinTableData;
     NSMutableArray *inviteTableData;
+    NSString *tmpData;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;

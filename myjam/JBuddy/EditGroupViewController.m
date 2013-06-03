@@ -84,20 +84,22 @@
 
 - (void)reloadGroupBuddyList
 {
-    [self.tableData removeAllObjects];
-    [self retrieveDataFromAPI];
-    [self.tableView reloadData];
-    searching = NO;
-    selectRowEnabled = YES;
+    [self.tableData removeAllObjects];    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self retrieveDataFromAPI];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            searching = NO;
+            selectRowEnabled = YES;
+        });
+    });
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     NSLog(@"vwa-EDITGROUP");
-    [self retrieveDataFromAPI];
-    [self.tableView reloadData];
-    searching = NO;
-    selectRowEnabled = YES;
+    [self reloadGroupBuddyList];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

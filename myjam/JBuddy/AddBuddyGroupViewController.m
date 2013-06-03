@@ -60,10 +60,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     
+    [self adjustViewsRect];
+    
     tableData = [[NSMutableArray alloc] init];
     self.subjectNameLabel.text = self.subjectName;
     self.subjectTextField.delegate = self;
     [self listParticipants];
+}
+
+- (void)adjustViewsRect
+{
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height-20;
+    CGRect tmp = self.addBuddyButton.frame;
+    tmp.origin.y = screenHeight-44*2-tmp.size.height-30;
+    self.addBuddyButton.frame = tmp;
+    
+//    [self.tableView setBackgroundColor:[UIColor yellowColor]];
+    tmp = self.tableView.frame;
+    tmp.size.height = self.addBuddyButton.frame.origin.y - tmp.origin.y - 44;
+    self.tableView.frame = tmp;
 }
 
 #pragma mark -

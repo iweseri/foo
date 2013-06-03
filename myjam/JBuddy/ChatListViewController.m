@@ -41,7 +41,7 @@
     self.tableData = [[NSMutableArray alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(viewWillAppear:)
+                                             selector:@selector(viewDidAppear:)
                                                  name:@"reloadChatList"
                                                object:nil];
     
@@ -53,19 +53,24 @@
     
     self.loadingLabel.frame = CGRectMake(self.view.frame.size.width/2-self.loadingLabel.frame.size.width/2,
                                          self.loadingIndicator.frame.origin.y+self.loadingIndicator.frame.size.height+10,
-                                         240,
+                                         200,
                                          55);
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [self.tableData removeAllObjects];
-    [self retrieveDataFromAPI];
-    [self.tableView reloadData];
-    [self.loadingLabel setHidden:YES];
-    [self.loadingIndicator setHidden:YES];
-
     
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self retrieveDataFromAPI];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            [self.loadingLabel setHidden:YES];
+            [self.loadingIndicator setHidden:YES];
+        });
+    });
+
     NSLog(@"vwa-chatList");
 }
 

@@ -64,10 +64,17 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self retrieveDataFromAPI];
-    [self.tableView reloadData];
-    searching = NO;
-    selectRowEnabled = YES; NSLog(@"vwa-newchat");
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self retrieveDataFromAPI];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            searching = NO;
+            selectRowEnabled = YES;
+        });
+    });
+    
+    NSLog(@"vwa-newchat");
 }
 
 - (void)viewWillDisappear:(BOOL)animated

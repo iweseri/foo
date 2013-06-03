@@ -28,6 +28,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-Buddy";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
     }
     return self;
 }
@@ -39,6 +53,8 @@
     self.scroller = (TPKeyboardAvoidingScrollView*)self.view;
     [self.scroller setContentSize:CGSizeMake(self.contentView.frame.size.width, kFrameHeightOnKeyboardUp)];
     [self.scroller addSubview:self.contentView];
+    
+    [self adjustViewsRect];
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
@@ -55,6 +71,18 @@
     [self.participantLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     self.subjectTextfield.delegate  = self;
     self.groupArray = [[NSMutableDictionary alloc] init];
+}
+
+- (void)adjustViewsRect
+{
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height-20;
+    CGRect tmp = self.groupButton.frame;
+    tmp.origin.y = screenHeight-44*3-tmp.size.height-12;
+    self.groupButton.frame = tmp;
+    
+    tmp = self.tableView.frame;
+    tmp.size.height = self.groupButton.frame.origin.y - tmp.origin.y;
+    self.tableView.frame = tmp;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -109,6 +137,8 @@
             [mydelegate.buddyNavController popToViewController:[mydelegate.buddyNavController.viewControllers objectAtIndex:0] animated:NO];
             GroupChatViewController *newChat = [[GroupChatViewController alloc] initWithGroupId:[resultsDictionary objectForKey:@"group_id"] andGroupname:self.subjectTextfield.text];
             [mydelegate.buddyNavController pushViewController:newChat animated:YES];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatList" object:nil];
             [newChat release];
         } else {
             [self triggerRequiredAlert:[[resultsDictionary objectForKey:@"message"] string]];

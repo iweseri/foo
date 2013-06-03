@@ -18,7 +18,6 @@
 @property (strong, nonatomic) id<PostHeaderViewDelegate>delegate;
 @property (retain, nonatomic) IBOutlet UIImageView *qrcodeImageView;
 
-//- (void)initView;
 - (void)setBoldText:(NSString *)prefix withFullText:(NSString *)text andTime:(NSString *)timeText;
 @end
 

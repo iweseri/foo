@@ -91,10 +91,27 @@
                                                object:nil];
     
     self.tableData = [[NSMutableArray alloc] init];
-    
-    [self retrieveDataFromAPI];
     [self setupView];
-    
+   
+    [self.sendMsgIndicator startAnimating];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self retrieveDataFromAPI];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            
+            [self.sendMsgIndicator stopAnimating];
+        });
+    });
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadChatList" object:nil];
 }
 
 - (void)updateSubjectName:(NSNotification *)name {
@@ -168,7 +185,7 @@
 }
 
 #pragma mark -
-#pragma mark updae message from nodejs
+#pragma mark update message from nodejs
 
 - (void)updateGroupMessageList
 {
@@ -194,7 +211,8 @@
     }
     
     [resultsDictionary release];
-    [self.sendMsgIndicator setHidden:YES];
+    
+    [self.sendMsgIndicator stopAnimating];
 }
 
 #pragma mark -
@@ -206,7 +224,7 @@
     if (![textView.text length]) {
         return;
     }
-    [self.sendMsgIndicator setHidden:NO];
+    [self.sendMsgIndicator startAnimating];
     [self performSelector:@selector(processSendMsg) withObject:nil afterDelay:0.0];
 }
 
@@ -240,7 +258,7 @@
     }
     
     [resultsDictionary release];
-    [self.sendMsgIndicator setHidden:YES];
+    [self.sendMsgIndicator stopAnimating];
 }
 
 - (NSString *)getLastMessageId
@@ -290,6 +308,9 @@
     self.tableView.frame = tableFrame;
 //    [self.tableView setContentOffset:CGPointMake(self.tableView.frame.size.width,tableHeight)];
 	
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:[self.tableData count]-1 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    
 	// commit animations
 	[UIView commitAnimations];
 }
@@ -334,7 +355,7 @@ static CGFloat kTailHeight = 5.0f; // to give space for text top padding
 static CGFloat kMinCellHeight = 40;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 27;
+    return 30;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

@@ -29,6 +29,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-Buddy";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+
+        
+        self.navigationItem.backBarButtonItem =
+        [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil];
     }
     return self;
 }
@@ -40,6 +54,8 @@
     
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.delegate = self;
+    [self.tableView setHidden:YES];
+    [self.recordLabel setHidden:NO];
     joinTableData = [[NSMutableArray alloc] init];
     inviteTableData = [[NSMutableArray alloc] init];
     copyListOfJoin = [[NSMutableArray alloc] init];
@@ -51,17 +67,41 @@
     [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
     //[overlayView release];
     
-    [self getAutorizedForContact];
+//    [self getAutorizedForContact];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    //[self retrieveDataFromAPI];
-    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading..." width:100];
-    [self performSelector:@selector(getAutorizedForContact) withObject:nil afterDelay:0.1];
-    [self.tableView reloadData];
-    searching = NO;
-    selectRowEnabled = YES; NSLog(@"vda-addBuddy");
+
+//    [self performSelector:@selector(getAutorizedForContact) withObject:nil afterDelay:0.1];
+//    [self.tableView reloadData];
+//    searching = NO;
+//    selectRowEnabled = YES;
+    
+    [self.loadingIndicator startAnimating];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self getAutorizedForContact];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            searching = NO;
+            selectRowEnabled = YES;
+            
+            if ([inviteTableData count] || [joinTableData count]) {
+                [self.tableView setHidden:NO];
+                [self.recordLabel setHidden:YES];
+            } else {
+                [self.tableView setHidden:YES];
+                [self.recordLabel setHidden:NO];
+                self.recordLabel.text = @"No results.";
+            }
+            
+            [self.loadingIndicator stopAnimating];
+        });
+    });
+    
+    NSLog(@"vda-addBuddy");
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -189,8 +229,16 @@
         }
         
     }
-    [self.tableView reloadData];
-    [DejalBezelActivityView removeViewAnimated:YES];
+    
+//    if (![joinTableData count] && ![inviteTableData count]) {
+//        self.recordLabel.text = @"No results.";
+//        [self.tableView setHidden:YES];
+//    }else{
+//        [self.tableView]
+//    }
+//    [self.tableView reloadData];
+//    [DejalBezelActivityView removeViewAnimated:YES];
+    
 }
 
 #pragma mark -
@@ -353,13 +401,6 @@
         }
     }
     
-    if (totalRow) {
-        [self.tableView setHidden:NO];
-        [self.recordLabel setHidden:YES];
-    } else {
-        [self.tableView setHidden:YES];
-        [self.recordLabel setHidden:NO];
-    }
     return totalRow;
 }
 
@@ -424,16 +465,31 @@
     return cell;
 }
 
-- (void)handleAddButtons:(UIButton*)addBtn
+- (void)handleAddButtons:(UIButton *)btn
 {
-    [self clearSearchBar:self.searchBar];
-    NSString *username = [[joinTableData objectAtIndex:addBtn.tag] objectForKey:@"username"];
-    NSInteger userId = [[joinTableData objectAtIndex:addBtn.tag] objectForKey:@"jambu_user_id"];
-    NSString *msg = [NSString stringWithFormat:@"Add %@ to your buddy list?",username];
+//    [self clearSearchBar:self.searchBar];
+    NSDictionary *buddyDict = nil;
+    NSString *word = @"";
+    
+    if (btn.currentBackgroundImage == [UIImage imageNamed:@"addBuddy"]) {
+        buddyDict = [joinTableData objectAtIndex:btn.tag];
+        word = @"Add";
+    }else{
+        buddyDict = [inviteTableData objectAtIndex:btn.tag];
+        word = @"Invite";
+    }
+    
+    NSString *username = [buddyDict objectForKey:@"username"];
+    NSInteger userId = [[buddyDict objectForKey:@"jambu_user_id"] integerValue];
+    NSString *msg = [NSString stringWithFormat:@"%@ %@ to your buddy list?", word, username];
     CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
-    alert.tag = userId;
+    if (userId == 0) {
+        tmpData = [buddyDict objectForKey:@"email"];
+    }else{
+        tmpData = [NSString stringWithFormat:@"%d",btn.tag];
+        alert.tag = userId;
+    }
     [alert show];
-    //[alert release];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -445,12 +501,20 @@
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
-        [self processAddBuddy:alertView.tag];
+        if (alertView.tag) {
+//            [self processAddBuddy:alertView.tag];
+            [self.loadingIndicator startAnimating];
+            [self performSelector:@selector(processAddBuddy:) withObject:[NSNumber numberWithInt:alertView.tag] afterDelay:0];
+        }else{
+            NSLog(@"Process invite now!");
+        }
+    
     }
 }
 
-- (void)processAddBuddy:(int)buddyId
+- (void)processAddBuddy:(NSNumber *)tagId
 {
+    NSInteger buddyId = [tagId integerValue];
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"jambu_user_id\":\"%d\"}",buddyId];
     
@@ -464,13 +528,16 @@
         if ([status isEqualToString:@"ok"])
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
-            AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-            [mydelegate.otherNavController popToViewController:[mydelegate.otherNavController.viewControllers objectAtIndex:1] animated:YES];
-            //[self.navigationController popViewControllerAnimated:YES];
+            
+            NSIndexPath *ip = [NSIndexPath indexPathForRow:[tmpData integerValue] inSection:0];
+            BuddyCell *cell = (BuddyCell *)[self.tableView cellForRowAtIndexPath:ip];
+            cell.addButtton.hidden = YES;
         }
         
     }
-    //[resultsDictionary release];
+    
+    [self.loadingIndicator stopAnimating];
+
 }
 
 - (void)didReceiveMemoryWarning
