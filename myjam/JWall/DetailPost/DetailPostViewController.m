@@ -36,7 +36,7 @@ static CGFloat kCommentImageViewHeight = 120;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
-        titleViewUsingFL.text = @"J-Wall";
+        titleViewUsingFL.text = @"J-ROOM";
         titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
         titleViewUsingFL.backgroundColor = [UIColor clearColor];
         titleViewUsingFL.textColor = [UIColor whiteColor];
@@ -78,6 +78,8 @@ static CGFloat kCommentImageViewHeight = 120;
     commentArray = [[NSMutableArray alloc] init];
     options = [[NSArray alloc] initWithObjects:@"Share Facebook", @"Share Twitter", @"Share Email", @"Share to J-Wall", @"Report", @"Block User", @"Cancel", nil];
     
+    options2 = [[NSArray alloc] initWithObjects:@"Share Facebook", @"Share Twitter", @"Share Email", @"Share to J-Wall", @"Report", @"Cancel", nil];
+    
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     
     if (screenBounds.size.height == 568) {
@@ -102,16 +104,34 @@ static CGFloat kCommentImageViewHeight = 120;
     [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#f8f8f8"]];
     [self.tableView setHidden:YES];
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateCommentList)
+                                                 name:@"updateCommentList"
+                                               object:nil];
 //    [self setup];
+}
+
+- (void)updateCommentList
+{
+    [self setup];
+    
+    NSIndexPath* ip = [NSIndexPath indexPathForRow:0 inSection:0];
+    [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionTop animated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [self.tableLoadingLabel setHidden:YES];
-    [self.tableLoadingIndicator setHidden:YES];
-    
-    // Start retreive data and setup views
-    [self setup];
+    if (!reloadDisabled) {
+        [self.tableLoadingLabel setHidden:YES];
+        [self.tableLoadingIndicator setHidden:YES];
+        
+        // Start retreive data and setup views
+        [self setup];
+        reloadDisabled = NO;
+        
+        NSLog(@"vda detail");
+    }
 }
 
 - (void)setup
@@ -165,9 +185,10 @@ static CGFloat kCommentImageViewHeight = 120;
 -(void)onClickedComment
 {
     // Open compose comment page
+    reloadDisabled = YES;
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
-    [mydelegate.otherNavController pushViewController:createComment animated:YES];
+    [mydelegate.homeNavController pushViewController:createComment animated:YES];
     [createComment release];
 }
 
@@ -662,7 +683,14 @@ static CGFloat kCommentImageViewHeight = 120;
 {
     NSLog(@"clicked %d",headerView.tag);
     
-    MyPopupView *popup = [[MyPopupView alloc] initWithDataList:options andTag:headerView.tag];
+    NSArray *optionList = nil;
+    if ([data.userId isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"userid"]] ) {
+        optionList = options2;
+    }else{
+        optionList = options;
+    }
+    
+    MyPopupView *popup = [[MyPopupView alloc] initWithDataList:optionList andTag:headerView.tag];
     popup.delegate = self;
     CGFloat popupYPoint = self.view.frame.size.height/2-popup.frame.size.height/2;
     CGFloat popupXPoint = self.view.frame.size.width/2-popup.frame.size.width/2;
@@ -769,7 +797,7 @@ static CGFloat kCommentImageViewHeight = 120;
         NSString *emailBody = [NSString stringWithFormat:@"Scan this QR code. \n\nJAM-BU App: %@/?qrcode_id=%d",APP_API_URL,qrcodeId];
         [mailer setMessageBody:emailBody isHTML:NO];
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [mydelegate.otherNavController presentModalViewController:mailer animated:YES];
+        [mydelegate.homeNavController presentModalViewController:mailer animated:YES];
         [mailer release];
         
         [self addShareItemtoServer:qrcodeId withShareType:@"email"];
@@ -956,7 +984,7 @@ static CGFloat kCommentImageViewHeight = 120;
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // Remove the mail view
-    [mydelegate.otherNavController dismissModalViewControllerAnimated:YES];
+    [mydelegate.homeNavController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

@@ -72,12 +72,31 @@ static CGFloat kMinCellTagHeight = 26;
                                                  name:@"reloadWall"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadTableRow)
+                                                 name:@"reloadWallPost"
+                                               object:nil];
+    
+    
+    showTopEnabled = NO;
 }
 
 - (void)reloadTableData
 {
+    
+    showTopEnabled = YES;
     [tableData removeAllObjects];
     [self setup];
+    NSLog(@"reloadwall");
+}
+
+- (void)reloadTableRow
+{
+    [tableData removeAllObjects];
+    
+    [self setup];
+    
+    NSLog(@"reloadwallPost");
 }
 
 
@@ -101,25 +120,51 @@ static CGFloat kMinCellTagHeight = 26;
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [tableData removeAllObjects];
-    [self setup];
+    if (!reloadDisabled) {
+        [tableData removeAllObjects];
+        [self setup];
+        
+        
+        reloadDisabled = NO;
+    }
+    
 }
 
 - (void)setup
 {
     pageCounter = 1;
-    BOOL success = [self retrieveData:pageCounter];
-    if (success) {
-        NSLog(@"count %d",[tableData count]);
-        [self.tableView setHidden:NO];
-        [self.tableView reloadData];
+//    BOOL success = [self retrieveData:pageCounter];
+//    if (success) {
+//        NSLog(@"count %d",[tableData count]);
+//        [self.tableView setHidden:NO];
+//        [self.tableView reloadData];
+//        
+//        [self.loadingLabel setHidden:YES];
+//        [self.loadingIndicator setHidden:YES];
+//        
+//    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL success = [self retrieveData:pageCounter];
         
-        [self.loadingLabel setHidden:YES];
-        [self.loadingIndicator setHidden:YES];
-        
-//        CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height);
-//        [self.tableView setContentOffset:bottomOffset animated:YES];
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                NSLog(@"count %d",[tableData count]);
+                [self.tableView setHidden:NO];
+                [self.tableView reloadData];
+                
+                [self.loadingLabel setHidden:YES];
+                [self.loadingIndicator setHidden:YES];
+                
+                if ([tableData count] && showTopEnabled) {
+                    [self.tableView setContentOffset:CGPointZero animated:NO];
+                    showTopEnabled = NO;
+                }
+                
+            }
+        });
+    });
+    
 }
 
 - (BOOL)retrieveData:(NSUInteger)page
@@ -473,8 +518,10 @@ static CGFloat kMinCellTagHeight = 26;
 //    NSString *idForComment = [NSString stringWithFormat:@"%d",data.postId];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
-    [mydelegate.otherNavController pushViewController:createComment animated:YES];
+    [mydelegate.homeNavController pushViewController:createComment animated:YES];
     [createComment release];
+    
+    reloadDisabled = YES;
 //    NSLog(@"commentPostId %@ index %d", idForComment, index);
 }
 
@@ -562,7 +609,7 @@ static CGFloat kMinCellTagHeight = 26;
     PostClass *data = [tableData objectAtIndex:index];
     detailvc.postId = data.postId;
     detailvc.currentView = option;
-    [mydelegate.otherNavController pushViewController:detailvc animated:YES];
+    [mydelegate.homeNavController pushViewController:detailvc animated:YES];
     [detailvc release];
     
 }
@@ -668,7 +715,7 @@ static CGFloat kMinCellTagHeight = 26;
         NSString *emailBody = [NSString stringWithFormat:@"Scan this QR code. \n\nJAM-BU App: %@/?qrcode_id=%d",APP_API_URL,qrcodeId];
         [mailer setMessageBody:emailBody isHTML:NO];
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [mydelegate.otherNavController presentModalViewController:mailer animated:YES];
+        [mydelegate.homeNavController presentModalViewController:mailer animated:YES];
         [mailer release];
         
         [self addShareItemtoServer:qrcodeId withShareType:@"email"];
@@ -855,7 +902,7 @@ static CGFloat kMinCellTagHeight = 26;
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // Remove the mail view
-    [mydelegate.otherNavController dismissModalViewControllerAnimated:YES];
+    [mydelegate.homeNavController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

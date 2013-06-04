@@ -7,6 +7,7 @@
 //
 
 #import "CreatePostViewController.h"
+#import "DetailPostViewController.h"
 #import "TagBuddyViewController.h"
 #import "ASIFormDataRequest.h"
 #import "AppDelegate.h"
@@ -317,9 +318,10 @@
         self.textData.text = @"";
     }
     if (self.uploadImage == nil && [self.textData.text isEqual: @""] && self.tagId == nil) {
-        [self presentAlert:@"No data, cannot post."];
-        self.textData.text = placeHolderText;
+//        [self presentAlert:@"No data, cannot post."];
+//        self.textData.text = placeHolderText;
     }
+    
     if ([self.textData.text isEqualToString: @""]) {
         [self presentAlert:@"Status is required."];
         self.textData.text = placeHolderText;
@@ -386,11 +388,24 @@
         if([resultsDictionary count]) {
             NSString *status = [resultsDictionary objectForKey:@"status"];
             if ([status isEqualToString:@"ok"]) {
-//                [self presentAlert:[resultsDictionary objectForKey:@"message"]];
-                [[NSNotificationCenter defaultCenter]postNotificationName:@"reloadWall"object:self];
+                
+                if ([[self parentViewController] isEqual:[DetailPostViewController class]]) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"updateCommentList" object:nil];
+                    
+                    NSLog(@"GEt in");
+                }
+                else{
+                    if ([typePost isEqualToString:@"postStatus"]) {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWall" object:self];
+                    } else {
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWallPost" object:self];
+                    }
+                }
+            
+                
                 [self.navigationController popViewControllerAnimated:YES];
             } else {
-//                [self presentAlert:[resultsDictionary objectForKey:@"message"]];
+                [self presentAlert:[resultsDictionary objectForKey:@"message"]];
             }
         }
         [resultsDictionary release];
@@ -410,7 +425,7 @@
 
 - (void)presentAlert:(NSString*)msg
 {
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Wall" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-ROOM" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     [alert release];
 }

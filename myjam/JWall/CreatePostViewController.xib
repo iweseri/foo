@@ -126,6 +126,7 @@
 										<string key="NSFrame">{{125, 5}, {80, 30}}</string>
 										<reference key="NSSuperview" ref="635563486"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:9</string>
 										<bool key="IBUIOpaque">NO</bool>
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -212,7 +213,7 @@
 									<object class="IBUIActivityIndicatorView" id="400036770">
 										<reference key="NSNextResponder" ref="997893213"/>
 										<int key="NSvFlags">-2147483356</int>
-										<string key="NSFrame">{{4, 2}, {20, 20}}</string>
+										<string key="NSFrame">{{285, 2}, {20, 20}}</string>
 										<reference key="NSSuperview" ref="997893213"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="231970896"/>
@@ -223,7 +224,7 @@
 									<object class="IBUILabel" id="231970896">
 										<reference key="NSNextResponder" ref="997893213"/>
 										<int key="NSvFlags">292</int>
-										<string key="NSFrame">{{33, 3}, {267, 21}}</string>
+										<string key="NSFrame">{{10, 2}, {267, 21}}</string>
 										<reference key="NSSuperview" ref="997893213"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="283871233"/>
@@ -325,6 +326,7 @@
 						<string key="NSFrame">{{125, 5}, {80, 30}}</string>
 						<reference key="NSSuperview" ref="363351394"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -518,8 +520,8 @@
 						<int key="objectID">54</int>
 						<reference key="object" ref="997893213"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="400036770"/>
 							<reference ref="231970896"/>
+							<reference ref="400036770"/>
 						</array>
 						<reference key="parent" ref="191373211"/>
 					</object>
@@ -628,6 +630,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">CreatePostViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">addBuddies:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">addBuddies:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">addBuddies:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="keyboardAccessoryView">UIView</string>
 						<string key="loadingIndicator">UIActivityIndicatorView</string>

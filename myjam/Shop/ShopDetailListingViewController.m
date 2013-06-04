@@ -10,7 +10,7 @@
 #import "MarqueeLabel.h"
 
 
-#define kTableCellHeight 170
+#define kTableCellHeightZ 170
 @interface ShopDetailListingViewController ()
 
 @end
@@ -99,7 +99,7 @@
         return 60;
     }
     else{
-        return kTableCellHeight;
+        return kTableCellHeightZ;
     }
 }
 

@@ -9,7 +9,7 @@
 #import "ShopListViewController.h"
 #import "MarqueeLabel.h"
 
-#define kTableCellHeight 170
+#define kTableCellHeight2 170
 
 @interface ShopListViewController ()
 
@@ -334,7 +334,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kTableCellHeight;
+    return kTableCellHeight2;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath

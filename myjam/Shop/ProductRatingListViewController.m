@@ -7,7 +7,7 @@
 //
 
 #import "ProductRatingListViewController.h"
-#define kTableCellHeight 100
+#define kTableCellHeightx 100
 @interface ProductRatingListViewController ()
 
 @end
@@ -16,15 +16,15 @@
 @synthesize tableView,shopName;
 
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        
-        // Custom initialization
-    }
-    return self;
-}
+//- (id)initWithStyle:(UITableViewStyle)style
+//{
+//    self = [super initWithStyle:style];
+//    if (self) {
+//        
+//        // Custom initialization
+//    }
+//    return self;
+//}
 
 - (void)viewDidLoad
 {
@@ -126,7 +126,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kTableCellHeight;
+    return kTableCellHeightx;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -134,7 +134,7 @@
      static NSString *CellIdentifier = @"Cell";
     
     if ([_reviewList count] >0){
-        CommentViewCell *cell = (CommentViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        CommentViewCell *cell = (CommentViewCell*)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil)
         {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CommentViewCell" owner:nil options:nil];
@@ -151,7 +151,7 @@
     else{
         static NSString *simpleTableIdentifier = @"SimpleTableItem";
         
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
         
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];

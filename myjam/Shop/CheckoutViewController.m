@@ -121,7 +121,7 @@
     
     static NSString *CellIdentifier = @"Cell";
     
-    CartItemViewCell *cell = (CartItemViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    CartItemViewCell *cell = (CartItemViewCell*)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
     {
         NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CartItemViewCell" owner:nil options:nil];

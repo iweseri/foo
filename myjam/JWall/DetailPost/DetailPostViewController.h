@@ -24,6 +24,7 @@
     
     NSMutableArray *tableDataFavourite;
     NSArray *options;
+    NSArray *options2;
     
     UILabel *commLabel;
     UILabel *favLabel;
@@ -35,6 +36,7 @@
     CGFloat tmpValue;
     BOOL isShownQRImage;
     SLComposeViewController *mySLComposerSheet;
+    BOOL reloadDisabled;
 }
 @property (retain, nonatomic) IBOutlet UIView *footerView;
 @property (retain, nonatomic) IBOutlet UIButton *commentButton;

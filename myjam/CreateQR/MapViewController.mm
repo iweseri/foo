@@ -578,7 +578,7 @@
         CGPoint bottomOffset = CGPointMake(0, self.scroller.contentSize.height - self.scroller.bounds.size.height);
         [self.scroller setContentOffset:bottomOffset animated:YES];
         
-        CLLocationCoordinate2D cSearchLocation = [ShowMapViewController getLocationFromAddressString:self.fullAddress];
+//        CLLocationCoordinate2D cSearchLocation = [ShowMapViewController getLocationFromAddressString:self.fullAddress];
         //NSLog(@"lat %f lang %f",cSearchLocation.latitude, cSearchLocation.longitude);
     }
 }

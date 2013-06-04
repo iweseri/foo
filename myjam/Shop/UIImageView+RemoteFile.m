@@ -40,6 +40,7 @@
 
 -(void) dealloc
 {
+    [super dealloc];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
 }
 
@@ -115,6 +116,7 @@
 
 -(void) dealloc
 {
+    [super dealloc];
     [self cancelConnection];
 }
 
@@ -177,6 +179,7 @@ static char kImageDownloadHelperObjectKey;
 
 -(void) dealloc
 {
+    [super dealloc];
     if (self.url != nil) [self.downloadHelper cancelConnection];
 }
 

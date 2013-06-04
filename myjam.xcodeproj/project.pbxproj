@@ -21,8 +21,6 @@
 		2126907F16E3ADEA0054295E /* BottomSwipeViewShareBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 2126907D16E3ADEA0054295E /* BottomSwipeViewShareBox.m */; };
 		2126908016E3ADEA0054295E /* BottomSwipeViewShareBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2126907E16E3ADEA0054295E /* BottomSwipeViewShareBox.xib */; };
 		212BE18B16E5E9A20053D09F /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 212BE18A16E5E9A20053D09F /* SDWebImage.framework */; };
-		212BE19016E5E9CD0053D09F /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 212BE18E16E5E9CD0053D09F /* FacebookSDKResources.bundle */; };
-		212BE19116E5E9CD0053D09F /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 212BE18F16E5E9CD0053D09F /* FBUserSettingsViewResources.bundle */; };
 		213AF70B16DAFB5F00798CB7 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 213AF70916DAFB5F00798CB7 /* ImageIO.framework */; };
 		213AF71216DAFCA300798CB7 /* NewsPreferenceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 213AF71016DAFCA300798CB7 /* NewsPreferenceViewController.m */; };
 		213AF71316DAFCA300798CB7 /* NewsPreferenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 213AF71116DAFCA300798CB7 /* NewsPreferenceViewController.xib */; };
@@ -166,6 +164,7 @@
 		6163AB25174E184800AF6A27 /* PostTaggedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6163AB24174E184800AF6A27 /* PostTaggedCell.m */; };
 		6163AB29174E1BDC00AF6A27 /* PostTaggedCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6163AB28174E1BDB00AF6A27 /* PostTaggedCell.xib */; };
 		6163BEB316A7F53900507CA3 /* Contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6163BEB216A7F53900507CA3 /* Contact.m */; };
+		616E97CD175DCE6B00FD0845 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 616E97CC175DCE6B00FD0845 /* FacebookSDK.framework */; };
 		61783F32167858BD009691DD /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61783F31167858BD009691DD /* TPKeyboardAvoidingScrollView.m */; };
 		617E6EC2166346D5005AE130 /* UIColor+ExtraMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 617E6EC1166346D5005AE130 /* UIColor+ExtraMethod.m */; };
 		617F21E71680110D006AD29B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 617F21E61680110D006AD29B /* MapKit.framework */; };
@@ -599,7 +598,6 @@
 		FF10D8B916EAAA2F00479199 /* MoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FF10D8B716EAAA2F00479199 /* MoreViewController.m */; };
 		FF10D8BA16EAAA2F00479199 /* MoreViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = FF10D8B816EAAA2F00479199 /* MoreViewController.xib */; };
 		FF19ACA316E73028002F36A1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF19ACA216E73028002F36A1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		FF2425F216E71D4F00A11682 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF2425F116E71D4F00A11682 /* FacebookSDK.framework */; };
 		FF622EA916E861C100CEAD00 /* CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = FF622EA816E861C100CEAD00 /* CustomBadge.m */; };
 /* End PBXBuildFile section */
 
@@ -643,8 +641,6 @@
 		2126907D16E3ADEA0054295E /* BottomSwipeViewShareBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewShareBox.m; sourceTree = "<group>"; };
 		2126907E16E3ADEA0054295E /* BottomSwipeViewShareBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BottomSwipeViewShareBox.xib; sourceTree = "<group>"; };
 		212BE18A16E5E9A20053D09F /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = myjam/SDWebImage.framework; sourceTree = "<group>"; };
-		212BE18E16E5E9CD0053D09F /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = myjam/FacebookSDK/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
-		212BE18F16E5E9CD0053D09F /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = myjam/FacebookSDK/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 		213AF70916DAFB5F00798CB7 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		213AF70F16DAFCA300798CB7 /* NewsPreferenceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewsPreferenceViewController.h; path = "SV-Settings/NewsPreferenceViewController.h"; sourceTree = "<group>"; };
 		213AF71016DAFCA300798CB7 /* NewsPreferenceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewsPreferenceViewController.m; path = "SV-Settings/NewsPreferenceViewController.m"; sourceTree = "<group>"; };
@@ -869,6 +865,9 @@
 		6163AB28174E1BDB00AF6A27 /* PostTaggedCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PostTaggedCell.xib; path = JWall/WallCustomCell/PostTaggedCell.xib; sourceTree = "<group>"; };
 		6163BEB116A7F53800507CA3 /* Contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Contact.h; path = Contact/Contact.h; sourceTree = "<group>"; };
 		6163BEB216A7F53900507CA3 /* Contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Contact.m; path = Contact/Contact.m; sourceTree = "<group>"; };
+		616E97CC175DCE6B00FD0845 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = myjam/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
+		616E97CE175DCEAC00FD0845 /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = myjam/FacebookSDK/FacebookSDK.framework/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		616E97CF175DCEAC00FD0845 /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = myjam/FacebookSDK/FacebookSDK.framework/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 		61783F30167858BD009691DD /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		61783F31167858BD009691DD /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		617E6EC0166346D5005AE130 /* UIColor+ExtraMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIColor+ExtraMethod.h"; path = "myjam/CustomUIColor/UIColor+ExtraMethod.h"; sourceTree = "<group>"; };
@@ -1460,7 +1459,6 @@
 		FF10D8B716EAAA2F00479199 /* MoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoreViewController.m; sourceTree = "<group>"; };
 		FF10D8B816EAAA2F00479199 /* MoreViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MoreViewController.xib; sourceTree = "<group>"; };
 		FF19ACA216E73028002F36A1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		FF2425F116E71D4F00A11682 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = myjam/FacebookSDK/FacebookSDK.framework; sourceTree = "<group>"; };
 		FF622EA716E861C100CEAD00 /* CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomBadge.h; sourceTree = "<group>"; };
 		FF622EA816E861C100CEAD00 /* CustomBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomBadge.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1470,13 +1468,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				616E97CD175DCE6B00FD0845 /* FacebookSDK.framework in Frameworks */,
 				618052C6164CD6AC009620DE /* AddressBook.framework in Frameworks */,
 				61E37EB7173B87D800C9F0F7 /* CoreText.framework in Frameworks */,
 				618052CD164CD6F3009620DE /* AudioToolbox.framework in Frameworks */,
 				61F0B430172917C30075054F /* Security.framework in Frameworks */,
 				61F0B42E172917B80075054F /* libicucore.dylib in Frameworks */,
 				FF19ACA316E73028002F36A1 /* Social.framework in Frameworks */,
-				FF2425F216E71D4F00A11682 /* FacebookSDK.framework in Frameworks */,
 				21F967FF16D45F560067AA22 /* AdSupport.framework in Frameworks */,
 				61E099E116C23CF900C012EF /* Twitter.framework in Frameworks */,
 				61E59C9916AE5F22002E7DDC /* EventKitUI.framework in Frameworks */,
@@ -2042,13 +2040,13 @@
 		6180D8411649F24600D9C74D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				616E97CE175DCEAC00FD0845 /* FacebookSDKResources.bundle */,
+				616E97CF175DCEAC00FD0845 /* FBUserSettingsViewResources.bundle */,
+				616E97CC175DCE6B00FD0845 /* FacebookSDK.framework */,
 				61E37EB6173B87D800C9F0F7 /* CoreText.framework */,
 				61F0B42F172917C30075054F /* Security.framework */,
 				61F0B42D172917B80075054F /* libicucore.dylib */,
 				FF19ACA216E73028002F36A1 /* Social.framework */,
-				FF2425F116E71D4F00A11682 /* FacebookSDK.framework */,
-				212BE18E16E5E9CD0053D09F /* FacebookSDKResources.bundle */,
-				212BE18F16E5E9CD0053D09F /* FBUserSettingsViewResources.bundle */,
 				212BE18A16E5E9A20053D09F /* SDWebImage.framework */,
 				213AF70916DAFB5F00798CB7 /* ImageIO.framework */,
 				21F967FE16D45F560067AA22 /* AdSupport.framework */,
@@ -3058,8 +3056,6 @@
 				21030A3D16E04421003A036B /* FavFolderViewController.xib in Resources */,
 				21030A3F16E04421003A036B /* ReportSpamViewController.xib in Resources */,
 				2126908016E3ADEA0054295E /* BottomSwipeViewShareBox.xib in Resources */,
-				212BE19016E5E9CD0053D09F /* FacebookSDKResources.bundle in Resources */,
-				212BE19116E5E9CD0053D09F /* FBUserSettingsViewResources.bundle in Resources */,
 				61A183FE16E658B4006C6F31 /* AGalleryViewController.xib in Resources */,
 				61A1840016E658B4006C6F31 /* PhotoViewController.xib in Resources */,
 				FF10D8A516EA094F00479199 /* AddMailViewController.xib in Resources */,
@@ -3659,11 +3655,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../FacebookSDK\"",
-					"\"$(SRCROOT)/../myjampii2-jprofile\"",
-					"\"$(SRCROOT)/../jambu-latest code\"",
-					"\"$(SRCROOT)/../../Documents/FacebookSDK\"",
 					"\"$(SRCROOT)/myjam\"",
 					"\"$(SRCROOT)/myjam/FacebookSDK\"",
 				);
@@ -3678,6 +3669,10 @@
 				);
 				INFOPLIST_FILE = "myjam/myjam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/myjam/FacebookSDK/FacebookSDK.framework\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-ObjC",
@@ -3698,11 +3693,6 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../FacebookSDK\"",
-					"\"$(SRCROOT)/../myjampii2-jprofile\"",
-					"\"$(SRCROOT)/../jambu-latest code\"",
-					"\"$(SRCROOT)/../../Documents/FacebookSDK\"",
 					"\"$(SRCROOT)/myjam\"",
 					"\"$(SRCROOT)/myjam/FacebookSDK\"",
 				);
@@ -3716,6 +3706,10 @@
 				);
 				INFOPLIST_FILE = "myjam/myjam-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/myjam/FacebookSDK/FacebookSDK.framework\"",
+				);
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-ObjC",

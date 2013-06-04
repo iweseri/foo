@@ -7,7 +7,7 @@
 //
 
 #import "ShopViewAllViewController.h"
-#define kTableCellHeight 140
+#define aTableCellHeight 140
 @interface ShopViewAllViewController ()
 
 @end
@@ -109,7 +109,7 @@
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return kTableCellHeight;
+    return aTableCellHeight;
 }
 - (void)createCellForIndex:(NSIndexPath *)indexPath cell:(ShopTableViewCellwoCat *)cell
 {

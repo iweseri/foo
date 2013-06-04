@@ -107,8 +107,8 @@
 {
     [self.activityIndicator startAnimating];
 //    [self performSelectorOnMainThread:@selector(setupView) withObject:nil waitUntilDone:YES];
-    [self performSelector:@selector(setupView) withObject:nil afterDelay:0.0];
-//    [self setupView];
+//    [self performSelector:@selector(setupView) withObject:nil afterDelay:0.0];
+    [self setupView];
 //    [self performSelectorInBackground:@selector(setupView) withObject:nil];
     
 }
@@ -122,25 +122,22 @@
     
     NSString *isLogin = [[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"]copy];
     
-    // check if login is remembered in local cache
-    if ([isLogin isEqualToString:@"YES"]) {
-        
-        self.pageCounter = 1;
-//        NSArray *list = [self loadMoreFromServer];
-//        
-//        if ([list count] > 0) {
-//            [self.tableData addObjectsFromArray:list];
-//        }
-//        
-//        self.tableData = [list mutableCopy];
-        
-        self.tableData = [self loadMoreFromServer];
-    }
     
-    if ([self.tableData count]) {
-        [self.tableView reloadData];
-        [self.activityIndicator stopAnimating];
-    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([isLogin isEqualToString:@"YES"]) {
+            
+            self.pageCounter = 1;
+            self.tableData = [self loadMoreFromServer];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.tableData count]) {
+                [self.tableView reloadData];
+                [self.activityIndicator stopAnimating];
+            }
+        });
+    });
     
 }
 

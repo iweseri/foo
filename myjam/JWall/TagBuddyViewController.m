@@ -86,7 +86,7 @@
                 [tableData addObject:data];
             }
         } else {
-            //CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Wall" message:[resultsDictionary objectForKey:@"message"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            //CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-ROOM" message:[resultsDictionary objectForKey:@"message"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             //[alert show];
         }
         
@@ -323,7 +323,7 @@
 
 - (void)triggerRequiredAlert:(NSString*)msg
 {
-    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Wall" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-ROOM" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
     [alert release];
 }

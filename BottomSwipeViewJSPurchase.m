@@ -325,7 +325,7 @@ static const CGFloat LANDSCAPE_KEYBOARD_HEIGHT = 162;
             // setup label and check image
             if ([contentSwitch isEqual:@"1"])
             {
-                NSInteger count = 0;
+//                NSInteger count = 0;
                 //if content is available
                 for (id row in [resultsDictionary objectForKey:setList])
                 {

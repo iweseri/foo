@@ -20,10 +20,10 @@
 @property (retain, nonatomic) IBOutlet UITextField *firstNameTextField;
 @property (retain, nonatomic) IBOutlet UITextField *lastNameTextField;
 @property (retain, nonatomic) IBOutlet UITextField *dateOfBirthTextField;
-@property (retain, nonatomic) IBOutlet UITextField *newEmailTextField;
+@property (retain, nonatomic) IBOutlet UITextField *aNewEmailTextField;
 @property (retain, nonatomic) IBOutlet UITextField *reNewEmailTextField;
 @property (retain, nonatomic) IBOutlet UITextField *currPasswordTextField;
-@property (retain, nonatomic) IBOutlet UITextField *newPasswordTextField;
+@property (retain, nonatomic) IBOutlet UITextField *aNewPasswordTextField;
 @property (retain, nonatomic) IBOutlet UITextField *reNewPasswordTextField;
 @property (retain, nonatomic) IBOutlet UIButton *mailButton;
 @property (retain, nonatomic) IBOutlet UIButton *saveButton;

@@ -7,6 +7,7 @@
 //
 
 #import "HomeViewController.h"
+#import "JWallViewController.h"
 #import "AppDelegate.h"
 
 @interface HomeViewController ()
@@ -79,8 +80,10 @@
     t2.viewController = vc2;
     TBTabButton *t3 = [[TBTabButton alloc] initWithTitle:@"Promotions"];
     t3.viewController = vc3;
+    
+    TBTabButton *t4 = [[TBTabButton alloc] initWithTitle:@"J-Room"];
 
-    NSArray *a = [NSArray arrayWithObjects:t1, t2, t3, nil];
+    NSArray *a = [NSArray arrayWithObjects:t1, t2, t3, t4, nil];
     
     tabBar = [[TBTabBar alloc] initWithItems:a];
     
@@ -96,10 +99,9 @@
 }
 
 -(void)switchViewController:(UIViewController *)viewController {
-    UIView *currentView = [self.view viewWithTag:SELECTED_VIEW_CONTROLLER_TAG];
-//    currentView = nil;
-    [currentView removeFromSuperview];
+    
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     if (viewController == vc1 || viewController == vc2 || viewController == vc3) {
         //NSLog(@"Enable bottom view for JAM-BU Feed");
         mydelegate.swipeBottomEnabled = YES;
@@ -116,19 +118,27 @@
         }
     }else{
         //NSLog(@"Bottom view disabled");
+        
         mydelegate.swipeBottomEnabled = NO;
+        
+        JWallViewController *jwallVC = [[JWallViewController alloc] init];
+        [self.navigationController pushViewController:jwallVC animated:YES];
+        [jwallVC release];
+        
+        return;
     }
 
+    
+    UIView *currentView = [self.view viewWithTag:SELECTED_VIEW_CONTROLLER_TAG];
+
+    [currentView removeFromSuperview];
+    
     viewController.view.frame = CGRectMake(0,28,self.view.bounds.size.width, self.view.bounds.size.height-(tabBar.frame.size.height)-24);
     
     viewController.view.tag = SELECTED_VIEW_CONTROLLER_TAG;
     [self.view insertSubview:viewController.view belowSubview:tabBar];
     
 }
-
-//- (void)viewWillAppear:(BOOL)animated{
-//    [self.navigationController popToRootViewControllerAnimated:NO];
-//}
 
 - (void)viewDidAppear:(BOOL)animated{
     
@@ -188,6 +198,14 @@
     //NSLog(@"viewwillAappearHome: enable bottom view for news");
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [mydelegate.bannerView animateFunction];
+    
+    // To deselect 4rd button (+)
+    int i = 0;
+    for (UIButton* b in tabBar.buttons) {
+        if (i++ == 3) {
+            [b setSelected:NO];
+        }
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated{
@@ -195,5 +213,6 @@
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     mydelegate.swipeBottomEnabled = NO;
 }
+
 
 @end

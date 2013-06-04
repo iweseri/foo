@@ -79,7 +79,7 @@
 {
     static NSString *CellIdentifier = @"Cell";
     if(indexPath.row == 0){
-        CustomHeaderCell *cell = (CustomHeaderCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        CustomHeaderCell *cell = (CustomHeaderCell*)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"CustomHeaderCell" owner:nil options:nil];
             cell = [nib objectAtIndex:0];
@@ -99,7 +99,7 @@
         cell.viewAllButton.hidden = YES;
         return cell;
     } else {
-        ProductTableViewCellwoCat *cell = (ProductTableViewCellwoCat*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        ProductTableViewCellwoCat *cell = (ProductTableViewCellwoCat*)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         if (cell == nil) {
             NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ProductTableViewCellwoCat" owner:nil options:nil];
             cell = [nib objectAtIndex:0];

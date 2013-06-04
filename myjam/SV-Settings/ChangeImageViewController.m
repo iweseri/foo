@@ -105,7 +105,7 @@
     [asiRequest startSynchronous];
     NSError *error = [asiRequest error];
     if (!error) {
-        NSString *response = [asiRequest responseString];
+//        NSString *response = [asiRequest responseString];
         //NSLog(@"%@",response);
         //Muz: Aku tambah method ni untuk clearkan cacheImage library yang kita guna.. sebab kita upload gambar baru, kita bagitau app buang gambar yang kita simpan sebelum ni
         [self clearImageCache];

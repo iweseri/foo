@@ -91,10 +91,10 @@
     self.firstNameTextField.delegate = self;
     self.lastNameTextField.delegate = self;
     self.dateOfBirthTextField.delegate = self;
-    self.newEmailTextField.delegate = self;
+    self.aNewEmailTextField.delegate = self;
     self.reNewEmailTextField.delegate = self;
     self.currPasswordTextField.delegate = self;
-    self.newPasswordTextField.delegate = self;
+    self.aNewPasswordTextField.delegate = self;
     self.reNewPasswordTextField.delegate = self;
     
     //setup checkbox gender
@@ -254,18 +254,18 @@
         reqFieldName = @"Date of birth is required";
         [self triggerRequiredAlert];
     }
-    else if (([self.newEmailTextField.text length] != 0 || [self.reNewEmailTextField.text length] != 0) && (![self.newEmailTextField.text isEqualToString:self.reNewEmailTextField.text]))
+    else if (([self.aNewEmailTextField.text length] != 0 || [self.reNewEmailTextField.text length] != 0) && (![self.aNewEmailTextField.text isEqualToString:self.reNewEmailTextField.text]))
     {
         reqFieldName = @"Email not match";
         [self triggerRequiredAlert];
     }
-    else if ([self.currPasswordTextField.text length] != 0 || [self.newPasswordTextField.text length] != 0 || [self.reNewPasswordTextField.text length] != 0)
+    else if ([self.currPasswordTextField.text length] != 0 || [self.aNewPasswordTextField.text length] != 0 || [self.reNewPasswordTextField.text length] != 0)
     {
         if ([self retrievePasswordFromAPI]) {
             reqFieldName = @"Wrong current password";
             [self triggerRequiredAlert];
         }
-        else if (![self.newPasswordTextField.text isEqualToString:self.reNewPasswordTextField.text])
+        else if (![self.aNewPasswordTextField.text isEqualToString:self.reNewPasswordTextField.text])
         {
             reqFieldName = @"New password and confirm password not match";
             [self triggerRequiredAlert];
@@ -753,12 +753,12 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_mobileTextField release];
-    [_newEmailTextField release];
+    [_aNewEmailTextField release];
     [_reNewEmailTextField release];
     [_datePicker release];
     [_dateToolbar release];
     [_currPasswordTextField release];
-    [_newPasswordTextField release];
+    [_aNewPasswordTextField release];
     [_reNewPasswordTextField release];
     [_firstNameTextField release];
     [_lastNameTextField release];
@@ -777,12 +777,12 @@
 
 - (void)viewDidUnload {
     [self setMobileTextField:nil];
-    [self setNewEmailTextField:nil];
+    [self setANewEmailTextField:nil];
     [self setReNewEmailTextField:nil];
     [self setDatePicker:nil];
     [self setDateToolbar:nil];
     [self setCurrPasswordTextField:nil];
-    [self setNewPasswordTextField:nil];
+    [self setANewPasswordTextField:nil];
     [self setReNewPasswordTextField:nil];
     [self setFirstNameTextField:nil];
     [self setLastNameTextField:nil];

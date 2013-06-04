@@ -25,7 +25,7 @@
     if (self) {
         // Custom initialization
         FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
-        titleViewUsingFL.text = @"J-Wall";
+        titleViewUsingFL.text = @"J-ROOM";
         titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
         titleViewUsingFL.backgroundColor = [UIColor clearColor];
         titleViewUsingFL.textColor = [UIColor whiteColor];

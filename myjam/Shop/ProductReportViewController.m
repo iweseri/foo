@@ -87,7 +87,7 @@
 }
 
 - (IBAction)submitButtonPressed:(id)sender {
-    NSDictionary *report = [NSDictionary dictionaryWithDictionary:[[MJModel sharedInstance] sendReportForProduct:productId withStatus:reportId withReview:_remarksLabel]];
+    NSDictionary *report = [NSDictionary dictionaryWithDictionary:[[MJModel sharedInstance] sendReportForProduct:productId withStatus:reportId withReview:_remarksLabel.text]];
     if ([[report valueForKey:@"status"] isEqual:@"ok"]){
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success" message:@"Your remarks have been posted succesfully." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alertView show];

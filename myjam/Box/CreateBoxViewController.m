@@ -85,7 +85,7 @@
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    [mydelegate.boxNavController pushViewController:detailView animated:YES];
     
-    [mydelegate.otherNavController pushViewController:detailView animated:YES];
+    [mydelegate.homeNavController pushViewController:detailView animated:YES];
     [detailView release];
 }
 

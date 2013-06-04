@@ -28,6 +28,7 @@
 //#import "ContactViewController.h"
 
 @class SidebarView;
+
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, SocketIODelegate> {
     UIWindow *window;
 	GTabBar *tabView;
@@ -95,8 +96,8 @@
 - (void)handleSwipeUp;
 - (void)presentLoginPage;
 - (void)clearViews;
-- (void)addBlackView;
-- (void)removeBlackView;
+//- (void)addBlackView;
+//- (void)removeBlackView;
 
 - (void)closeSession; //fb login
 - (void)removeCustomBadge;

@@ -24,6 +24,8 @@
     BOOL isLastPage;
     SLComposeViewController *mySLComposerSheet;
     UIImage *currImage;
+    BOOL reloadDisabled;
+    BOOL showTopEnabled;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
