@@ -46,6 +46,7 @@
 @property (nonatomic, retain) UINavigationController* homeNavController;
 @property (nonatomic, retain) UINavigationController* otherNavController;
 @property (nonatomic, retain) UINavigationController* buddyNavController;
+@property (nonatomic, retain) UINavigationController* wallNavController;
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 @property (nonatomic, retain) SidebarView *sidebarController;
 @property (nonatomic, retain) BottomSwipeView *bottomSVAll;

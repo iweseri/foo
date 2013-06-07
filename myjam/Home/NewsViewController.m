@@ -39,18 +39,19 @@
     UIPanGestureRecognizer *slideRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:nil];
     slideRecognizer.delegate = self;
     [self.tableView addGestureRecognizer:slideRecognizer];
-//    [self loadData];
+    [self loadData];
     
     
 }
 
 - (void)viewWillAppear:(BOOL)animated{
-    [self.activityIndicator startAnimating];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-     
+    [self.activityIndicator startAnimating];
+    
     if (!self.refreshDisabled)
     {
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -75,6 +76,7 @@
         [self.activityIndicator setHidden:NO];
         [self.activityIndicatorView setHidden:NO];
         [self loadData];
+        [self.activityIndicator startAnimating];
         
         [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
     }else{
@@ -109,36 +111,66 @@
 {
     [self.activityIndicator startAnimating];
 //    [self performSelectorOnMainThread:@selector(setupView) withObject:nil waitUntilDone:YES];
-    [self performSelectorInBackground:@selector(setupView) withObject:nil];
+//    [self performSelectorInBackground:@selector(setupView) withObject:nil];
+    
+    [self setupView];
 //    [self performSelector:@selector(setupView) withObject:nil afterDelay:0.1];
 }
 
 - (void)setupView
 {
-    //self.selectedCategories = @"";
-    //self.searchedText = @"";
+    
     if (![self.searchedText isKindOfClass:[NSString class]]) {
         self.searchedText = @"";
     }
     
     NSString *isLogin = [[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"]copy];
     
-    // check if login is remembered in local cache
-    if ([isLogin isEqualToString:@"YES"]) {
-        
-        self.pageCounter = 1;
-        NSArray *list = [self loadMoreFromServer];
-        
-        if ([list count] > 0) {
-            [self.tableData addObjectsFromArray:list];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        if ([isLogin isEqualToString:@"YES"]) {
+            
+            self.pageCounter = 1;
+            NSArray *list = [self loadMoreFromServer];
+            
+            if ([list count] > 0) {
+                [self.tableData addObjectsFromArray:list];
+            }
+            
+            self.tableData = [list mutableCopy];
         }
         
-        self.tableData = [list mutableCopy];
-    }
-    if ([self.tableData count]) {
-        [self.tableView reloadData];
-        [self.activityIndicator stopAnimating];
-    }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.tableData count]) {
+                [self.tableView reloadData];
+                [self.activityIndicator stopAnimating];
+            }
+        });
+    });
+    
+    //self.selectedCategories = @"";
+    //self.searchedText = @"";
+//    if (![self.searchedText isKindOfClass:[NSString class]]) {
+//        self.searchedText = @"";
+//    }
+//    
+//    NSString *isLogin = [[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"]copy];
+//    
+//    // check if login is remembered in local cache
+//    if ([isLogin isEqualToString:@"YES"]) {
+//        
+//        self.pageCounter = 1;
+//        NSArray *list = [self loadMoreFromServer];
+//        
+//        if ([list count] > 0) {
+//            [self.tableData addObjectsFromArray:list];
+//        }
+//        
+//        self.tableData = [list mutableCopy];
+//    }
+//    if ([self.tableData count]) {
+//        [self.tableView reloadData];
+//        [self.activityIndicator stopAnimating];
+//    }
     
 }
 

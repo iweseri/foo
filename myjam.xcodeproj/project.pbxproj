@@ -59,6 +59,7 @@
 		21F967FF16D45F560067AA22 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21F967FE16D45F560067AA22 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6100D3BE174C967600E79E71 /* left_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6100D3BC174C967600E79E71 /* left_arrow.png */; };
 		6100D3BF174C967600E79E71 /* right_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 6100D3BD174C967600E79E71 /* right_arrow.png */; };
+		610C1AAA17605B050016B703 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610C1AA917605B050016B703 /* TTTAttributedLabel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		6114A50F16B18921009299EE /* CreateBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A50916B187BE009299EE /* CreateBoxViewController.m */; };
 		6114A51116B1893C009299EE /* ShareBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A50E16B187BE009299EE /* ShareBoxViewController.m */; };
 		6114A55C16B270F7009299EE /* MEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A55B16B270F7009299EE /* MEvent.m */; };
@@ -321,7 +322,7 @@
 		61E37E9B173B3EAC00C9F0F7 /* JWallViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37E99173B3EAC00C9F0F7 /* JWallViewController.xib */; };
 		61E37EA5173B4BB900C9F0F7 /* PostTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EA4173B4BB900C9F0F7 /* PostTextCell.m */; };
 		61E37EA9173B4C2B00C9F0F7 /* PostTextCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EA8173B4C2B00C9F0F7 /* PostTextCell.xib */; };
-		61E37EAE173B511300C9F0F7 /* PostHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EAD173B511300C9F0F7 /* PostHeaderView.m */; };
+		61E37EAE173B511300C9F0F7 /* PostHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EAD173B511300C9F0F7 /* PostHeaderView.m */; settings = {COMPILER_FLAGS = "-fobj-arc"; }; };
 		61E37EB1173B514900C9F0F7 /* PostFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61E37EB0173B514900C9F0F7 /* PostFooterView.m */; };
 		61E37EB3173B516400C9F0F7 /* PostHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB2173B516400C9F0F7 /* PostHeaderView.xib */; };
 		61E37EB5173B51A900C9F0F7 /* PostFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61E37EB4173B51A900C9F0F7 /* PostFooterView.xib */; };
@@ -699,6 +700,8 @@
 		21F9680216D465650067AA22 /* FBAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppDelegate.h; sourceTree = "<group>"; };
 		6100D3BC174C967600E79E71 /* left_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = left_arrow.png; sourceTree = "<group>"; };
 		6100D3BD174C967600E79E71 /* right_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = right_arrow.png; sourceTree = "<group>"; };
+		610C1AA817605B050016B703 /* TTTAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTAttributedLabel.h; sourceTree = "<group>"; };
+		610C1AA917605B050016B703 /* TTTAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTAttributedLabel.m; sourceTree = "<group>"; };
 		6114A50816B187BE009299EE /* CreateBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreateBoxViewController.h; sourceTree = "<group>"; };
 		6114A50916B187BE009299EE /* CreateBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreateBoxViewController.m; sourceTree = "<group>"; };
 		6114A50D16B187BE009299EE /* ShareBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareBoxViewController.h; sourceTree = "<group>"; };
@@ -1619,6 +1622,16 @@
 			name = MainView;
 			sourceTree = "<group>";
 		};
+		610C1AA717605B050016B703 /* TTTAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				610C1AA817605B050016B703 /* TTTAttributedLabel.h */,
+				610C1AA917605B050016B703 /* TTTAttributedLabel.m */,
+			);
+			name = TTTAttributedLabel;
+			path = myjam/TTTAttributedLabel;
+			sourceTree = "<group>";
+		};
 		6139632016EF35C70056B314 /* SidebarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2339,6 +2352,7 @@
 		61858DFC1662FFFF00DC7E9E /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				610C1AA717605B050016B703 /* TTTAttributedLabel */,
 				61F0B3CF172916750075054F /* SBJson */,
 				61F0B3E9172916750075054F /* SocketRocket */,
 				61D5F62F16BA618300110825 /* Connection */,
@@ -3566,6 +3580,7 @@
 				61E3813C1746103600C9F0F7 /* TagBuddyViewController.m in Sources */,
 				61E3813E1746103600C9F0F7 /* UnblockUsersViewController.m in Sources */,
 				6163AB25174E184800AF6A27 /* PostTaggedCell.m in Sources */,
+				610C1AAA17605B050016B703 /* TTTAttributedLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3600,8 +3615,8 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 3zquare Sdn. Bhd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 3zquare Sdn. Bhd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3616,9 +3631,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "B53E8E4F-375A-4B30-A0A4-F6BCA16E8AE9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B53E8E4F-375A-4B30-A0A4-F6BCA16E8AE9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "";
 				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = NO;
 			};
 			name = Debug;
 		};
@@ -3631,8 +3647,8 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_ENTITLEMENTS = "";
-				CODE_SIGN_IDENTITY = "iPhone Distribution: 3zquare Sdn. Bhd.";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: 3zquare Sdn. Bhd.";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -3640,8 +3656,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "B53E8E4F-375A-4B30-A0A4-F6BCA16E8AE9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "B53E8E4F-375A-4B30-A0A4-F6BCA16E8AE9";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3653,7 +3669,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/myjam\"",
 					"\"$(SRCROOT)/myjam/FacebookSDK\"",
@@ -3679,7 +3695,7 @@
 				);
 				PRODUCT_NAME = "JAM-BU";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "";
 				VALIDATE_PRODUCT = NO;
 				WRAPPER_EXTENSION = app;
 			};
@@ -3691,7 +3707,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"\"$(SRCROOT)/myjam\"",
 					"\"$(SRCROOT)/myjam/FacebookSDK\"",
@@ -3710,13 +3726,15 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/myjam/FacebookSDK/FacebookSDK.framework\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-ObjC",
 				);
 				PRODUCT_NAME = "JAM-BU";
 				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				"PROVISIONING_PROFILE[sdk=*]" = "";
+				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

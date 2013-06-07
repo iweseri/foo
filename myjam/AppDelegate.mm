@@ -27,6 +27,7 @@
 #import "JSONKit.h"
 #import "SocketIOPacket.h"
 #import "JBuddyViewController.h"
+#import "JWallViewController.h"
 
 #define kCloseSwipeBottom   1
 #define kCloseSideBar       2
@@ -56,6 +57,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 @synthesize otherNavController;
 @synthesize swipeOptionString;
 @synthesize cartCounter;
+@synthesize wallNavController;
+
 - (void)dealloc
 {
     [frontLayerView release];
@@ -78,6 +81,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [boxNavController release];
     [shopNavController release];
     [otherNavController release];
+    [wallNavController release];
+    [buddyNavController release];
     [bottomNearMe release];
     [super dealloc];
 }
@@ -92,7 +97,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     
     // Create socket nodejs client
-    socketIO = [[SocketIO alloc] initWithDelegate:self];
+//    socketIO = [[SocketIO alloc] initWithDelegate:self];
     [self initViews];
     
     [self.window makeKeyAndVisible];
@@ -258,6 +263,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     bottomSVJShop = [[BottomSwipeViewJShop alloc] init];
     bottomSVJSPurchase = [[BottomSwipeViewJSPurchase alloc] init];
     JBuddyViewController *jbuddy = [[JBuddyViewController alloc] init];
+    JWallViewController *wall = [[JWallViewController alloc] init];
     
     // Init navigationControllers for TabbarController
     homeNavController = [[UINavigationController alloc] initWithRootViewController:homeVC];
@@ -266,6 +272,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     boxNavController = [[UINavigationController alloc] initWithRootViewController:boxVC];
     otherNavController = [[UINavigationController alloc] initWithRootViewController:createVC];
     buddyNavController = [[UINavigationController alloc] initWithRootViewController:jbuddy];
+    wallNavController = [[UINavigationController alloc] initWithRootViewController:wall];
     
     //    // Init TabBarItem
     //    GTabTabItem *tabItem1 = [[GTabTabItem alloc] initWithFrame:CGRectMake(0, 0, 64, 39) normalState:@"home_selected" toggledState:@"home"];
@@ -334,6 +341,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [viewControllersArray addObject:scanNavController];
     [viewControllersArray addObject:buddyNavController];
     [viewControllersArray addObject:otherNavController];
+    [viewControllersArray addObject:wallNavController];
 	
 	NSMutableArray *tabItemsArray = [[NSMutableArray alloc] init];
 	[tabItemsArray addObject:tabItem1];
@@ -887,10 +895,10 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (void)connectNodeJS
 {
 //    NSLog(@"connect nodejs");
-    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
-    if ([conn isEqualToString:@"NO"]) {
-        [socketIO connectToHost:@"202.71.110.204" onPort:80];
-    }
+//    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+//    if ([conn isEqualToString:@"NO"]) {
+//        [socketIO connectToHost:@"202.71.110.204" onPort:80];
+//    }
 }
 
 - (void)sendTokenNodeJS
@@ -1290,21 +1298,73 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
     UIApplicationState state = [application applicationState];
     if (state == UIApplicationStateActive) {
-//        NSString *cancelTitle = @"Close";
-//        NSString *showTitle = @"Show";
-//        NSString *message = [[userInfo valueForKey:@"aps"] valueForKey:@"alert"];
-//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Some title"
-//                                                            message:message
-//                                                           delegate:self
-//                                                  cancelButtonTitle:cancelTitle
-//                                                  otherButtonTitles:showTitle, nil];
-//        [alertView show];
-//        [alertView release];
         NSLog(@"%@",userInfo);
+        [self playAlertSound];
     } else {
         //Do stuff that you would do if the application was not active
         NSLog(@"not active: %@",userInfo);
     }
+    
+    [self handleNotification:[userInfo objectForKey:@"aps"]];
+}
+
+#pragma mark -
+#pragma mark cycle delegate
+
+- (void)handleNotification:(NSDictionary *)aps
+{
+    NSLog(@"didReceiveEvent()");
+    
+    NSString *msg = [aps objectForKey:@"message"];
+    
+    if ([msg isEqualToString:@"conversation_list_updated"]) {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"updateMessageList"
+         object:nil];
+        
+    }
+    else if ([msg isEqualToString:@"group_message_list_updated"])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"updateGroupMessageList"
+         object:nil];
+        
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"reloadChatList"
+         object:nil];
+        
+        
+    }
+    else if ([msg isEqualToString:@"buddy_list_updated"])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"reloadBuddyList"
+         object:nil];
+    }
+    else if ([msg isEqualToString:@"new_group_created"])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"reloadChatList"
+         object:nil];
+    }
+    else if ([msg isEqualToString:@"group_title_changed"])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"reloadChatList"
+         object:nil];
+        
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"updateSubjectName"
+         object:nil];
+        
+    }
+    else if ([msg isEqualToString:@"new_group_member_added"])
+    {
+        [[NSNotificationCenter defaultCenter]
+         postNotificationName:@"updateGroupMessageList"
+         object:nil];
+    }
+    
 }
 
 #pragma mark -

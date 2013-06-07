@@ -7,7 +7,7 @@
 //
 
 #import "HomeViewController.h"
-#import "JWallViewController.h"
+//#import "JWallViewController.h"
 #import "AppDelegate.h"
 
 @interface HomeViewController ()
@@ -16,7 +16,7 @@
 
 @implementation HomeViewController
 
-@synthesize av, nv, pv, vc1, vc2, vc3;
+@synthesize nv, pv, vc2, vc3;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -60,30 +60,30 @@
     
     CGRect innerViewFrame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(tabBar.frame.size.height)-26);
     
-    av = [[AllViewController alloc] init];
-    av.view.frame = innerViewFrame;
+//    av = [[AllViewController alloc] init];
+//    av.view.frame = innerViewFrame;
     nv = [[NewsViewController alloc] init];
     nv.view.frame = innerViewFrame;
     pv = [[PromotionsViewController alloc] init];
     pv.view.frame = innerViewFrame;
     
-    vc1 = [[[TBViewController alloc] init] autorelease];
-    [vc1.view addSubview:av.view];
+//    vc1 = [[[TBViewController alloc] init] autorelease];
+//    [vc1.view addSubview:av.view];
     vc2 = [[[TBViewController alloc] init] autorelease];
     [vc2.view addSubview:nv.view];
     vc3 = [[[TBViewController alloc] init] autorelease];
     [vc3.view addSubview:pv.view];
     
-    TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:@"All"];
-    t1.viewController = vc1;
-    TBTabButton *t2 = [[TBTabButton alloc] initWithTitle:@"News"];
+//    TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:@"All"];
+//    t1.viewController = vc1;
+    TBTabButton *t2 = [[TBTabButton alloc] initWithTitle:@"NEWS"];
     t2.viewController = vc2;
-    TBTabButton *t3 = [[TBTabButton alloc] initWithTitle:@"Promotions"];
+    TBTabButton *t3 = [[TBTabButton alloc] initWithTitle:@"PROMOTIONS"];
     t3.viewController = vc3;
     
-    TBTabButton *t4 = [[TBTabButton alloc] initWithTitle:@"J-Room"];
+    TBTabButton *t4 = [[TBTabButton alloc] initWithTitle:@"J-ROOM"];
 
-    NSArray *a = [NSArray arrayWithObjects:t1, t2, t3, t4, nil];
+    NSArray *a = [NSArray arrayWithObjects: t2, t3, t4, nil];
     
     tabBar = [[TBTabBar alloc] initWithItems:a];
     
@@ -102,14 +102,15 @@
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    if (viewController == vc1 || viewController == vc2 || viewController == vc3) {
+    if (viewController == vc2 || viewController == vc3) {
         //NSLog(@"Enable bottom view for JAM-BU Feed");
         mydelegate.swipeBottomEnabled = YES;
-        if (viewController == vc1) {
-            //NSLog(@"ALL");
-            mydelegate.swipeController = kAll;
-            mydelegate.swipeOptionString = @"home-all";
-        } else if (viewController == vc2) {
+//        if (viewController == vc1) {
+//            //NSLog(@"ALL");
+//            mydelegate.swipeController = kAll;
+//            mydelegate.swipeOptionString = @"home-all";
+//        } else
+        if (viewController == vc2) {
             mydelegate.swipeController = kNews;
             mydelegate.swipeOptionString = @"home-news";
         } else if (viewController == vc3) {
@@ -120,11 +121,7 @@
         //NSLog(@"Bottom view disabled");
         
         mydelegate.swipeBottomEnabled = NO;
-        
-        JWallViewController *jwallVC = [[JWallViewController alloc] init];
-        [self.navigationController pushViewController:jwallVC animated:YES];
-        [jwallVC release];
-        
+        [self navigateToWallNavController];
         return;
     }
 
@@ -137,6 +134,14 @@
     
     viewController.view.tag = SELECTED_VIEW_CONTROLLER_TAG;
     [self.view insertSubview:viewController.view belowSubview:tabBar];
+    
+}
+
+- (void)navigateToWallNavController
+{
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [mydelegate.tabView activateController:5];
+    
     
 }
 
@@ -202,7 +207,7 @@
     // To deselect 4rd button (+)
     int i = 0;
     for (UIButton* b in tabBar.buttons) {
-        if (i++ == 3) {
+        if (i++ == 2) {
             [b setSelected:NO];
         }
     }

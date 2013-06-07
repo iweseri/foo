@@ -145,27 +145,27 @@ static int kImageTagStart = 1000;
 - (void)processCategoryFilter
 {
     
-    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+//    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    HomeViewController *hm = [mydelegate.homeNavController.viewControllers objectAtIndex:0];
-    NSMutableString *strData = [NSMutableString stringWithFormat:@""];
-    int i = 0;
-    for (id row in self.checkedAllCategories) {
-        if (i == 0) {
-            strData = [NSString stringWithFormat:@"%@",row];
-        }else{
-            strData = [NSString stringWithFormat:@"%@,%@",strData,row];
-        }
-        
-        i++;
-    }
+//    HomeViewController *hm = [mydelegate.homeNavController.viewControllers objectAtIndex:0];
+//    NSMutableString *strData = [NSMutableString stringWithFormat:@""];
+//    int i = 0;
+//    for (id row in self.checkedAllCategories) {
+//        if (i == 0) {
+//            strData = [NSString stringWithFormat:@"%@",row];
+//        }else{
+//            strData = [NSString stringWithFormat:@"%@,%@",strData,row];
+//        }
+//        
+//        i++;
+//    }
     
     //NSLog(@"data: %@",strData);
     
-    if (mydelegate.swipeController == kAll) {
-        [hm.av refreshTableItemsWithFilter:strData andSearchedText:self.searchTextField.text];
-        //NSLog(@"all");
-    }
+//    if (mydelegate.swipeController == kAll) {
+//        [hm.av refreshTableItemsWithFilter:strData andSearchedText:self.searchTextField.text];
+//        //NSLog(@"all");
+//    }
     
     //    [DejalBezelActivityView removeViewAnimated:YES];
 }

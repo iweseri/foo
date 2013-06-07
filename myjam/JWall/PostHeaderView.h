@@ -7,10 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTTAttributedLabel.h"
 
 @protocol PostHeaderViewDelegate;
 
 @interface PostHeaderView : UIView
+{
+    TTTAttributedLabel *postLabel;
+    UILabel *timeLabel;
+}
 
 @property (retain, nonatomic) IBOutlet UIView *textPostView;
 @property (retain, nonatomic) IBOutlet UIImageView *imageView;

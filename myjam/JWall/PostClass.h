@@ -24,5 +24,7 @@
 @property (nonatomic, retain) NSString *imageURL;
 @property (nonatomic, retain) NSArray *taggedUsersArray;
 @property (nonatomic, retain) NSString *taggedUsersString;
+@property (nonatomic) NSInteger *sharedPostId;
+@property (nonatomic, retain) NSDictionary *sharedItem;
 
 @end

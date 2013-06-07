@@ -39,6 +39,7 @@
     
     UIPanGestureRecognizer *slideRecognizer = [[UIPanGestureRecognizer alloc]initWithTarget:self action:nil];
     slideRecognizer.delegate = self;
+    [self.activityIndicator startAnimating];
     [self.tableView addGestureRecognizer:slideRecognizer];
     [self loadData];
     

@@ -14,6 +14,7 @@
 #import "PostTaggedCell.h"
 #import <Twitter/Twitter.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <math.h>
 
 #define kCommentView    1
 #define kFavView        2
@@ -206,7 +207,13 @@ static CGFloat kMinCellTagHeight = 26;
             data.totalComment = [row objectForKey:@"comment_count"];
             data.totalFavourite = [row objectForKey:@"fav_count"];
             data.imageURL = [row objectForKey:@"post_photo"];
+            data.sharedPostId = [[row objectForKey:@"shared_post_id"] integerValue];
+            if (data.sharedPostId > 0) {
+                data.sharedItem = [NSDictionary dictionaryWithDictionary:[row objectForKey:@"shared_from"]];
+//                NSLog(@"data %@",[row objectForKey:@"shared_from"]);
+            }
             
+            NSLog(@"shared item %@", data.sharedItem);
             NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
             NSMutableString *tmpString = [[NSMutableString alloc] initWithString:@""];
             
@@ -271,7 +278,7 @@ static CGFloat kMinCellTagHeight = 26;
     if (indexPath.row == 0) { // for text
         
         // Get appropriate height for cell based on word / characters counting
-        CGSize  textSize = { 300, 10000.0 };
+        CGSize  textSize = { 300, 70 };
         CGSize size = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
                             constrainedToSize:textSize
                                 lineBreakMode:UILineBreakModeWordWrap];
@@ -323,13 +330,19 @@ static CGFloat kMinCellTagHeight = 26;
     
     NSMutableString *fullText = [NSMutableString stringWithFormat:@"%@ ",data.username];
     
-    if ([data.type isEqualToString:@"DEFAULT"]) {
-        [fullText appendString:@"says"];
+    if (data.sharedPostId){
+        [fullText appendFormat:@"shared %@'s post", [data.sharedItem objectForKey:@"user_name"]];
     }else{
-        [fullText appendString:@"shared a photo"];
+        if ([data.type isEqualToString:@"DEFAULT"]) {
+            [fullText appendString:@"says"];
+        }
+        else{
+            [fullText appendString:@"shared a photo"];
+        }
+        
+        [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
     }
     
-    [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
     [header.imageView setImageWithURL:[NSURL URLWithString:data.avatarURL]
                     placeholderImage:[UIImage imageNamed:@"blank_avatar"]
                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -396,10 +409,43 @@ static CGFloat kMinCellTagHeight = 26;
             cell = [nib objectAtIndex:0];
         }
         
-        cell.postTextLabel.frame = CGRectMake(0, 0, tableView.frame.size.width-20, kMinCellHeight);
+        CGSize  textSize = { 300, 70 };
+        CGSize size = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
+                            constrainedToSize:textSize
+                                lineBreakMode:UILineBreakModeWordWrap];
+        
+        CGFloat height = size.height < kMinCellHeight ? kMinCellHeight : size.height;
+        
+        cell.postTextLabel.frame = CGRectMake(0, 0, tableView.frame.size.width-20, height);
         [cell.postTextLabel setFont:[UIFont systemFontOfSize:14]];
+        
+//        NSString *temp = data.text;
+//        if ([temp length] > 100) {
+//            NSRange range = [temp rangeOfComposedCharacterSequencesForRange:(NSRange){0, 100}];
+//            temp = [temp substringWithRange:range];
+//            temp = [temp stringByAppendingString:@" …"];
+//        }
+        if ([data.text length] > 120) {
+            int len = [self getPostTextLessLength:data.text];
+            NSString *temp = data.text;
+            NSRange range = [temp rangeOfComposedCharacterSequencesForRange:(NSRange){0, len}];
+            data.text = [temp substringWithRange:range];
+
+            CGSize  newTextSize = { 10000, 40 };
+            CGSize newSize = [data.text sizeWithFont:[UIFont systemFontOfSize:14]
+                                constrainedToSize:newTextSize
+                                    lineBreakMode:UILineBreakModeCharacterWrap];
+//            double k = fmod(newSize.width, 300.0);
+            CGFloat k = (float)((int)newSize.width % 300);
+            NSLog(@"len %f", k);
+//            data.text = [temp stringByAppendingString:@" … more"];
+        }
         [cell.postTextLabel setText:data.text];
-        [cell.postTextLabel sizeToFit];
+
+        cell.postTextLabel.numberOfLines = 3;
+        
+        
+//        NSLog(@"label = %@", cell.postTextLabel.text);
         
         // To remove group cell border
         cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
@@ -460,6 +506,30 @@ static CGFloat kMinCellTagHeight = 26;
     
     return nil;
     
+}
+
+- (int)getPostTextLessLength:(NSString *)str
+{
+    NSArray *seperated = [str componentsSeparatedByString:@" "];
+    
+    int totalChar = 0;
+    int totalWord = 0;
+    for (NSString *word in seperated) {
+        totalChar += [word length];
+        
+        if (totalChar > 100) {
+            totalWord--;
+            break;
+        }else{
+            totalWord++;
+        }
+    }
+    
+//    return tmp;
+    NSRange wordRange = NSMakeRange(0,totalWord);
+    NSString *result = [[seperated subarrayWithRange:wordRange] componentsJoinedByString:@" "];
+    
+    return [result length];
 }
 
 - (void)addBlackView

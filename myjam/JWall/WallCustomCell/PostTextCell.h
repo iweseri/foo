@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TTTAttributedLabel.h"
 
 @interface PostTextCell : UITableViewCell
-@property (retain, nonatomic) IBOutlet UILabel *postTextLabel;
+@property (retain, nonatomic) IBOutlet TTTAttributedLabel *postTextLabel;
 
 @end
