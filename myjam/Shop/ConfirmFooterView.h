@@ -13,6 +13,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *deliveryLabel;
 @property (retain, nonatomic) IBOutlet UILabel *shopNameLabel;
 @property (retain, nonatomic) IBOutlet UIButton *checkOutButton;
+@property (retain, nonatomic) IBOutlet UIButton *seedButton;
 @property (retain, nonatomic) IBOutlet UILabel *jambuFeePrice;
 
 @property (retain, nonatomic) IBOutlet UILabel *jambuFeeLabel;

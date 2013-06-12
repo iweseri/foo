@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString *orderItemId;
 @property (nonatomic, retain) NSString *productId;
 @property (nonatomic, retain) NSString *newsId;
+@property (nonatomic, retain) NSString *postId;
 @property (nonatomic, retain) NSString *qrcodeId;
 @property (nonatomic, retain) NSString *qrTitle;
 @property (nonatomic, retain) NSString *qrProvider;
@@ -29,6 +30,7 @@
 @property (nonatomic, retain) NSString *qrCategory;
 @property (nonatomic, retain) NSString *qrLabelColor;
 @property (nonatomic, retain) UIImage *qrImage;
+@property (nonatomic, retain) NSString *imageURL;
 //@property (nonatomic, retain) MData *detailsData;
 
 @property (retain, nonatomic) IBOutlet UILabel *titleLabel;

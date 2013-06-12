@@ -23,7 +23,7 @@
 @property (strong, nonatomic) id<PostHeaderViewDelegate>delegate;
 @property (retain, nonatomic) IBOutlet UIImageView *qrcodeImageView;
 
-- (void)setBoldText:(NSString *)prefix withFullText:(NSString *)text andTime:(NSString *)timeText;
+-(void)setBoldText:(NSString *)prefix withFullText:(NSString *)text boldPostfix:(NSString *)postfix andTime:(NSString *)timeText;
 @end
 
 @protocol PostHeaderViewDelegate

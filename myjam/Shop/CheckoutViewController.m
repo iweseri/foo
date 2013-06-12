@@ -8,6 +8,8 @@
 
 #import "CheckoutViewController.h"
 #define kTableCellHeightB 150
+#define checkoutTag         1
+#define seedTag             2
 @interface CheckoutViewController ()
 
 @end
@@ -52,6 +54,8 @@
             footerView.deliveryLabel.text = [[_cartList objectAtIndex:0] valueForKey:@"delivery_fee"];
             footerView.gTotalLabel.text
             = [[[[_cartList objectAtIndex:0] valueForKey:@"grand_total"] componentsSeparatedByString:@":"] objectAtIndex:1];
+            self.totalSeed = [[[_cartList objectAtIndex:0] valueForKey:@"grand_total_seed"] intValue];
+            NSLog(@"SEED:%d",self.totalSeed);
         }
     }
     else{
@@ -77,7 +81,12 @@
     
     self.shopName.text = [[_cartList objectAtIndex:0] valueForKey:@"shop_name"];
     if ([self.footerType isEqual:@"1"]){
+        [footerView.checkOutButton setTag:checkoutTag];
         [footerView.checkOutButton addTarget:self action:@selector(checkOutPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [footerView.seedButton setTag:seedTag];
+        NSString *seedTitle = [NSString stringWithFormat:@"CHECKOUT WITH  ♦ %d",500];
+        [footerView.seedButton setTitle:seedTitle forState:UIControlStateNormal];
+        [footerView.seedButton addTarget:self action:@selector(checkOutPressed:) forControlEvents:UIControlEventTouchUpInside];
         footerView.jambuFeePrice.text = [[_cartList objectAtIndex:0] valueForKey:@"admin_fee"];
     }
     self.tableView.tableFooterView=footerView;
@@ -85,7 +94,6 @@
                   placeholderImage:[UIImage imageNamed:@"default_icon.png"]];
     [self updatePage];
     [footerView.deliveryButton addTarget:self action:@selector(deliveryOptions:) forControlEvents:UIControlEventTouchUpInside];
-    
     
     
     // Uncomment the following line to preserve selection between presentations.
@@ -283,7 +291,92 @@
     [self updatePage];
     // [[[[[self tabBarController] tabBar] items] objectAtIndex:4] setBadgeValue:@"1"];
 }
--(void)checkOutPressed:(id)sender{
+#pragma mark -
+#pragma mark CheckoutPopupViewDelegate
+- (void)popView:(CheckoutPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
+{
+    NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
+    [self removeBlackView];
+    if (popupView.tag == checkoutTag) {
+        if (index == 1) {
+            [self checkoutProcess];
+        }
+    } else {
+        if (index == 1) {
+            [self seedProcess];
+        }
+    }
+}
+
+- (void)addBlackView
+{
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIView *blackView = [[UIView alloc] initWithFrame:mydelegate.window.frame];
+    //UIView *blackView = [[UIView alloc] initWithFrame:self.view.frame];
+    [blackView setTag:99];
+    [blackView setBackgroundColor:[UIColor blackColor]];
+    [blackView setAlpha:0.3];
+    [mydelegate.window addSubview:blackView];
+    //[self.view addSubview:blackView];
+    [blackView release];
+}
+
+- (void)removeBlackView
+{
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIView *blackView = [mydelegate.window viewWithTag:99];
+    //UIView *blackView = [self.view viewWithTag:99];
+    [blackView removeFromSuperview];
+}
+
+- (IBAction)checkOutPressed:(id)sender
+{
+    NSLog(@"Seed2:%d",self.totalSeed);
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    CheckoutPopupView *popup;
+    if ([sender tag] == seedTag) {
+        popup = [[CheckoutPopupView alloc] initWithDataList:self.totalSeed andTag:[sender tag]];
+    } else {
+        popup = [[CheckoutPopupView alloc] initWithDataList:nil andTag:[sender tag]];
+    }
+    
+    popup.delegate = self;
+    
+    CGFloat popupYPoint = mydelegate.window.frame.size.height/2-popup.frame.size.height/2;
+    CGFloat popupXPoint = mydelegate.window.frame.size.width/2-popup.frame.size.width/2;
+    popup.frame = CGRectMake(popupXPoint, popupYPoint, popup.frame.size.width, popup.frame.size.height);
+    
+    [self addBlackView];
+    [mydelegate.window addSubview:popup];
+}
+
+-(void)seedProcess {
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/shop_cart_checkout_deduct_seed_v2.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]copy]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"seed_value\":%d}",self.totalSeed];
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    NSLog(@"dataContent: %@\nresponse listing: %@", dataContent,response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    NSString *status = nil;
+    NSMutableArray* list = nil;
+    NSString *balanceSeed = 0;
+    
+    if([resultsDictionary count]) {
+        status = [resultsDictionary objectForKey:@"status"];
+        if ([status isEqualToString:@"ok"]) {
+            list = [resultsDictionary objectForKey:@"list"];
+            balanceSeed = [list valueForKey:@"balance_seed"];
+            
+            AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            SuccessfulViewController *success = [[SuccessfulViewController alloc] init];
+            [mydelegate.shopNavController pushViewController:success animated:YES];
+            success.isShowSeeds = YES;
+            success.balanceSeed = balanceSeed;
+            [success release];
+        }
+    }
+}
+
+-(void)checkoutProcess {
     NSDictionary *respond = [[MJModel sharedInstance]getCheckoutUrlForId:[[_cartList objectAtIndex:0]valueForKey:@"cart_id"]];
     if ([[respond valueForKey:@"status" ] isEqual:@"ok"]){
         self.paymentStatus = @"processing";
@@ -291,7 +384,6 @@
             
         }
     }
-    
 }
 
 -(void)PurchaseVerification:(NSNotification *) notification{
@@ -306,15 +398,17 @@
     NSDictionary *purchaseStatus = [[MJModel sharedInstance] getPurchaseStatus:[[_cartList objectAtIndex:0] valueForKey:@"cart_id"]];
     //NSLog(@"PurchaseVerification get called!");
     if ([[purchaseStatus valueForKey:@"status"] isEqualToString:@"Paid"]){
-        ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
+//        ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"refreshPurchaseHistory" object:self];
-        mydelegate.isShowPurchaseHistory = YES;
+//        mydelegate.isShowPurchaseHistory = YES;
         //        [sv1 switchViewController:sv1.vc3];
-        [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
-        [sv1.tabBar showViewControllerAtIndex:1];
-        
 //        [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
+//        [sv1.tabBar showViewControllerAtIndex:1];
+        SuccessfulViewController *success = [[SuccessfulViewController alloc] init];
+        [mydelegate.shopNavController pushViewController:success animated:YES];
+        success.isShowSeeds = NO;
+        [success release];
     }
     else{
         CustomAlertView *alertView = [[CustomAlertView alloc] initWithTitle:@"Failure" message:@"Purchase failed. Please try again." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil];

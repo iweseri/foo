@@ -28,6 +28,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-ROOM";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
     }
     return self;
 }
@@ -49,6 +63,21 @@
     [overlayView setBackgroundColor:[UIColor whiteColor]];
     [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
     [overlayView release];
+    
+    [self adjustViewsRect];
+}
+
+- (void)adjustViewsRect
+{
+    CGFloat screenHeight = [[UIScreen mainScreen] bounds].size.height-20;
+    CGRect tmp = self.addBuddyButton.frame;
+    tmp.origin.y = screenHeight-44*2-tmp.size.height-30;
+    self.addBuddyButton.frame = tmp;
+    
+    //    [self.tableView setBackgroundColor:[UIColor yellowColor]];
+    tmp = self.tableView.frame;
+    tmp.size.height = self.addBuddyButton.frame.origin.y - tmp.origin.y - 44;
+    self.tableView.frame = tmp;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -338,6 +367,7 @@
     [self setTableView:nil];
     [self setLoadingIndicator:nil];
     [self setNoRecordLabel:nil];
+    [self setAddBuddyButton:nil];
     [super viewDidUnload];
 }
 
@@ -345,6 +375,7 @@
     [_tableView release];
     [_loadingIndicator release];
     [_noRecordLabel release];
+    [_addBuddyButton release];
     [super dealloc];
 }
 @end

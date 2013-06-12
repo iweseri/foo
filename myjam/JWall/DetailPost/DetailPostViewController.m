@@ -110,6 +110,8 @@ static CGFloat kCommentImageViewHeight = 120;
                                                  name:@"updateCommentList"
                                                object:nil];
 //    [self setup];
+    reloadDisabled = YES;
+    [self setup];
 }
 
 - (void)updateCommentList
@@ -128,10 +130,12 @@ static CGFloat kCommentImageViewHeight = 120;
         
         // Start retreive data and setup views
         [self setup];
-        reloadDisabled = NO;
+        
         
         NSLog(@"vda detail");
     }
+    
+    reloadDisabled = NO;
 }
 
 - (void)setup
@@ -188,7 +192,7 @@ static CGFloat kCommentImageViewHeight = 120;
     reloadDisabled = YES;
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
-    [mydelegate.homeNavController pushViewController:createComment animated:YES];
+    [mydelegate.wallNavController pushViewController:createComment animated:YES];
     [createComment release];
 }
 
@@ -218,6 +222,11 @@ static CGFloat kCommentImageViewHeight = 120;
         data.totalFavourite = [postDetails objectForKey:@"fav_count"];
         data.totalComment = [postDetails objectForKey:@"comment_count"];
         data.imageURL = [postDetails objectForKey:@"post_photo"];
+        data.sharedPostId = [[postDetails objectForKey:@"shared_post_id"] integerValue];
+        if (data.sharedPostId > 0) {
+            data.sharedItem = [NSDictionary dictionaryWithDictionary:[postDetails objectForKey:@"shared_from"]];
+            //                NSLog(@"data %@",[row objectForKey:@"shared_from"]);
+        }
         
         if ([data.isFavourite intValue] == 1) {
             [self.favouriteButton setImage:[UIImage imageNamed:@"btn-fav-unfav-mr"] forState:UIControlStateNormal];
@@ -471,14 +480,24 @@ static CGFloat kCommentImageViewHeight = 120;
     
     NSMutableString *fullText = [NSMutableString stringWithFormat:@"%@ ",data.username];
     
-    if ([data.type isEqualToString:@"DEFAULT"]) {
-        [fullText appendString:@"says"];
-    }
-    else if ([data.type isEqualToString:@"PHOTO"]) {
-        [fullText appendString:@"shared a photo"];
+    NSString *shareUsername = @"";
+    if (data.sharedPostId){
+        
+        shareUsername = [data.sharedItem objectForKey:@"user_name"];
+        
+        [fullText appendFormat:@"shared %@'s post", shareUsername];
+    }else{
+        if ([data.type isEqualToString:@"DEFAULT"]) {
+            [fullText appendString:@"says"];
+        }
+        else{
+            [fullText appendString:@"shared a photo"];
+        }
+        
     }
     
-    [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
+    [header setBoldText:data.username withFullText:fullText boldPostfix:shareUsername andTime:@"About 1 minute ago"];
+    
     [header.imageView setImageWithURL:[NSURL URLWithString:data.avatarURL]
                      placeholderImage:[UIImage imageNamed:@"blank_avatar"]
                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
@@ -531,6 +550,31 @@ static CGFloat kCommentImageViewHeight = 120;
         tmp.size.height = ypoint;
         self.postContentView.frame = tmp;
         
+    }else if (data.sharedPostId > 0){
+        self.aPostView.frame = CGRectMake(10, ypoint, self.aPostView.frame.size.width, self.aPostView.frame.size.height);
+        [self.postContentView addSubview:self.aPostView];
+        self.aPostView.backgroundColor = [UIColor colorWithHex:@"#f1f1f1"];
+        self.aPostView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+        self.aPostView.layer.borderWidth = 1.0f;
+        
+        NSString *urlImage = [data.sharedItem objectForKey:@"avatar_url"];
+        
+        if ([[data.sharedItem objectForKey:@"post_type"] isEqualToString:@"PHOTO"]) {
+            urlImage = [data.sharedItem objectForKey:@"post_photo"];
+        }
+        
+        [self.postImageView setImageWithURL:[NSURL URLWithString:urlImage]
+                             placeholderImage:[UIImage imageNamed:@"default_icon"]];
+        self.postTitleLabel.text = [data.sharedItem objectForKey:@"user_name"];
+        [self.postTitleLabel sizeToFit];
+        self.postSubtitleLabel.text = [data.sharedItem objectForKey:@"post_text"];
+        [self.postSubtitleLabel sizeToFit];
+        
+//        [self.aPostView release];
+        ypoint += self.aPostView.frame.size.height + 10;
+        CGRect tmp = self.postContentView.frame;
+        tmp.size.height = ypoint;
+        self.postContentView.frame = tmp;
     }
 
     [headerView addSubview:self.postContentView];
@@ -587,7 +631,7 @@ static CGFloat kCommentImageViewHeight = 120;
                                 }
                                 
                             }];
-    
+//    return headerView;
     return [headerView autorelease];
 }
 
@@ -706,6 +750,8 @@ static CGFloat kCommentImageViewHeight = 120;
 
 - (void)popView:(MyPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
 {
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
     switch (index) {
         case 0:
             [self shareImageOnFB:data.qrcodeId];
@@ -717,8 +763,36 @@ static CGFloat kCommentImageViewHeight = 120;
             [self shareImageOnEmail:data.qrcodeId];
             break;
         case 3:
+        {
+            CreatePostViewController *createPost = [[CreatePostViewController alloc] initWithPlaceholderText:@"What's on your mind?" withLabel:@"SHARE POST" andComment:nil];
+            createPost.shareData = data;
+            [mydelegate.wallNavController pushViewController:createPost animated:YES];
+            [createPost release];
+            break;
+        }
             break;
         case 4:
+        {
+            ReportSpamViewController *detailView = [[ReportSpamViewController alloc] init];
+            detailView.qrcodeId = [NSString stringWithFormat:@"%d", data.qrcodeId];
+            detailView.postId = [NSString stringWithFormat:@"%d", data.postId];
+            detailView.qrTitle = data.text;
+            detailView.qrProvider = data.username;
+            detailView.qrDate = data.datetime;
+            detailView.qrAbstract = @"";
+            detailView.qrType = @"J-ROOM";
+            detailView.qrCategory = @"Wall Post";
+            detailView.qrLabelColor = @"#0099FF";
+            
+            if (![data.type isEqualToString:@"PHOTO"]) {
+                detailView.imageURL = [NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId];
+            }else{
+                detailView.imageURL = data.imageURL;
+            }
+            [mydelegate.wallNavController pushViewController:detailView animated:YES];
+            [detailView release];
+            break;
+        }
             break;
         case 5:
         {
@@ -797,7 +871,7 @@ static CGFloat kCommentImageViewHeight = 120;
         NSString *emailBody = [NSString stringWithFormat:@"Scan this QR code. \n\nJAM-BU App: %@/?qrcode_id=%d",APP_API_URL,qrcodeId];
         [mailer setMessageBody:emailBody isHTML:NO];
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [mydelegate.homeNavController presentModalViewController:mailer animated:YES];
+        [mydelegate.wallNavController presentModalViewController:mailer animated:YES];
         [mailer release];
         
         [self addShareItemtoServer:qrcodeId withShareType:@"email"];
@@ -984,7 +1058,7 @@ static CGFloat kCommentImageViewHeight = 120;
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // Remove the mail view
-    [mydelegate.homeNavController dismissModalViewControllerAnimated:YES];
+    [mydelegate.wallNavController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -
@@ -1007,6 +1081,10 @@ static CGFloat kCommentImageViewHeight = 120;
     [_tableLoadingLabel release];
     [_footerLoadingIndicator release];
     [_rightButton release];
+    [_postImageView release];
+    [_postTitleLabel release];
+    [_postSubtitleLabel release];
+    [_aPostView release];
     [super dealloc];
 }
 - (void)viewDidUnload {
@@ -1022,6 +1100,10 @@ static CGFloat kCommentImageViewHeight = 120;
     [self setTableLoadingLabel:nil];
     [self setFooterLoadingIndicator:nil];
     [self setRightButton:nil];
+    [self setPostImageView:nil];
+    [self setPostTitleLabel:nil];
+    [self setPostSubtitleLabel:nil];
+    [self setAPostView:nil];
     [super viewDidUnload];
 }
 - (IBAction)handlePostContentRightButton:(id)sender

@@ -38,6 +38,7 @@
     SLComposeViewController *mySLComposerSheet;
     BOOL reloadDisabled;
 }
+
 @property (retain, nonatomic) IBOutlet UIView *footerView;
 @property (retain, nonatomic) IBOutlet UIButton *commentButton;
 @property (retain, nonatomic) IBOutlet UIButton *favouriteButton;
@@ -49,6 +50,10 @@
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *tableLoadingIndicator;
 @property (retain, nonatomic) IBOutlet UILabel *tableLoadingLabel;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *footerLoadingIndicator;
+@property (retain, nonatomic) IBOutlet UIImageView *postImageView;
+@property (retain, nonatomic) IBOutlet UILabel *postTitleLabel;
+@property (retain, nonatomic) IBOutlet UILabel *postSubtitleLabel;
+@property (retain, nonatomic) IBOutlet UIView *aPostView;
 
 @property (nonatomic) NSInteger postId;
 @property int currentView;

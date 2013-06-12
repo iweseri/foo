@@ -12,5 +12,7 @@
 @interface PhotoViewController : UIViewController <UIScrollViewDelegate>
 
 @property (nonatomic, retain) NSArray *aImages;
+@property (nonatomic, retain) IBOutlet UIView *contentView;
+@property BOOL *isPushController;
 
 @end

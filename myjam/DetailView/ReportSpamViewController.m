@@ -10,6 +10,7 @@
 #import "NewsViewController.h"
 #import "CustomAlertView.h"
 #import "FontLabel.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #define kFrame 460.0f
 
@@ -86,12 +87,20 @@
 {
     if (![self.qrcodeId isKindOfClass:[NSString class]]) {
         self.qrcodeId = @"";
-    } if (![self.productId isKindOfClass:[NSString class]]) {
+    }
+    
+    if (![self.productId isKindOfClass:[NSString class]]) {
         self.productId = @"";
     }
+    
+    if (![self.postId isKindOfClass:[NSString class]]) {
+        self.postId = @"";
+    }
+    
     if (![self.newsId isKindOfClass:[NSString class]]) {
         self.newsId = @"";
     }
+    
     if (![self.orderItemId isKindOfClass:[NSString class]]) {
         self.orderItemId = @"";
     }
@@ -104,7 +113,13 @@
     self.typeLabel.text = self.qrType;
     self.abstractLabel.text = self.qrAbstract;
     self.labelView.backgroundColor = [UIColor colorWithHex:self.qrLabelColor];
-    self.thumbsView.image = self.qrImage;
+    if ([self.imageURL length]) {
+        [self.thumbsView setImageWithURL:[NSURL URLWithString:self.imageURL]
+                placeholderImage:[UIImage imageNamed:@"default_icon"]];
+
+    }else{
+        self.thumbsView.image = self.qrImage;
+    }
     
     self.remarksTextView.layer.borderWidth = 1.0f;
     self.remarksTextView.layer.borderColor = [[UIColor grayColor] CGColor];
@@ -159,6 +174,10 @@
 //    NSString *flag = @"GET_REPORT_TYPES_NEWS";
     NSString *urlString = [NSString stringWithFormat:@"%@/api/report_abuse_type.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"news_id\":\"%@\"}",self.newsId];
+    
+    if (self.postId > 0) {
+        dataContent = [NSString stringWithFormat:@"{\"wall_post_id\":\"%@\"}",self.postId];
+    }
     NSDictionary *rep;
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
@@ -274,9 +293,12 @@
         [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
         //NSLog(@"saved");
         if (![self.productId isEqual:@""]) {
-            [self performSelector:@selector(processSubmitSpamForProduct) withObject:nil afterDelay:0.2];
-        } else {
-            [self performSelector:@selector(processSubmitSpamForBox) withObject:nil afterDelay:0.2];
+            [self performSelector:@selector(processSubmitSpamForProduct) withObject:nil afterDelay:0.0];
+        }else if(![self.postId isEqual:@""]){
+            [self performSelector:@selector(processSubmitSpamForWall) withObject:nil afterDelay:0.0];
+        }
+        else {
+            [self performSelector:@selector(processSubmitSpamForBox) withObject:nil afterDelay:0.0];
         }
     }
 }
@@ -356,6 +378,38 @@
     }
     [DejalBezelActivityView removeViewAnimated:YES];
 }
+
+- (void)processSubmitSpamForWall
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/report_abuse_submit.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    
+    NSString *dataContent = [NSString stringWithFormat:@"{\"wall_post_id\":\"%@\",\"report_type\":\"%@\",\"report_remarks\":\"%@\"}",
+                             self.postId,
+                             self.reportTypeId,
+                             self.remarksTextView.text];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    //NSLog(@"abc: %@, def:%@",dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] mutableCopy];
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        NSString *msg = [resultsDictionary objectForKey:@"message"];
+        
+        CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"Reporting Spam" message:msg delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        [alert release];
+        
+        if ([status isEqualToString:@"ok"])
+        {
+            //NSLog(@"Success submit spam");
+            [self.navigationController popToRootViewControllerAnimated:NO];
+        }
+    }
+    [DejalBezelActivityView removeViewAnimated:YES];
+}
+
 
 #pragma mark -
 #pragma mark textView delegate

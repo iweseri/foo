@@ -9,6 +9,7 @@
 #import "DetailProductViewController.h"
 #import "CompareRelatedViewController.h"
 #import "CustomProduct.h"
+#import "PhotoViewController.h"
 #define kTableCellHeightC 70
 @interface DetailProductViewController ()
 
@@ -112,6 +113,9 @@
     }
     
     self.aImages = [[NSMutableArray alloc] initWithCapacity:[[productInfo valueForKey:@"product_image"] count]];
+    
+    self.tempImages = [[productInfo valueForKey:@"product_image"] copy];
+    
     for (int i=0; i< [[productInfo valueForKey:@"product_image"] count]; i++){
         
         [self retrieveImages:[[productInfo valueForKey:@"product_image"] objectAtIndex:i] ];
@@ -119,6 +123,8 @@
         
         
     }
+    
+    
     
     self.tableView.tableHeaderView = headerView;
     
@@ -419,7 +425,23 @@
     [headerView.leftButton addTarget:self action:@selector(handleLeftButton) forControlEvents:UIControlEventTouchUpInside];
     [headerView.rightButton addTarget:self action:@selector(handleRightButton) forControlEvents:UIControlEventTouchUpInside];
     
-    
+    headerView.imageCarouselView.tag = imgCounter;
+    UITapGestureRecognizer *fullScreenTapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleImageFullScreen:)];
+    [headerView.imageCarouselView addGestureRecognizer:fullScreenTapGestureRecognizer];
+    [fullScreenTapGestureRecognizer release];
+}
+
+- (void)handleImageFullScreen:(id)sender
+{
+    int index = [(UIGestureRecognizer *)sender view].tag;
+    NSLog(@"tapped on img %d | %@",index,self.tempImages);
+    PhotoViewController *photovc = [[PhotoViewController alloc] init];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    mydelegate.arrayTemp = [self.tempImages copy];
+    mydelegate.indexTemp = index;
+    photovc.isPushController = YES;
+    [mydelegate.shopNavController pushViewController:photovc animated:YES];
+    //[mydelegate.window addSubview:photovc.view];
 }
 - (void)handleLeftButton
 {

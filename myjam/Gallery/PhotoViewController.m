@@ -41,24 +41,42 @@
         // code for 3.5-inch screen
         self.view.frame = CGRectMake(0,0,self.view.bounds.size.width, 480);
     }
-    
-    UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    backButton.frame = CGRectMake(20,30,50,20);
-    backButton.clipsToBounds = YES;
-    backButton.backgroundColor = [UIColor clearColor];
-    [backButton setShowsTouchWhenHighlighted:YES];
-    [backButton setTitle:@"Back" forState:UIControlStateNormal];
-    [backButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
-    [backButton setTintColor:[UIColor whiteColor]];
-    [backButton addTarget:self action:@selector(handleBackButton) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.view addSubview:backButton];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     self.aImages = [mydelegate.arrayTemp copy];
-
-//    self.aImages = [[NSArray alloc] init];
-    UIView *photoView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 320, self.view.frame.size.height-50-60)];
-//    [photoView setBackgroundColor:[UIColor greenColor]];
+    
+    UIView *photoView;
+    if (!self.isPushController) {
+        self.isPushController = NO;
+        UIButton *backButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        backButton.frame = CGRectMake(20,30,50,20);
+        backButton.clipsToBounds = YES;
+        backButton.backgroundColor = [UIColor clearColor];
+        [backButton setShowsTouchWhenHighlighted:YES];
+        [backButton setTitle:@"Back" forState:UIControlStateNormal];
+        [backButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+        [backButton setTintColor:[UIColor whiteColor]];
+        [backButton addTarget:self action:@selector(handleBackButton) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:backButton];
+        
+        //    self.aImages = [[NSArray alloc] init];
+        photoView = [[UIView alloc] initWithFrame:CGRectMake(0, 60, 320, self.view.frame.size.height-50-60)];
+        //    [photoView setBackgroundColor:[UIColor greenColor]];
+    } else {
+        self.title = @"JAM-BU Shop";
+        FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleView.text = self.title;
+        titleView.textAlignment = NSTextAlignmentCenter;
+        titleView.backgroundColor = [UIColor clearColor];
+        titleView.textColor = [UIColor whiteColor];
+        [titleView sizeToFit];
+        self.navigationItem.titleView = titleView;
+        [titleView release];
+        
+        [mydelegate.bannerView setHidden:YES];
+        [self.contentView setBackgroundColor:[UIColor lightGrayColor]];
+        photoView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-50-60)];
+    }
+    
     
     UIScrollView *mainScrollView = [[UIScrollView alloc] initWithFrame:photoView.bounds];
     mainScrollView.pagingEnabled = YES;
@@ -122,6 +140,11 @@
     [self.view addSubview:photoView];
     [photoView release];
 
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    [mydelegate.bannerView setHidden:NO];
 }
 
 #pragma mark -

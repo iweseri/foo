@@ -17,9 +17,11 @@
 #import "ConfirmFooterView.h"
 #import "UIColor+HexString.h"
 #import "ShopViewController.h"
+#import "CheckoutPopupView.h"
+#import "SuccessfulViewController.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
-@interface CheckoutViewController : CoreViewController<UITableViewDelegate,UITableViewDataSource, UIAlertViewDelegate>
+@interface CheckoutViewController : CoreViewController<UITableViewDelegate,UITableViewDataSource, UIAlertViewDelegate,CheckoutPopupViewDelegate>
 @property (retain, nonatomic) IBOutlet UILabel *shopName;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *cartList;
@@ -27,6 +29,7 @@
 @property (retain, nonatomic) IBOutlet UIImageView *shopLogo;
 @property (retain, nonatomic) ConfirmFooterView *footerView;
 @property (retain, nonatomic) NSString *paymentStatus;
+@property (nonatomic) NSInteger totalSeed;
 
 
 -(void)deliveryOptions:(id)sender;

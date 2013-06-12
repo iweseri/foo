@@ -38,7 +38,7 @@
 -(NSDictionary*)getPuchasedInfoForId:(NSString*)orderItemId;
 -(NSDictionary*)getAddressForStore:(NSString*)storeId;
 -(NSDictionary*)getCategoryForBottomViewPurchased;
-
+-(NSDictionary*)getSavedAddressFor:(NSString*)cartId;
 -(NSDictionary*) getPurchasedHistoryFor:(NSString*)searchText cats:(NSString*)catIds arrangedBy:(NSString*)arrange forPage:(NSString*)page;
 
 

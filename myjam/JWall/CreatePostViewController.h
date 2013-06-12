@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "MyPopupView.h"
+#import "PostClass.h"
 
 @class TPKeyboardAvoidingScrollView;
 
@@ -33,7 +34,11 @@
 @property (retain, nonatomic) IBOutlet UITextView *textData;
 @property (retain, nonatomic) IBOutlet UIImageView *userImageView;
 @property (retain, nonatomic) IBOutlet UIView *keyboardAccessoryView;
-
+@property (retain, nonatomic) IBOutlet UIImageView *sourceImageView;
+@property (retain, nonatomic) IBOutlet UILabel *topLabel;
+@property (retain, nonatomic) IBOutlet UILabel *subtitleLabel;
+@property (retain, nonatomic) IBOutlet UIView *shareView;
+@property (retain, nonatomic) PostClass *shareData;
 @property (nonatomic, retain) UIImageView *uploadImage;
 
 //@property (nonatomic) BOOL isTagged;

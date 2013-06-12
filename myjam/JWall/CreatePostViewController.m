@@ -30,6 +30,20 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        FontLabel *titleViewUsingFL = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleViewUsingFL.text = @"J-ROOM";
+        titleViewUsingFL.textAlignment = NSTextAlignmentCenter;
+        titleViewUsingFL.backgroundColor = [UIColor clearColor];
+        titleViewUsingFL.textColor = [UIColor whiteColor];
+        [titleViewUsingFL sizeToFit];
+        self.navigationItem.titleView = titleViewUsingFL;
+        [titleViewUsingFL release];
+        
+        self.navigationItem.backBarButtonItem =
+        [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                          style:UIBarButtonItemStyleBordered
+                                         target:nil
+                                         action:nil] autorelease];
     }
     return self;
 }
@@ -42,7 +56,13 @@
         placeHolderText = holderText;
         textType = type;
         postIdComment = postId;
+        
+        if ([textType isEqualToString:@"SHARE POST"]) {
+            self.shareData = [[PostClass alloc] init];
+        }
+        
     }
+    
     NSLog(@"ID:%d",postIdComment);
     return self;
 }
@@ -143,6 +163,33 @@
     NSString *imgURL = [[NSUserDefaults standardUserDefaults] objectForKey:@"user_avatar_url"];
     [self.userImageView setImageWithURL:[NSURL URLWithString:imgURL]
                       placeholderImage:[UIImage imageNamed:@"blank_avatar.png"]];
+    
+    if ([textType isEqualToString:@"SHARE POST"]) {
+        self.shareView.frame = CGRectMake(10, 180, self.shareView.frame.size.width, self.shareView.frame.size.height);
+        [self.view addSubview:self.shareView];
+        self.shareView.backgroundColor = [UIColor colorWithHex:@"#f1f1f1"];
+        self.shareView.layer.borderColor = [[UIColor lightGrayColor] CGColor];
+        self.shareView.layer.borderWidth = 1.0f;
+        
+        NSString *urlImage = self.shareData.avatarURL;
+        
+        if ([[self.shareData.sharedItem objectForKey:@"post_type"] isEqualToString:@"PHOTO"]) {
+            urlImage = [self.shareData.sharedItem objectForKey:@"post_photo"];
+        }
+        else if ([self.shareData.type isEqualToString:@"PHOTO"])
+        {
+            urlImage = self.shareData.imageURL;
+        }
+        
+        [self.sourceImageView setImageWithURL:[NSURL URLWithString:urlImage]
+                           placeholderImage:[UIImage imageNamed:@"default_icon"]];
+        self.topLabel.text = self.shareData.username;
+        [self.topLabel sizeToFit];
+        self.subtitleLabel.text = self.shareData.text;
+        [self.subtitleLabel sizeToFit];
+        
+        [self.shareView release];
+    }
 }
 
 - (void)reloadView:(NSNotification*)tagData
@@ -349,7 +396,7 @@
 {
     NSString *apiFile = nil;
     NSString *type = @"DEFAULT";
-    if ([typePost isEqualToString:@"postStatus"]) {
+    if ([typePost isEqualToString:@"postStatus"] || [textType isEqualToString:@"SHARE POST"]) {
         NSLog(@"POST");
         apiFile = @"wall_post.php";
     } else {
@@ -367,6 +414,11 @@
     if ([typePost isEqualToString:@"postStatus"]) {
         [asiRequest addPostValue:self.textData.text forKey:@"post_text"];
         [asiRequest addPostValue:self.tagId forKey:@"post_tagged_user_ids"];
+        
+        if ([textType isEqualToString:@"SHARE POST"])
+        {
+            [asiRequest addPostValue:[NSString stringWithFormat:@"%d",self.shareData.postId] forKey:@"post_id"];
+        }
     } else {
         [asiRequest addPostValue:self.textData.text forKey:@"comment_text"];
         [asiRequest addPostValue:[NSString stringWithFormat:@"%d",postIdComment] forKey:@"post_id"];
@@ -378,49 +430,56 @@
     [asiRequest addPostValue:type forKey:@"post_type"];
     [asiRequest setTimeOutSeconds:20];
     [asiRequest setShouldContinueWhenAppEntersBackground:YES];
-    [asiRequest startSynchronous];
-    NSError *error = [asiRequest error];
-    if (!error) {
-        [self clearImageCache];
-        NSString *response = [asiRequest responseString];
-        NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-        NSLog(@"RES :%@\nDIC :%@",response,resultsDictionary);
-        if([resultsDictionary count]) {
-            NSString *status = [resultsDictionary objectForKey:@"status"];
-            if ([status isEqualToString:@"ok"]) {
-                
-                if ([[self parentViewController] isEqual:[DetailPostViewController class]]) {
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"updateCommentList" object:nil];
-                    
-                    NSLog(@"GEt in");
-                }
-                else{
-                    if ([typePost isEqualToString:@"postStatus"]) {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWall" object:self];
+    
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [asiRequest startSynchronous];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSError *error = [asiRequest error];
+            if (!error) {
+                [self clearImageCache];
+                NSString *response = [asiRequest responseString];
+                NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+                NSLog(@"RES :%@\nDIC :%@",response , resultsDictionary);
+                if([resultsDictionary count]) {
+                    NSString *status = [resultsDictionary objectForKey:@"status"];
+                    if ([status isEqualToString:@"ok"]) {
+                        
+                        if ([[self parentViewController] isEqual:[DetailPostViewController class]]) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateCommentList" object:nil];
+                            
+                            NSLog(@"GEt in");
+                        }
+                        else{
+                            if ([typePost isEqualToString:@"postStatus"]) {
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWall" object:self];
+                            } else {
+                                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWallPost" object:self];
+                            }
+                        }
+                        
+                        
+                        [self.navigationController popViewControllerAnimated:YES];
                     } else {
-                        [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWallPost" object:self];
+                        [self presentAlert:[resultsDictionary objectForKey:@"message"]];
                     }
                 }
-            
-                
-                [self.navigationController popViewControllerAnimated:YES];
-            } else {
-                [self presentAlert:[resultsDictionary objectForKey:@"message"]];
+                [resultsDictionary release];
+            }else{
+                NSString *error = [NSString stringWithFormat:@"%@",[asiRequest error]];
+                NSLog(@"error: %@",error);
+                if (!([error rangeOfString:@"timed out"].location == NSNotFound)) {
+                    [self presentAlert:@"Request timed out."];
+                }else if (!([error rangeOfString:@"connection failure"].location == NSNotFound)) {
+                    [self presentAlert:@"Connection failure occured."];
+                }
+                else [self presentAlert:@"Connection error."];
             }
-        }
-        [resultsDictionary release];
-    }else{
-        NSString *error = [NSString stringWithFormat:@"%@",[asiRequest error]];
-        NSLog(@"error: %@",error);
-        if (!([error rangeOfString:@"timed out"].location == NSNotFound)) {
-            [self presentAlert:@"Request timed out."];
-        }else if (!([error rangeOfString:@"connection failure"].location == NSNotFound)) {
-            [self presentAlert:@"Connection failure occured."];
-        }
-        else [self presentAlert:@"Connection error."];
-    }
-    [url release];
-    [self.loadingIndicator stopAnimating];
+            [url release];
+            [self.loadingIndicator stopAnimating];
+        });
+    });
 }
 
 - (void)presentAlert:(NSString*)msg
@@ -456,6 +515,10 @@
 {
     [_userImageView release];
     [_keyboardAccessoryView release];
+    [_sourceImageView release];
+    [_topLabel release];
+    [_subtitleLabel release];
+    [_shareView release];
     [super dealloc];
     [cameraPicker release];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -470,6 +533,10 @@
 - (void)viewDidUnload {
     [self setUserImageView:nil];
     [self setKeyboardAccessoryView:nil];
+    [self setSourceImageView:nil];
+    [self setTopLabel:nil];
+    [self setSubtitleLabel:nil];
+    [self setShareView:nil];
     [super viewDidUnload];
 }
 @end

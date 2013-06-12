@@ -12,12 +12,15 @@
 #import "AppDelegate.h"
 #import "PostClass.h"
 #import "PostTaggedCell.h"
+#import "ShareCell.h"
 #import <Twitter/Twitter.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "ReportSpamViewController.h"
 #import <math.h>
 
 #define kCommentView    1
 #define kFavView        2
+#define kOriginalPost   3
 
 #define kPublic     1
 #define kPersonal   2
@@ -27,6 +30,10 @@ static CGFloat kFooterHeight = 100;
 static CGFloat kMinCellHeight = 22;
 static CGFloat kImageCellHeight = 260;
 static CGFloat kMinCellTagHeight = 26;
+//static CGFloat kMinCellShareHeight = 160;
+static CGFloat kStartCalcCellShareHeight = 78;
+static CGFloat kImageShareHeight = 200;
+
 
 @interface PublicViewController ()
 
@@ -126,8 +133,8 @@ static CGFloat kMinCellTagHeight = 26;
         [self setup];
         
         
-        reloadDisabled = NO;
     }
+    reloadDisabled = NO;
     
 }
 
@@ -151,8 +158,10 @@ static CGFloat kMinCellTagHeight = 26;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (success) {
                 NSLog(@"count %d",[tableData count]);
-                [self.tableView setHidden:NO];
-                [self.tableView reloadData];
+                if ([tableData count]) {
+                    [self.tableView setHidden:NO];
+                    [self.tableView reloadData];
+                }
                 
                 [self.loadingLabel setHidden:YES];
                 [self.loadingIndicator setHidden:YES];
@@ -180,7 +189,7 @@ static CGFloat kMinCellTagHeight = 26;
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
 
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-    NSLog(@"%@\n %@", dataContent, resultsDictionary);
+//    NSLog(@"%@\n %@", dataContent, resultsDictionary);
     if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
         
         // If already reached the last page in loadmore function
@@ -213,7 +222,7 @@ static CGFloat kMinCellTagHeight = 26;
 //                NSLog(@"data %@",[row objectForKey:@"shared_from"]);
             }
             
-            NSLog(@"shared item %@", data.sharedItem);
+//            NSLog(@"shared item %@", data.sharedItem);
             NSMutableArray *tmpArray = [[NSMutableArray alloc] init];
             NSMutableString *tmpString = [[NSMutableString alloc] initWithString:@""];
             
@@ -258,7 +267,12 @@ static CGFloat kMinCellTagHeight = 26;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+//    return 4;
+    if ([tableData count]) {
+        return 4;
+    }
+    
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -314,6 +328,25 @@ static CGFloat kMinCellTagHeight = 26;
         }
         
     }
+    else if (indexPath.row == 3){
+        if (data.sharedPostId > 0)
+        {
+            CGSize  textSize = { 280, 70 };
+            CGSize size = [[data.sharedItem objectForKey:@"post_text"] sizeWithFont:[UIFont systemFontOfSize:12]
+                                constrainedToSize:textSize
+                                    lineBreakMode:UILineBreakModeWordWrap];
+            
+            CGFloat height = kStartCalcCellShareHeight + size.height + 10;
+            if ([[data.sharedItem objectForKey:@"post_type"] isEqualToString:@"PHOTO"]) {
+                height += kImageShareHeight + 10;
+            }
+            return height;
+        }
+        else{
+            return 0;
+        }
+        
+    }
     
     return 0;
     
@@ -330,8 +363,12 @@ static CGFloat kMinCellTagHeight = 26;
     
     NSMutableString *fullText = [NSMutableString stringWithFormat:@"%@ ",data.username];
     
+    NSString *shareUsername = @"";
     if (data.sharedPostId){
-        [fullText appendFormat:@"shared %@'s post", [data.sharedItem objectForKey:@"user_name"]];
+        
+        shareUsername = [data.sharedItem objectForKey:@"user_name"];
+        
+        [fullText appendFormat:@"shared %@'s post", shareUsername];
     }else{
         if ([data.type isEqualToString:@"DEFAULT"]) {
             [fullText appendString:@"says"];
@@ -340,29 +377,15 @@ static CGFloat kMinCellTagHeight = 26;
             [fullText appendString:@"shared a photo"];
         }
         
-        [header setBoldText:data.username withFullText:fullText andTime:@"About 1 minute ago"];
     }
     
+    [header setBoldText:data.username withFullText:fullText boldPostfix:shareUsername andTime:data.datetime];
+    
     [header.imageView setImageWithURL:[NSURL URLWithString:data.avatarURL]
-                    placeholderImage:[UIImage imageNamed:@"blank_avatar"]
-                           completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                               if (!error) {
-                                   
-                               }else{
-                                   NSLog(@"error retrieve image: %@",error);
-                               }
-                               
-                           }];
+                     placeholderImage:[UIImage imageNamed:@"blank_avatar"]];
+    
     [header.qrcodeImageView setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId]]
-                     placeholderImage:[UIImage imageNamed:@"preview"]
-                            completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
-                                if (!error) {
-                                    
-                                }else{
-                                    NSLog(@"error retrieve image: %@",error);
-                                }
-                                
-                            }];
+                           placeholderImage:[UIImage imageNamed:@"preview"]];
     
     return header;
 }
@@ -503,9 +526,42 @@ static CGFloat kMinCellTagHeight = 26;
         return cell;
 
     }
+    else if (indexPath.row == 3){
+        
+        static NSString *CellIdentifier = @"ShareCell";
+        ShareCell *cell = (ShareCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (cell == nil)
+        {
+            cell = [[ShareCell alloc] init];
+        }
+        
+        
+        // To remove group cell border
+        cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+        
+        if (data.sharedPostId > 0) {
+            [cell setupCell:data.sharedItem];
+            cell.userInteractionEnabled = YES;
+        }
+        else {
+            [cell setHidden:YES];
+            cell.userInteractionEnabled = YES;
+        }
+        return cell;
+        
+    }
+    
+    [data release];
     
     return nil;
     
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == 3) {
+        [self pushDetailPost:indexPath.section withOption:kOriginalPost];
+    }
 }
 
 - (int)getPostTextLessLength:(NSString *)str
@@ -534,11 +590,13 @@ static CGFloat kMinCellTagHeight = 26;
 
 - (void)addBlackView
 {
+//    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     UIView *blackView = [[UIView alloc] initWithFrame:self.view.frame];
     [blackView setTag:99];
     [blackView setBackgroundColor:[UIColor blackColor]];
     [blackView setAlpha:0.5];
     [self.view addSubview:blackView];
+//    [mydelegate.window addSubview:blackView];
     [blackView release];
 }
 
@@ -588,7 +646,7 @@ static CGFloat kMinCellTagHeight = 26;
 //    NSString *idForComment = [NSString stringWithFormat:@"%d",data.postId];
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     CreatePostViewController *createComment = [[CreatePostViewController alloc] initWithPlaceholderText:@"Write a comment." withLabel:@"COMMENT" andComment:data.postId];
-    [mydelegate.homeNavController pushViewController:createComment animated:YES];
+    [mydelegate.wallNavController pushViewController:createComment animated:YES];
     [createComment release];
     
     reloadDisabled = YES;
@@ -677,9 +735,15 @@ static CGFloat kMinCellTagHeight = 26;
     
     DetailPostViewController *detailvc = [[DetailPostViewController alloc] init];
     PostClass *data = [tableData objectAtIndex:index];
-    detailvc.postId = data.postId;
-    detailvc.currentView = option;
-    [mydelegate.homeNavController pushViewController:detailvc animated:YES];
+    
+    if (option == kOriginalPost) {
+        detailvc.postId = data.sharedPostId;
+    }else{
+        detailvc.postId = data.postId;
+        detailvc.currentView = option;
+    }
+    
+    [mydelegate.wallNavController pushViewController:detailvc animated:YES];
     [detailvc release];
     
 }
@@ -692,7 +756,7 @@ static CGFloat kMinCellTagHeight = 26;
     NSLog(@"Clicked at post index %d and selected option %d", popupView.tag, index);
     
     PostClass *data = [tableData objectAtIndex:popupView.tag];
-
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     switch (index) {
         case 0:
             [self shareImageOnFB:data.qrcodeId];
@@ -704,9 +768,42 @@ static CGFloat kMinCellTagHeight = 26;
             [self shareImageOnEmail:data.qrcodeId];
             break;
         case 3:
+        {
+            
+            CreatePostViewController *createPost = [[CreatePostViewController alloc] initWithPlaceholderText:@"What's on your mind?" withLabel:@"SHARE POST" andComment:nil];
+            createPost.shareData = data;
+            [mydelegate.wallNavController pushViewController:createPost animated:YES];
+            [createPost release];
             break;
+        }
         case 4:
+        {
+            
+            
+            ReportSpamViewController *detailView = [[ReportSpamViewController alloc] init];
+            detailView.qrcodeId = [NSString stringWithFormat:@"%d",data.qrcodeId];
+            detailView.postId = [NSString stringWithFormat:@"%d",data.postId];
+            detailView.qrTitle = data.text;
+            detailView.qrProvider = data.username;
+            detailView.qrDate = data.datetime;
+            detailView.qrAbstract = @"";
+            detailView.qrType = @"J-ROOM";
+            detailView.qrCategory = @"Wall Post";
+            detailView.qrLabelColor = @"#0099FF";
+//            detailView.qrImage = [UIImage imageNamed:@"avatar_blank"];
+//            NSURL *iurl = [NSURL URLWithString: data.avatarURL];
+            if (![data.type isEqualToString:@"PHOTO"]) {
+               detailView.imageURL = [NSString stringWithFormat:@"http://www.jam-bu.com/qrcode/%d.png", data.qrcodeId];
+            }else{
+                detailView.imageURL = data.imageURL;
+            }
+//            NSData *imageData = [NSData dataWithContentsOfURL:iurl];
+//            detailView.qrImage = [UIImage imageWithData:imageData];
+  
+            [mydelegate.wallNavController pushViewController:detailView animated:YES];
+            [detailView release];
             break;
+        }
         case 5:
         {
             if ([data.userId isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"userid"]]) {
@@ -785,7 +882,7 @@ static CGFloat kMinCellTagHeight = 26;
         NSString *emailBody = [NSString stringWithFormat:@"Scan this QR code. \n\nJAM-BU App: %@/?qrcode_id=%d",APP_API_URL,qrcodeId];
         [mailer setMessageBody:emailBody isHTML:NO];
         AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-        [mydelegate.homeNavController presentModalViewController:mailer animated:YES];
+        [mydelegate.wallNavController presentModalViewController:mailer animated:YES];
         [mailer release];
         
         [self addShareItemtoServer:qrcodeId withShareType:@"email"];
@@ -972,7 +1069,7 @@ static CGFloat kMinCellTagHeight = 26;
     
     AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     // Remove the mail view
-    [mydelegate.homeNavController dismissModalViewControllerAnimated:YES];
+    [mydelegate.wallNavController dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

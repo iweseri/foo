@@ -35,6 +35,7 @@
     [_checkOutButton release];
     [_jambuFeePrice release];
     [_jambuFeeLabel release];
+    [_seedButton release];
     [super dealloc];
 }
 @end

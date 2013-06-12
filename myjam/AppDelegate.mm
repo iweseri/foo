@@ -11,7 +11,8 @@
 #import "FBAppDelegate.h"
 
 #import "HomeViewController.h"
-#import "ShopViewController.h"
+//#import "JShopViewController.h"
+#import "JShopViewController.h"
 #import "ScanQRViewController.h"
 #import "BoxViewController.h"
 #import "LoginViewController.h"
@@ -256,7 +257,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     // Init viewcontrollers
     HomeViewController *homeVC = [[HomeViewController alloc] init];
-    ShopViewController *shopVC = [[ShopViewController alloc] init];
+    JShopViewController *shopVC = [[JShopViewController alloc] init];
     ScanQRViewController *scanVC = [[ScanQRViewController alloc] init];
     BoxViewController *boxVC = [[BoxViewController alloc] init];
     CreateViewController *createVC = [[CreateViewController alloc] init];

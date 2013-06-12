@@ -66,6 +66,7 @@
 @property (nonatomic, retain) IBOutlet UIButton *viewAllCompare;
 @property (nonatomic, retain) IBOutlet UIButton *viewAllRelated;
 @property (retain, nonatomic) NSString *categoryId;
+@property (retain, nonatomic) NSMutableArray *tempImages;
 
 - (IBAction)facebookPressed:(id)sender;
 - (IBAction)twitterPressed:(id)sender;
