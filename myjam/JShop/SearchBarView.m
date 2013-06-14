@@ -111,7 +111,7 @@
     NSString *urlString = [self returnAPIURL];
     NSString *dataContent = [self returnAPIDataContent];
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    NSLog(@"url: %@\ndataContent: %@",urlString,dataContent);
+    NSLog(@"url: %@\ndataContent: %@", urlString, dataContent);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     NSString *status = nil;
     NSMutableArray* list = nil;

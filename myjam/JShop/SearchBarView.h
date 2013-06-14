@@ -14,4 +14,8 @@
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *tableData;
 
+- (NSString *)returnAPIURL;
+- (NSString *)returnAPIDataContent;
+- (BOOL)retrieveData;
+
 @end

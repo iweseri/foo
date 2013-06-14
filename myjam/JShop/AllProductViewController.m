@@ -58,14 +58,24 @@
                                       style:UIBarButtonItemStyleBordered
                                      target:nil
                                      action:nil] autorelease];
+    productData = [[NSMutableArray alloc] init];
+    pageCounter = 1;
+    [self loadMoreData];
+    refreshDisabled = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     NSLog(@"vda");
-    pageCounter = 1;
-    productData = [[NSMutableArray alloc] init];
-    [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
+    if (!refreshDisabled) {
+        pageCounter = 1;
+        
+//        [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
+        [productData removeAllObjects];
+        [self loadMoreData];
+    }
+    
+    refreshDisabled = NO;
 }
 
 - (void)didReceiveMemoryWarning
@@ -245,24 +255,49 @@
 {
     NSLog(@"Page now is %d",pageCounter);
     
-    BOOL success = [self retrieveData];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL success = [self retrieveData];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success) {
+                // Hide loading cell
+                [UIView animateWithDuration:0.5 animations:^{
+                    CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+                    
+                    [self.tableView setContentOffset:bottomOffset animated:YES];
+                }];
+            }else if([productData count]==0) {
+                NSLog(@"DATA EMPTY :%@",productData);
+                [self.tableView setHidden:YES];
+            }else{
+                // Reload tableView
+                [self.tableView setHidden:NO];
+                NSLog(@"DATA :%@",productData);
+                [self.tableView reloadData];
+            }
+            NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
+        });
+    });
     
-    if (!success) {
-        // Hide loading cell
-        [UIView animateWithDuration:0.5 animations:^{
-            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
-            
-            [self.tableView setContentOffset:bottomOffset animated:YES];
-        }];
-    }else if([productData count]==0) {
-        NSLog(@"DATA EMPTY :%@",productData);
-        [self.tableView setHidden:YES];
-    }else{
-        // Reload tableView
-        NSLog(@"DATA :%@",productData);
-        [self.tableView reloadData];
-    }
-    NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
+//    BOOL success = [self retrieveData];
+//    
+//    if (!success) {
+//        // Hide loading cell
+//        [UIView animateWithDuration:0.5 animations:^{
+//            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+//            
+//            [self.tableView setContentOffset:bottomOffset animated:YES];
+//        }];
+//    }else if([productData count]==0) {
+//        NSLog(@"DATA EMPTY :%@",productData);
+//        [self.tableView setHidden:YES];
+//    }else{
+//        // Reload tableView
+//        [self.tableView setHidden:NO];
+//        NSLog(@"DATA :%@",productData);
+//        [self.tableView reloadData];
+//    }
+//    NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
     
 }
 

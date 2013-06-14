@@ -705,18 +705,21 @@ static CGFloat kCommentImageViewHeight = 120;
 
 - (void)addBlackView
 {
-    UIView *blackView = [[UIView alloc] initWithFrame:self.view.frame];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIView *blackView = [[UIView alloc] initWithFrame:mydelegate.window.frame];
     [blackView setTag:99];
     [blackView setBackgroundColor:[UIColor blackColor]];
     [blackView setAlpha:0.5];
-    [self.view addSubview:blackView];
+    //    [self.view addSubview:blackView];
+    [mydelegate.window addSubview:blackView];
     [blackView release];
 }
 
 - (void)removeBlackView
 {
-    UIView *blackView = [self.view viewWithTag:99];
-    if ([self.view.subviews containsObject:blackView]) {
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIView *blackView = [mydelegate.window viewWithTag:99];
+    if ([mydelegate.window.subviews containsObject:blackView]) {
         [blackView removeFromSuperview];
     }
 }
@@ -725,7 +728,7 @@ static CGFloat kCommentImageViewHeight = 120;
 #pragma mark PostHeaderView delegate
 - (void)tableHeaderView:(PostHeaderView *)headerView didClickOptionButton:(UIButton *)button
 {
-    NSLog(@"clicked %d",headerView.tag);
+    NSLog(@"clicked %d", headerView.tag);
     
     NSArray *optionList = nil;
     if ([data.userId isEqualToString:[[NSUserDefaults standardUserDefaults] objectForKey:@"userid"]] ) {
@@ -734,14 +737,18 @@ static CGFloat kCommentImageViewHeight = 120;
         optionList = options;
     }
     
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
     MyPopupView *popup = [[MyPopupView alloc] initWithDataList:optionList andTag:headerView.tag];
     popup.delegate = self;
-    CGFloat popupYPoint = self.view.frame.size.height/2-popup.frame.size.height/2;
-    CGFloat popupXPoint = self.view.frame.size.width/2-popup.frame.size.width/2;
+    CGFloat popupYPoint = mydelegate.window.frame.size.height/2-popup.frame.size.height/2;
+    CGFloat popupXPoint = mydelegate.window.frame.size.width/2-popup.frame.size.width/2;
     
     popup.frame = CGRectMake(popupXPoint, popupYPoint, popup.frame.size.width, popup.frame.size.height);
+    
     [self addBlackView];
-    [self.view addSubview:popup];
+    [mydelegate.window addSubview:popup];
+    [popup release];
 }
 
 

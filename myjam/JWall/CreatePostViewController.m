@@ -380,7 +380,8 @@
         NSLog(@"ID:%d",postIdComment);
         NSLog(@"\nText :%@\nImage :%@\nTag :%@",self.textData.text,self.uploadImage,self.tagId);
         [self.loadingIndicator startAnimating];
-        [self performSelector:@selector(processPostToAPI:) withObject:typePost afterDelay:0.0f];
+//        [self performSelector:@selector(processPostToAPI:) withObject:typePost afterDelay:0.0f];
+        [self processPostToAPI:typePost];
     }
 }
 
@@ -404,9 +405,9 @@
         apiFile = @"wall_post_comment.php";
     }
     NSData *imgData = UIImageJPEGRepresentation(self.uploadImage.image, 0.3);
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/%@?token=%@",APP_API_URL,apiFile,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/%@?token=%@", APP_API_URL, apiFile,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSURL *url = [[NSURL alloc] initWithString:urlString];
-    
+    NSLog(@"urlstr %@", urlString);
     ASIFormDataRequest *asiRequest = [ASIFormDataRequest requestWithURL:url];
     [asiRequest addRequestHeader:@"Accept" value:@"application/json"];
     [asiRequest addRequestHeader:@"Content-Type" value:@"application/json"];
@@ -423,25 +424,28 @@
         [asiRequest addPostValue:self.textData.text forKey:@"comment_text"];
         [asiRequest addPostValue:[NSString stringWithFormat:@"%d",postIdComment] forKey:@"post_id"];
     }
+    
     if (self.uploadImage != nil) {
         type = @"PHOTO";
         [asiRequest addData:imgData withFileName:@"currImage.jpg" andContentType:@"image/jpeg" forKey:@"image"];
+        NSLog(@"is photo");
     }
     [asiRequest addPostValue:type forKey:@"post_type"];
     [asiRequest setTimeOutSeconds:20];
     [asiRequest setShouldContinueWhenAppEntersBackground:YES];
     
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [asiRequest startSynchronous];
+
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+//        dispatch_async(dispatch_get_main_queue(), ^{
             NSError *error = [asiRequest error];
             if (!error) {
                 [self clearImageCache];
                 NSString *response = [asiRequest responseString];
                 NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-                NSLog(@"RES :%@\nDIC :%@",response , resultsDictionary);
+                NSLog(@"RES :%@\nDIC :%@",response, resultsDictionary);
                 if([resultsDictionary count]) {
                     NSString *status = [resultsDictionary objectForKey:@"status"];
                     if ([status isEqualToString:@"ok"]) {
@@ -478,8 +482,8 @@
             }
             [url release];
             [self.loadingIndicator stopAnimating];
-        });
-    });
+//        });
+//    });
 }
 
 - (void)presentAlert:(NSString*)msg

@@ -486,7 +486,7 @@
     if (userId == 0) {
         tmpData = [buddyDict objectForKey:@"email"];
     }else{
-        tmpData = [NSString stringWithFormat:@"%d",btn.tag];
+        tmpData = [NSString stringWithFormat:@"%d", btn.tag];
         alert.tag = userId;
     }
     [alert show];
@@ -506,7 +506,7 @@
             [self.loadingIndicator startAnimating];
             [self performSelector:@selector(processAddBuddy:) withObject:[NSNumber numberWithInt:alertView.tag] afterDelay:0];
         }else{
-            NSLog(@"Process invite now!");
+            [self performSelector:@selector(processInviteBuddy:) withObject:tmpData afterDelay:0];
         }
     
     }
@@ -515,7 +515,7 @@
 - (void)processAddBuddy:(NSNumber *)tagId
 {
     NSInteger buddyId = [tagId integerValue];
-    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_add.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
     NSString *dataContent = [NSString stringWithFormat:@"{\"jambu_user_id\":\"%d\"}",buddyId];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
@@ -528,16 +528,53 @@
         if ([status isEqualToString:@"ok"])
         {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
+            [joinTableData removeObjectAtIndex:[tmpData integerValue]];
+            [self.tableView reloadData];
+//            NSIndexPath *ip = [NSIndexPath indexPathForRow:[tmpData integerValue] inSection:0];
+//            BuddyCell *cell = (BuddyCell *)[self.tableView cellForRowAtIndexPath:ip];
+//            cell.addButtton.hidden = YES;
+//            [self.tableView beginUpdates];
+//            [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObjects:ip, nil] withRowAnimation:UITableViewRowAnimationTop];
+//            [self.tableView endUpdates];
             
-            NSIndexPath *ip = [NSIndexPath indexPathForRow:[tmpData integerValue] inSection:0];
-            BuddyCell *cell = (BuddyCell *)[self.tableView cellForRowAtIndexPath:ip];
-            cell.addButtton.hidden = YES;
+        }else{
+            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:[resultsDictionary objectForKey:@"message"] delegate:nil cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [alert show];
         }
         
     }
     
     [self.loadingIndicator stopAnimating];
 
+}
+
+- (void)processInviteBuddy:(NSString *)email
+{
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_invite.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"email\":\"%@\"}", email];
+    
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    
+    if([resultsDictionary count])
+    {
+        NSString *status = [resultsDictionary objectForKey:@"status"];
+        if ([status isEqualToString:@"ok"])
+        {
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadBuddyList" object:nil];
+//            
+//            NSIndexPath *ip = [NSIndexPath indexPathForRow:[tmpData integerValue] inSection:0];
+//            BuddyCell *cell = (BuddyCell *)[self.tableView cellForRowAtIndexPath:ip];
+//            cell.addButtton.hidden = YES;
+            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:[resultsDictionary objectForKey:@"message"] delegate:nil cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [alert show];
+        }
+        
+    }
+    
+    [self.loadingIndicator stopAnimating];
+    
 }
 
 - (void)didReceiveMemoryWarning

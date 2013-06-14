@@ -19,6 +19,7 @@
     int pageCounter;
     int rows;
     int kDisplayPerScreen;
+    BOOL refreshDisabled;
 }
 @property (nonatomic, retain) NSMutableArray *productData;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;

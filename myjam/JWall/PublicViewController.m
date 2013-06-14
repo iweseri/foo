@@ -16,6 +16,7 @@
 #import <Twitter/Twitter.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import "ReportSpamViewController.h"
+#import "ShopLoadingCell.h"
 #import <math.h>
 
 #define kCommentView    1
@@ -24,6 +25,8 @@
 
 #define kPublic     1
 #define kPersonal   2
+
+#define kDisplayPerPage 5
 
 static CGFloat kHeaderHeight = 80;
 static CGFloat kFooterHeight = 100;
@@ -141,16 +144,6 @@ static CGFloat kImageShareHeight = 200;
 - (void)setup
 {
     pageCounter = 1;
-//    BOOL success = [self retrieveData:pageCounter];
-//    if (success) {
-//        NSLog(@"count %d",[tableData count]);
-//        [self.tableView setHidden:NO];
-//        [self.tableView reloadData];
-//        
-//        [self.loadingLabel setHidden:YES];
-//        [self.loadingIndicator setHidden:YES];
-//        
-//    }
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL success = [self retrieveData:pageCounter];
@@ -180,23 +173,25 @@ static CGFloat kImageShareHeight = 200;
 - (BOOL)retrieveData:(NSUInteger)page
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_list.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
-    NSString *dataContent = @"";
+    NSString *dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d}", page, kDisplayPerPage];
+    
     if (self.pageType == kPersonal)
     {
-        dataContent = @"{\"is_private\":\"1\"}";
+        dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d,\"is_private\":\"1\"}", page, kDisplayPerPage];
     }
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-
+    NSMutableArray *newData = [[NSMutableArray alloc] init];
+    
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
-//    NSLog(@"%@\n %@", dataContent, resultsDictionary);
+    NSLog(@"%@\n %@", dataContent, resultsDictionary);
     if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
         
         // If already reached the last page in loadmore function
-        if (NO) {
-            isLastPage = YES;
-            return YES;
-        }
+//        if (NO) {
+//            isLastPage = YES;
+//            return YES;
+//        }
         
         NSDictionary *posts = [resultsDictionary objectForKey:@"list"];
         
@@ -242,17 +237,23 @@ static CGFloat kImageShareHeight = 200;
     
             data.taggedUsersArray = [tmpArray copy];
             [tmpArray release];
-            [tableData addObject:data];
+            [newData addObject:data];
         }
         
-        // If list is empty
-        if (![tableData count]) {
-            return NO;
-        }
     }else{
         // If status error
+        [newData release];
         return NO;
     }
+    
+    if ([newData count]) {
+        [tableData addObjectsFromArray:newData];
+        [newData release];
+    }else{
+        [newData release];
+        return NO;
+    }
+    
     
     return YES;
 }
@@ -261,15 +262,17 @@ static CGFloat kImageShareHeight = 200;
 #pragma mark tableView delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [tableData count];
+{    
+    return [tableData count]+1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
 //    return 4;
-    if ([tableData count]) {
+    if (section < [tableData count]) {
         return 4;
+    }else if (section == [tableData count]) {
+        return 1;
     }
     
     return 0;
@@ -277,16 +280,28 @@ static CGFloat kImageShareHeight = 200;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    if (section == [tableData count]) {
+        return 0;
+    }
+    
     return kHeaderHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (section == [tableData count]) {
+        return 0;
+    }
+    
     return kFooterHeight;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == [tableData count]) {
+        return 22;
+    }
+    
     PostClass *data = [tableData objectAtIndex:indexPath.section];
     
     if (indexPath.row == 0) { // for text
@@ -355,6 +370,11 @@ static CGFloat kImageShareHeight = 200;
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     
+    if (section == [tableData count]) {
+        UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+        return v;
+    }
+    
     PostHeaderView *header = [[PostHeaderView alloc] init];
     header.delegate = self;
     header.tag = section;
@@ -392,6 +412,11 @@ static CGFloat kImageShareHeight = 200;
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    if (section == [tableData count]) {
+        UIView *v = [[UIView alloc] initWithFrame:CGRectZero];
+        return v;
+    }
+    
     PostFooterView *footer = [[PostFooterView alloc] init];
     footer.tag = section;
     footer.delegate = self;
@@ -420,6 +445,22 @@ static CGFloat kImageShareHeight = 200;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 //    NSLog(@"section %d, row %d", indexPath.section, indexPath.row);
+    
+    if (indexPath.section == [tableData count] && indexPath.row == 0){
+        ShopLoadingCell *cell = (ShopLoadingCell*)[tableView dequeueReusableCellWithIdentifier:@"ShopLoadingCell"];
+        if (cell == nil)
+        {
+            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ShopLoadingCell" owner:nil options:nil];
+            cell = [nib objectAtIndex:0];
+        }
+        [cell.loadingIndicator startAnimating];
+        
+//        NSLog(@"loading");
+        cell.backgroundView = [[[UIView alloc] initWithFrame:cell.bounds] autorelease];
+        
+        return cell;
+        
+    }
     
     PostClass *data = [tableData objectAtIndex:indexPath.section];
     
@@ -564,6 +605,40 @@ static CGFloat kImageShareHeight = 200;
     }
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.section == [tableData count] && [tableData count] > kDisplayPerPage-1) {
+        pageCounter++;
+        NSLog(@"here");
+        [self loadMoreData];
+    }
+}
+
+- (void)loadMoreData
+{
+    NSLog(@"Page now is %d", pageCounter);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL success = [self retrieveData:pageCounter];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (!success) {
+                // Hide loading cell
+                [UIView animateWithDuration:0.5 animations:^{
+                    CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-80);
+                    [self.tableView setContentOffset:bottomOffset animated:YES];
+                }];
+                pageCounter--;
+            }else{
+                // Append new data to table and reload tableView
+                [self.tableView reloadData];
+            }
+
+        });
+    });
+    
+}
+
 - (int)getPostTextLessLength:(NSString *)str
 {
     NSArray *seperated = [str componentsSeparatedByString:@" "];
@@ -590,20 +665,21 @@ static CGFloat kImageShareHeight = 200;
 
 - (void)addBlackView
 {
-//    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    UIView *blackView = [[UIView alloc] initWithFrame:self.view.frame];
+    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    UIView *blackView = [[UIView alloc] initWithFrame:mydelegate.window.frame];
     [blackView setTag:99];
     [blackView setBackgroundColor:[UIColor blackColor]];
     [blackView setAlpha:0.5];
-    [self.view addSubview:blackView];
-//    [mydelegate.window addSubview:blackView];
+//    [self.view addSubview:blackView];
+    [mydelegate.window addSubview:blackView];
     [blackView release];
 }
 
 - (void)removeBlackView
 {
-    UIView *blackView = [self.view viewWithTag:99];
-    if ([self.view.subviews containsObject:blackView]) {
+     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIView *blackView = [mydelegate.window viewWithTag:99];
+    if ([mydelegate.window.subviews containsObject:blackView]) {
         [blackView removeFromSuperview];
     }
 }
@@ -626,15 +702,18 @@ static CGFloat kImageShareHeight = 200;
     // Store qrcode image
     currImage = headerView.qrcodeImageView.image;
     
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
     MyPopupView *popup = [[MyPopupView alloc] initWithDataList:optionList andTag:headerView.tag];
     popup.delegate = self;
-    CGFloat popupYPoint = self.view.frame.size.height/2-popup.frame.size.height/2;
-    CGFloat popupXPoint = self.view.frame.size.width/2-popup.frame.size.width/2;
+    CGFloat popupYPoint = mydelegate.window.frame.size.height/2-popup.frame.size.height/2;
+    CGFloat popupXPoint = mydelegate.window.frame.size.width/2-popup.frame.size.width/2;
     
     popup.frame = CGRectMake(popupXPoint, popupYPoint, popup.frame.size.width, popup.frame.size.height);
+    
     [self addBlackView];
-    [self.view addSubview:popup];
+    [mydelegate.window addSubview:popup];
+    [popup release];
 }
 
 #pragma mark -
