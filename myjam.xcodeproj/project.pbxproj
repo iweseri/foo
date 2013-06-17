@@ -60,6 +60,8 @@
 		610C1AAA17605B050016B703 /* TTTAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 610C1AA917605B050016B703 /* TTTAttributedLabel.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		610C1AAF1761C0750016B703 /* ShareCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 610C1AAE1761C0750016B703 /* ShareCell.m */; settings = {COMPILER_FLAGS = "-fobj-arc"; }; };
 		610C1AB31761C4720016B703 /* ShareCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 610C1AB21761C4720016B703 /* ShareCell.xib */; };
+		610FF07E176B0D2600C17102 /* WallSearchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 610FF07D176B0D2600C17102 /* WallSearchBarView.m */; };
+		610FF082176B0EDA00C17102 /* img-cart-tab.png in Resources */ = {isa = PBXBuildFile; fileRef = 610FF081176B0ED900C17102 /* img-cart-tab.png */; };
 		6114A50F16B18921009299EE /* CreateBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A50916B187BE009299EE /* CreateBoxViewController.m */; };
 		6114A51116B1893C009299EE /* ShareBoxViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A50E16B187BE009299EE /* ShareBoxViewController.m */; };
 		6114A55C16B270F7009299EE /* MEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 6114A55B16B270F7009299EE /* MEvent.m */; };
@@ -748,6 +750,9 @@
 		610C1AAD1761C0750016B703 /* ShareCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareCell.h; path = JWall/WallCustomCell/ShareCell.h; sourceTree = "<group>"; };
 		610C1AAE1761C0750016B703 /* ShareCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareCell.m; path = JWall/WallCustomCell/ShareCell.m; sourceTree = "<group>"; };
 		610C1AB21761C4720016B703 /* ShareCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = ShareCell.xib; path = JWall/WallCustomCell/ShareCell.xib; sourceTree = "<group>"; };
+		610FF07C176B0D2600C17102 /* WallSearchBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WallSearchBarView.h; path = JWall/WallSearchBarView.h; sourceTree = "<group>"; };
+		610FF07D176B0D2600C17102 /* WallSearchBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WallSearchBarView.m; path = JWall/WallSearchBarView.m; sourceTree = "<group>"; };
+		610FF081176B0ED900C17102 /* img-cart-tab.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "img-cart-tab.png"; sourceTree = "<group>"; };
 		6114A50816B187BE009299EE /* CreateBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CreateBoxViewController.h; sourceTree = "<group>"; };
 		6114A50916B187BE009299EE /* CreateBoxViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CreateBoxViewController.m; sourceTree = "<group>"; };
 		6114A50D16B187BE009299EE /* ShareBoxViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShareBoxViewController.h; sourceTree = "<group>"; };
@@ -2449,6 +2454,8 @@
 				61E381371746102F00C9F0F7 /* TagBuddyViewController.xib */,
 				61E3810D1741D70800C9F0F7 /* PostClass.h */,
 				61E3810E1741D70900C9F0F7 /* PostClass.m */,
+				610FF07C176B0D2600C17102 /* WallSearchBarView.h */,
+				610FF07D176B0D2600C17102 /* WallSearchBarView.m */,
 			);
 			name = JWall;
 			sourceTree = "<group>";
@@ -2725,6 +2732,7 @@
 		61F7A3AA17686E1C001C9151 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				610FF081176B0ED900C17102 /* img-cart-tab.png */,
 				61F7A3AB17686E1C001C9151 /* ad4.png */,
 				61F7A3AC17686E1C001C9151 /* addBuddy.png */,
 				61F7A3AD17686E1C001C9151 /* added_cart.png */,
@@ -3556,6 +3564,7 @@
 				61F7A62A17686E40001C9151 /* SuccessfulViewController.xib in Resources */,
 				61F7A62E17686E40001C9151 /* WriteReviewViewController.xib in Resources */,
 				61F7A6341768722C001C9151 /* JShopViewController.xib in Resources */,
+				610FF082176B0EDA00C17102 /* img-cart-tab.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3825,6 +3834,7 @@
 				61F7A62C17686E40001C9151 /* UIImageView+RemoteFile.m in Sources */,
 				61F7A62D17686E40001C9151 /* WriteReviewViewController.m in Sources */,
 				61F7A6331768722C001C9151 /* JShopViewController.m in Sources */,
+				610FF07E176B0D2600C17102 /* WallSearchBarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

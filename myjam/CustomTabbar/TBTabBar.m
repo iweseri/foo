@@ -68,6 +68,20 @@
     }
     return self;
 }
+//for J-Shop
+- (id)initWithButtonSize:(NSArray *)buttonSize andItems:(NSArray *)items {
+    self = [super init];
+    if (self) {
+        self.frame = CGRectMake(0, 0, 320, 36);
+        
+        if ([items count] > 5) {
+            [NSException raise:@"Too Many Tabs" format:@"A maximum of 5 tabs are allowed in the TBTabBar. %d were asked to be rendered", [items count]];
+        }
+        self.buttonData = [[NSMutableArray alloc] initWithArray:items];
+        [self setupButtonsWithSize:buttonSize];
+    }
+    return self;
+}
 
 -(void)willMoveToWindow:(UIWindow *)newWindow{
     [super willMoveToWindow:newWindow];
@@ -182,6 +196,43 @@
     }
 }
 
+//use for J-Shop
+-(void)setupButtonsWithSize:(NSArray*)buttonSize {
+    NSInteger count = 0;
+    NSInteger buttonX = 0;
+    self.buttons = [[NSMutableArray alloc] init];
+    for (TBTabButton *info in self.buttonData) {
+        
+        NSInteger buttonY = [[buttonSize objectAtIndex:count] intValue];
+        UIButton *b = [UIButton buttonWithType:UIButtonTypeCustom];
+        b.frame = CGRectMake(buttonX, 0, buttonY, 30);
+        
+        UIImage *tabBarButtonBackground = [[UIImage imageNamed:@"tab_item_bg_"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+        UIImage *tabBarButtonBackgroundHighlighted = [[UIImage imageNamed:@"tab_item_bg_selected"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+        UIImage *cartImg = [[UIImage imageNamed:@"img-cart-tab"] stretchableImageWithLeftCapWidth:0 topCapHeight:0];
+        
+        if (count == [self.buttonData count]-1) {
+            [b setImage:cartImg forState:UIControlStateNormal];
+            [b setImage:cartImg forState:UIControlStateHighlighted];
+            [b setImage:cartImg forState:UIControlStateSelected];
+        }
+        [b setBackgroundImage:tabBarButtonBackground forState:UIControlStateNormal];
+        [b setBackgroundImage:tabBarButtonBackgroundHighlighted forState:UIControlStateHighlighted];
+        [b setBackgroundImage:tabBarButtonBackgroundHighlighted forState:UIControlStateSelected];
+        
+        [b setTitle:[info title] forState:UIControlStateNormal];
+        b.titleLabel.font = [UIFont fontWithName:@"Helvetica-Bold" size:13];
+        [b addTarget:self action:@selector(touchDownForButton:) forControlEvents:UIControlEventTouchDown];
+        [b addTarget:self action:@selector(touchUpForButton:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self addSubview:b];
+        [self.buttons addObject:b];
+        
+        buttonX += buttonY;
+        count++;
+    }
+}
+
 -(void)setupLights {
     NSInteger count = 0;
     NSInteger xExtra = 0;
@@ -237,6 +288,11 @@
         [b setSelected:NO];
     }
     [button setSelected:YES];
+}
+
+-(void)setTitleButton:(NSString*)aTitle forButtonIndex:(NSInteger)ind
+{
+    [[self.buttons objectAtIndex:ind] setTitle:aTitle forState:UIControlStateNormal];
 }
 
 - (void)dealloc

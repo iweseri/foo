@@ -21,13 +21,14 @@
 
 -(id)initWithItems:(NSArray *)items;
 -(id)initWithFrame:(CGRect)frameSize andItems:(NSArray *)items;
+-(id)initWithButtonSize:(NSArray *)buttonSize andItems:(NSArray *)items; //for J-Shop
 
 -(void)showDefaults;
 -(void)showViewControllerAtIndex:(NSUInteger)index;
 
 -(void)touchDownForButton:(UIButton*)button;
 -(void)touchUpForButton:(UIButton*)button;
-
+-(void)setTitleButton:(NSString*)aTitle forButtonIndex:(NSInteger)ind;
 @end
 
 @protocol TBTabBarDelegate

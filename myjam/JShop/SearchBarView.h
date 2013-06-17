@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SearchBarView : UITableViewController// UIViewController<UITableViewDataSource,UITableViewDelegate>
-
+@interface SearchBarView : UITableViewController
 
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *tableData;

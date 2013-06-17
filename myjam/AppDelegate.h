@@ -32,7 +32,6 @@
 @interface AppDelegate : NSObject <UIApplicationDelegate, UITabBarControllerDelegate, SocketIODelegate> {
     UIWindow *window;
 	GTabBar *tabView;
-    UIView *frontLayerView;
     int LayerOption;
     BOOL showCamera;
     UIView *blackView;
@@ -40,6 +39,7 @@
     BOOL isNodeJSConnected;
 }
 
+@property (nonatomic, retain) UIView *frontLayerView;
 @property (nonatomic, retain) UINavigationController* shopNavController;
 @property (nonatomic, retain) UINavigationController* scanNavController;
 @property (nonatomic, retain) UINavigationController* boxNavController;
@@ -74,6 +74,9 @@
 @property (nonatomic) double currentLong;
 @property (nonatomic) NSInteger withRadius;
 @property (nonatomic) NSInteger currentDecDegree;
+
+//For ShopTabbar
+@property (nonatomic) NSInteger totalCart;
 
 @property int indexTemp;
 @property int swipeController;

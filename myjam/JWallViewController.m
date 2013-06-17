@@ -9,6 +9,7 @@
 #import "JWallViewController.h"
 #import "CreatePostViewController.h"
 #import "UnblockUsersViewController.h"
+#import "AppDelegate.h"
 
 #define kPublic     1
 #define kPersonal   2
@@ -38,6 +39,12 @@
                                           style:UIBarButtonItemStyleBordered
                                          target:nil
                                          action:nil] autorelease];
+        
+        UIButton *settingsView = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 30, 30)];
+        [settingsView addTarget:self action:@selector(handleSearchBar) forControlEvents:UIControlEventTouchUpInside];
+        [settingsView setBackgroundImage:[UIImage imageNamed:@"search_icon"] forState:UIControlStateNormal];
+        UIBarButtonItem *settingsButton = [[UIBarButtonItem alloc] initWithCustomView:settingsView];
+        [self.navigationItem setLeftBarButtonItem:settingsButton];
     }
     return self;
 }
@@ -45,6 +52,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    searchBar = [[WallSearchBarView alloc] initWithNibName:@"SearchBarView" bundle:nil];
     
     optionPersonal = [[NSArray alloc] initWithObjects:@"Create Post", @"Unblock Users", @"Cancel", nil];
 
@@ -59,6 +68,23 @@
     }
     
     CGRect innerViewFrame = CGRectMake(0,0,self.view.frame.size.width, self.view.frame.size.height-(tabBar.frame.size.height)-18-44);
+    
+    //to close searchBar view.
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
+    frontLayerView = [[UIView alloc] initWithFrame:mydelegate.window.frame];
+    [frontLayerView setBackgroundColor:[UIColor clearColor]];
+    [frontLayerView setUserInteractionEnabled:YES];
+    UITapGestureRecognizer *closeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSearchBar)];
+    [frontLayerView addGestureRecognizer:closeTap];
+    [closeTap release];
+    
+    // To close sidebar only
+    UISwipeGestureRecognizer *swipeLeftRecognizer;
+    swipeLeftRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSearchBar)];
+    [swipeLeftRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [frontLayerView addGestureRecognizer:swipeLeftRecognizer];
+    [swipeLeftRecognizer release];
     
     self.publicVc = [[PublicViewController alloc] init];
     self.publicVc.pageType = kPublic;
@@ -193,6 +219,59 @@
 {
     UIView *blackView = [self.view viewWithTag:99];
     [blackView removeFromSuperview];
+}
+
+#pragma mark -
+#pragma mark SearchBar
+- (void)handleSearchBar
+{
+    if (isSearchBarOpen) {
+        NSLog(@"close");
+        [self closeSearchBar];
+    } else {
+        NSLog(@"open");
+        //setup searchBar view.
+        
+        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        searchBar.view.frame = CGRectMake(-260.0f, 0.0f, searchBar.view.frame.size.width, mydelegate.window.frame.size.height);
+        [mydelegate.window addSubview:searchBar.view];
+        [self openSearchBar];
+    }
+}
+
+- (void)openSearchBar
+{
+    isSearchBarOpen = YES;
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [mydelegate.tabView.view addSubview:frontLayerView];
+    [mydelegate.bannerView setUserInteractionEnabled:NO];
+    [UIView animateWithDuration:0.35f delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction animations:^
+     {
+         mydelegate.tabView.view.frame = CGRectMake(260.0f, 0.0f, mydelegate.window.frame.size.width, mydelegate.window.frame.size.height);
+         mydelegate.bannerView.frame = CGRectMake(260, mydelegate.window.frame.size.height-39-34, mydelegate.window.frame.size.width, 34);
+         searchBar.view.frame = CGRectMake(0.0f, 0.0f, searchBar.view.frame.size.width, mydelegate.window.frame.size.height);
+         
+     }
+                     completion:^(BOOL finished){
+                         //[DejalBezelActivityView activityViewForView:mydelegate.window withLabel:@"Loading ..." width:100];
+                         //[self performSelector:@selector(updateCart) withObject:nil afterDelay:0.5];
+                     }];
+}
+
+- (void)closeSearchBar
+{
+    isSearchBarOpen = NO;
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [UIView animateWithDuration:0.35f delay:0.0f options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionAllowUserInteraction animations:^
+     {
+         mydelegate.tabView.view.frame = CGRectMake(0, 0.0f, mydelegate.window.frame.size.width, mydelegate.window.frame.size.height);
+         mydelegate.bannerView.frame = CGRectMake(0, mydelegate.window.frame.size.height-39-34, mydelegate.window.frame.size.width, 34);
+         searchBar.view.frame = CGRectMake(-260.0f, 0.0f, searchBar.view.frame.size.width, mydelegate.window.frame.size.height);
+         
+     }
+                     completion:^(BOOL finished){}];
+    [mydelegate.bannerView setUserInteractionEnabled:YES];
+    [frontLayerView removeFromSuperview];
 }
 
 - (void)didReceiveMemoryWarning

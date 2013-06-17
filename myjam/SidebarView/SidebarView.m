@@ -703,7 +703,7 @@
 }
 
 - (void)updateTabBar {
-    int counter = 0;
+    NSInteger counter = 0;
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     for (id row in cartItems ){
         for (id items in [row valueForKey:@"item_list"]){
@@ -713,11 +713,18 @@
         }
     }
     //  [mydelegate tabView]
+    
     if (counter == 0){
         [mydelegate removeCustomBadge];
+        mydelegate.totalCart = counter;
+        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",counter], @"counter", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTotalCartTab" object:self userInfo:d];
     }
-    else{
+    else{ NSLog(@"counterest");
         [mydelegate setCustomBadgeWithText:[NSString stringWithFormat:@"%d",counter]];
+        mydelegate.totalCart = counter;
+        NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",counter], @"counter", nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTotalCartTab" object:self userInfo:d];
     }
 }
 

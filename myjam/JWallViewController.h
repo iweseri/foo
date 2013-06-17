@@ -12,13 +12,16 @@
 //#import "PersonalViewController.h"
 #import "TBTabButton.h"
 #import "MyPopupView.h"
-
+#import "WallSearchBarView.h"
 
 @interface JWallViewController : UIViewController<TBTabBarDelegate, MyPopupViewDelegate> {
     TBTabBar *tabBar;
     int plusPage;
     BOOL refreshPageDisabled;
     NSArray *optionPersonal;
+    WallSearchBarView *searchBar;
+    BOOL isSearchBarOpen;
+    UIView *frontLayerView;
 }
 
 @property (retain, nonatomic) PublicViewController *publicVc;

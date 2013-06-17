@@ -59,6 +59,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 @synthesize swipeOptionString;
 @synthesize cartCounter;
 @synthesize wallNavController;
+@synthesize frontLayerView;
 
 - (void)dealloc
 {
@@ -93,12 +94,12 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
     
     // Let the device know we want to receive push notifications
-//	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
-//     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
+    //	[[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+    //     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
     
     // Create socket nodejs client
-//    socketIO = [[SocketIO alloc] initWithDelegate:self];
+    //    socketIO = [[SocketIO alloc] initWithDelegate:self];
     [self initViews];
     
     [self.window makeKeyAndVisible];
@@ -513,6 +514,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
          tabView.view.frame = CGRectMake(-260.0f, 0.0f, self.window.frame.size.width, self.window.frame.size.height);
          bannerView.frame = CGRectMake(-260, self.window.frame.size.height-39-bannerHeight, self.window.frame.size.width, bannerHeight);
          sidebarController.view.frame = CGRectMake(60.0f, 0.0f, sidebarController.view.frame.size.width, self.window.frame.size.height);
+         if (self.pageIndex == kShopTab) {
+             self.pageIndex = nil;
+             CGPoint bottomOffset = CGPointMake(0,0);
+             [sidebarController.tableView setContentOffset:bottomOffset animated:YES];
+         }
          
      }
                      completion:^(BOOL finished){
@@ -868,26 +874,26 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     localNotification.fireDate = [now dateByAddingTimeInterval:5];
     localNotification.alertBody = @"New message received.";
     localNotification.soundName = UILocalNotificationDefaultSoundName;
-//    localNotification.applicationIconBadgeNumber = 1; // increment
+    //    localNotification.applicationIconBadgeNumber = 1; // increment
     
     NSDictionary *infoDict = [NSDictionary dictionaryWithObjectsAndKeys:@"Object 1", @"Key 1", @"Object 2", @"Key 2", nil];
     localNotification.userInfo = infoDict;
     
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     
-//    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+    //    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     NSLog(@"AppDelegate didReceiveLocalNotification %@", notification.userInfo);
     
-//    UIAlertView *alertView = [[UIAlertView alloc]
-//                              initWithTitle:@"J-Buddy"
-//                              message:notification.alertBody
-//                              delegate:nil
-//                              cancelButtonTitle:@"OK"
-//                              otherButtonTitles:nil];
-//    [alertView show];
+    //    UIAlertView *alertView = [[UIAlertView alloc]
+    //                              initWithTitle:@"J-Buddy"
+    //                              message:notification.alertBody
+    //                              delegate:nil
+    //                              cancelButtonTitle:@"OK"
+    //                              otherButtonTitles:nil];
+    //    [alertView show];
 }
 
 #pragma mark -
@@ -895,11 +901,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 - (void)connectNodeJS
 {
-//    NSLog(@"connect nodejs");
-//    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
-//    if ([conn isEqualToString:@"NO"]) {
-//        [socketIO connectToHost:@"202.71.110.204" onPort:80];
-//    }
+    //    NSLog(@"connect nodejs");
+    //    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+    //    if ([conn isEqualToString:@"NO"]) {
+    //        [socketIO connectToHost:@"202.71.110.204" onPort:80];
+    //    }
 }
 
 - (void)sendTokenNodeJS
@@ -934,13 +940,13 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"updateMessageList"
              object:nil];
-
+            
         }
         else if ([[msg objectForKey:@"message"] isEqualToString:@"group_message_list_updated"])
         {
             [[NSNotificationCenter defaultCenter]
-                 postNotificationName:@"updateGroupMessageList"
-                 object:nil];
+             postNotificationName:@"updateGroupMessageList"
+             object:nil];
             
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"reloadChatList"
@@ -969,7 +975,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             [[NSNotificationCenter defaultCenter]
              postNotificationName:@"updateSubjectName"
              object:nil];
-
+            
         }
         else if ([[msg objectForKey:@"message"] isEqualToString:@"new_group_member_added"])
         {
@@ -1191,11 +1197,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     // attempt to extract a token from the url
     
-//    NSError *error = nil;
+    //    NSError *error = nil;
     NSString *urlString = [NSString stringWithFormat:@"%@",url];
     NSLog(@"url: %@", urlString);
     
-//    [error rangeOfString:@"timed out"].location == NSNotFound
+    //    [error rangeOfString:@"timed out"].location == NSNotFound
     if ([url isEqual:[NSURL URLWithString:@"jambu://www.jam-bu.com/" ]])
     {
         if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
@@ -1203,7 +1209,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             self.isReturnFromPayment = YES;
             [[NSNotificationCenter defaultCenter]  postNotificationName:@"PurchaseVerification" object:self];
         }
-
+        
     }else if ([urlString hasPrefix:@"jambu://www.jam-bu.com/?qrcode_id="]){
         NSArray *splittedURL = [urlString componentsSeparatedByString:@"="];
         NSString *qrcodeId = [[[splittedURL objectAtIndex:1] componentsSeparatedByString:@"&"] objectAtIndex:0];
@@ -1235,13 +1241,13 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         else{
             MoreViewController *more = [[MoreViewController alloc] init];
             more.qrcodeId = qrcodeId;
-//            [boxNavController popToRootViewControllerAnimated:YES];
+            //            [boxNavController popToRootViewControllerAnimated:YES];
             
             [homeNavController pushViewController:more animated:YES];
             [more release];
         }
         
-
+        
     }
     else{
         return [FBSession.activeSession handleOpenURL:url];
@@ -1382,15 +1388,15 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-//    [self disconnectNodeJS];
-//    NSLog(@"-disconnect");
+    //    [self disconnectNodeJS];
+    //    NSLog(@"-disconnect");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-//    [self connectNodeJS];
-//    NSLog(@"-connect");
+    //    [self connectNodeJS];
+    //    NSLog(@"-connect");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -1407,7 +1413,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             [localData synchronize];
             [self initViews];
         }
-
+        
         [FBSettings publishInstall:kAppID];
         [FBSession.activeSession handleDidBecomeActive]; //fb login
     }

@@ -96,12 +96,12 @@
     sbv = [[StarBuyViewController alloc] init];
     sbv.view.frame = innerViewFrame;
     
-    
+
     vc1 = [[[TBViewController alloc] init] autorelease];
     [vc1.view addSubview:apv.view];
     vc2 = [[[TBViewController alloc] init] autorelease];
     [vc2.view addSubview:sbv.view];
-    
+   
     TBTabButton *t1 = [[TBTabButton alloc] initWithTitle:@"ALL"];
     t1.viewController = vc1;
     TBTabButton *t2 = [[TBTabButton alloc] initWithTitle:@"STAR BUYS"];
@@ -162,9 +162,9 @@
         UIView *currentView = [self.view viewWithTag:SELECTED_VIEW_CONTROLLER_TAG];
         NSLog(@"VIEW :%@",currentView);
         [currentView removeFromSuperview];
-        
+    
         viewController.view.frame = CGRectMake(0,22,self.view.bounds.size.width, self.view.bounds.size.height-(tabBar.frame.size.height)-24);
-        
+    
         viewController.view.tag = SELECTED_VIEW_CONTROLLER_TAG;
         [self.view insertSubview:viewController.view belowSubview:tabBar];
     }
