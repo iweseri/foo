@@ -57,7 +57,8 @@ static CGFloat kImageShareHeight = 200;
 {
     [super viewDidLoad];
     
-    // Init data array
+    filterParameter = [NSString stringWithFormat:@"0"];
+    searchParameter = @"";
     tableData = [[NSMutableArray alloc] init];
     self.loadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.loadingIndicator.frame.size.width/2,
                                              self.view.frame.size.height/2-self.loadingIndicator.frame.size.height/2-100,
@@ -88,13 +89,28 @@ static CGFloat kImageShareHeight = 200;
                                                  name:@"reloadWallPost"
                                                object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(showPostsWithFilter:)
+                                                 name:@"showPostsWithFilter"
+                                               object:nil];
     
     showTopEnabled = NO;
 }
 
+- (void)showPostsWithFilter:(NSNotification *)n
+{
+    NSLog(@"dic %@", n.userInfo);
+    showTopEnabled = YES;
+    filterParameter = [[n.userInfo objectForKey:@"filterOption"] intValue];
+    searchParameter = [[n.userInfo objectForKey:@"searchText"] copy];
+    [tableData removeAllObjects];
+    [self setup];
+//    [tableData]
+    NSLog(@"reloadwithfilter");
+}
+
 - (void)reloadTableData
 {
-    
     showTopEnabled = YES;
     [tableData removeAllObjects];
     [self setup];
@@ -132,6 +148,9 @@ static CGFloat kImageShareHeight = 200;
 - (void)viewDidAppear:(BOOL)animated
 {
     if (!reloadDisabled) {
+        NSLog(@"Vda");
+        filterParameter = @"";
+        searchParameter = @"";
         [tableData removeAllObjects];
         [self setup];
         
@@ -167,17 +186,17 @@ static CGFloat kImageShareHeight = 200;
             }
         });
     });
-    
 }
 
 - (BOOL)retrieveData:(NSUInteger)page
 {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_list.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
-    NSString *dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d}", page, kDisplayPerPage];
+    
+    NSString *dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d,\"filter_option\":\"%d\",\"filter_search\":\"%@\"}", page, kDisplayPerPage, filterParameter, searchParameter];
     
     if (self.pageType == kPersonal)
     {
-        dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d,\"is_private\":\"1\"}", page, kDisplayPerPage];
+        dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d,\"is_private\":\"1\",\"filter_option\":\"%d\",\"filter_search\":\"%@\"}", page, kDisplayPerPage, filterParameter, searchParameter];
     }
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
@@ -262,8 +281,11 @@ static CGFloat kImageShareHeight = 200;
 #pragma mark tableView delegate
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{    
-    return [tableData count]+1;
+{
+    if ([tableData count] && [tableData count] > kDisplayPerPage-1) {
+        return [tableData count]+1;
+    }
+    return [tableData count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -271,7 +293,7 @@ static CGFloat kImageShareHeight = 200;
 //    return 4;
     if (section < [tableData count]) {
         return 4;
-    }else if (section == [tableData count]) {
+    }else if (section == [tableData count] && [tableData count] > kDisplayPerPage-1) {
         return 1;
     }
     
@@ -289,7 +311,7 @@ static CGFloat kImageShareHeight = 200;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    if (section == [tableData count]) {
+    if (section == [tableData count] ) {
         return 0;
     }
     
@@ -298,7 +320,7 @@ static CGFloat kImageShareHeight = 200;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == [tableData count]) {
+    if (indexPath.section == [tableData count] && [tableData count] > kDisplayPerPage-1) {
         return 22;
     }
     

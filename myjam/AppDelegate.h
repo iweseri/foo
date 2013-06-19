@@ -65,6 +65,7 @@
 @property (nonatomic, retain) NSString *swipeOptionString;
 @property (nonatomic, retain) NSMutableArray *arrayTemp;
 @property (nonatomic, retain) CustomBadge *cartCounter;
+@property (nonatomic, retain) CustomBadge *buddyNotifCounter;
 @property (nonatomic, retain) UIButton *nearMeBtn;
 
 @property (nonatomic, retain) SocketIO *socketIO;
@@ -105,9 +106,11 @@
 
 - (void)closeSession; //fb login
 - (void)removeCustomBadge;
+- (void)removeChatBadge;
 - (void)setCustomBadgeWithText:(NSString *)text;
 - (void)showUpdateProfileDialog;
 
 - (void)connectNodeJS;
 - (void)disconnectNodeJS;
+
 @end

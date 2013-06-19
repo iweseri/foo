@@ -31,6 +31,12 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.searchBar.delegate = self;
+    
+//    UIView *overlayView = [[UIView alloc] initWithFrame:CGRectMake(0, 43, self.view.frame.size.width, 1)];
+//    [overlayView setBackgroundColor:[UIColor whiteColor]];
+//    [self.searchBar addSubview:overlayView]; // navBar is your UINavigationBar instance
+//    [overlayView release];
     
     [self loadData];
 }
@@ -132,6 +138,38 @@
         return NO;
 }
 
+#pragma mark -
+#pragma mark SearchBar delegate
+
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)theSearchBar {
+
+    [self.searchBar setShowsCancelButton:YES animated:NO];
+    UIButton *cancelButton = nil;
+    for(UIView *subView in theSearchBar.subviews){
+        if([subView isKindOfClass:UIButton.class]){
+            cancelButton = (UIButton*)subView;
+        }
+    }
+    [cancelButton setTintColor:[UIColor lightGrayColor]];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    searchBar.text = @"";
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
+}
+
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
+}
+
+- (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -139,9 +177,14 @@
 }
 
 - (void)dealloc {
+    [_searchBar release];
     [super dealloc];
     [_tableData release];
     [self.tableView release];
 }
 
+- (void)viewDidUnload {
+    [self setSearchBar:nil];
+    [super viewDidUnload];
+}
 @end

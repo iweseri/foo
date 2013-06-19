@@ -58,6 +58,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 @synthesize otherNavController;
 @synthesize swipeOptionString;
 @synthesize cartCounter;
+@synthesize buddyNotifCounter;
 @synthesize wallNavController;
 @synthesize frontLayerView;
 
@@ -99,7 +100,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     
     // Create socket nodejs client
-    //    socketIO = [[SocketIO alloc] initWithDelegate:self];
+    socketIO = [[SocketIO alloc] initWithDelegate:self];
     [self initViews];
     
     [self.window makeKeyAndVisible];
@@ -901,11 +902,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 - (void)connectNodeJS
 {
-    //    NSLog(@"connect nodejs");
-    //    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
-    //    if ([conn isEqualToString:@"NO"]) {
-    //        [socketIO connectToHost:@"202.71.110.204" onPort:80];
-    //    }
+    NSLog(@"connect nodejs");
+    NSString *conn = [[NSUserDefaults standardUserDefaults] objectForKey:@"connectedToNodeJS"];
+    if ([conn isEqualToString:@"NO"]) {
+        [socketIO connectToHost:@"202.71.110.204" onPort:80];
+    }
 }
 
 - (void)sendTokenNodeJS
@@ -985,7 +986,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         }
         
         
-        [self setupLocalNotifications];
+//        [self setupLocalNotifications];
+        [self setChatBadgeUpdate:YES];
         [self playAlertSound];
         
     }
@@ -1087,9 +1089,74 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         if ([aView isKindOfClass:[CustomBadge class]])
         {
             [aView removeFromSuperview];
+        }
+    }
+}
+
+- (void)removeChatBadge
+{
+    for (UIView *aView in [[[tabView tabItemsArray] objectAtIndex:3
+                            ]  subviews]) {
+        if ([aView isKindOfClass:[CustomBadge class]])
+        {
+            [aView removeFromSuperview];
+        }
+    }
+    
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"];
+    NSString *badgeKey = [NSString stringWithFormat:@"chatBadge%@",token];
+    [[NSUserDefaults standardUserDefaults] setObject:@"0" forKey:badgeKey];
+}
+
+- (void)setChatBadgeUpdate:(BOOL)update
+{
+    for (UIView *aView in [[[tabView tabItemsArray] objectAtIndex:3] subviews]) {
+        if ([aView isKindOfClass:[CustomBadge class]])
+        {
+            [aView removeFromSuperview];
             //            [aView release];
         }
     }
+    NSString *token = [[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"];
+    NSString *badgeKey = [NSString stringWithFormat:@"chatBadge%@",token];
+    NSString *text = [[NSUserDefaults standardUserDefaults] objectForKey:badgeKey];
+    
+    int i = [text intValue];
+    
+    if (i == 0) {
+        return;
+    }
+    
+    if (update) {
+        i++;
+    }
+    text = [NSString stringWithFormat:@"%d",i];
+    [[NSUserDefaults standardUserDefaults] setObject:text forKey:badgeKey]; // update local counter
+    
+    buddyNotifCounter = [CustomBadge customBadgeWithString:text
+                                     withStringColor:[UIColor whiteColor]
+                                      withInsetColor:[UIColor redColor]
+                                      withBadgeFrame:YES
+                                 withBadgeFrameColor:[UIColor whiteColor]
+                                           withScale:0.7
+                                         withShining:YES];
+    buddyNotifCounter.tag = 2000;
+    
+//    UITapGestureRecognizer *badgeTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTab5)];
+//    [buddyNotifCounter addGestureRecognizer:badgeTap];
+//    [badgeTap release];
+    
+    CGFloat x = 38;
+    
+    if ([text intValue] >= 100) {
+        x = 24;
+    }else if([text intValue] >= 10){
+        x = 32;
+    }
+    
+    buddyNotifCounter.frame = CGRectMake(x, 4, buddyNotifCounter.frame.size.width, buddyNotifCounter.frame.size.height);
+    [[[tabView tabItemsArray] objectAtIndex:3]  addSubview:buddyNotifCounter];
+    //    [cartCounter release];
 }
 
 - (void)setCustomBadgeWithText:(NSString *)text
@@ -1395,7 +1462,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    //    [self connectNodeJS];
+//    [self connectNodeJS];
     //    NSLog(@"-connect");
 }
 
@@ -1407,7 +1474,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
         NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
         //NSLog(@"get connected!");
-        
+        [self connectNodeJS];
         if ([[localData objectForKey:@"noConnection"] isEqualToString:@"YES"]) {
             [localData setObject:@"NO" forKey:@"noConnection"];
             [localData synchronize];
@@ -1416,6 +1483,8 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         
         [FBSettings publishInstall:kAppID];
         [FBSession.activeSession handleDidBecomeActive]; //fb login
+        
+        [self setChatBadgeUpdate:NO]; // show chat notif
     }
     
     

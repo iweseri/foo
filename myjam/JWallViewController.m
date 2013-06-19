@@ -111,6 +111,11 @@
     tabBar.delegate = self;
     [self.view addSubview:tabBar];
     [tabBar showDefaults];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleSearchBar)
+                                                 name:@"handleSearchBarWall"
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated

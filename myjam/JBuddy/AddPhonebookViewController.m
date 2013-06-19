@@ -224,7 +224,7 @@
                 [inviteTableData addObject:data];
             }
         } else {
-            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Buddy" message:[[resultsDictionary objectForKey:@"status"] string] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-Buddy" message:[resultsDictionary objectForKey:@"status"] delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             [alert show];
         }
         
@@ -428,7 +428,7 @@
             cellData = [inviteTableData objectAtIndex:indexPath.row];
         }
     }
-    NSLog(@"cell data %@",cellData);
+//    NSLog(@"cell data %@",cellData);
     [cell.usernameLabel setTextColor:[UIColor colorWithHex:@"#D22042"]];
     cell.usernameLabel.text = [cellData valueForKey:@"username"];
     cell.statusLabel.text = [cellData valueForKey:@"status"];
@@ -458,7 +458,12 @@
     } else {
         [cell.addButtton setBackgroundImage:[UIImage imageNamed:@"inviteBuddy"]
                                    forState:UIControlStateNormal];
-        [cell.addButtton addTarget:self action:@selector(handleAddButtons:) forControlEvents:UIControlEventTouchUpInside];
+        if ([[cellData valueForKey:@"invited"] isEqualToString:@"true"]) {
+            [cell.addButtton setEnabled:NO];
+        }else{
+            [cell.addButtton setEnabled:YES];
+            [cell.addButtton addTarget:self action:@selector(handleAddButtons:) forControlEvents:UIControlEventTouchUpInside];
+        }
     }
     [cell addSubview:cell.addButtton];
     NSLog(@"TAG:%d",indexPath.row);
@@ -484,7 +489,8 @@
     NSString *msg = [NSString stringWithFormat:@"%@ %@ to your buddy list?", word, username];
     CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:msg delegate:self cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
     if (userId == 0) {
-        tmpData = [buddyDict objectForKey:@"email"];
+//        tmpData = [buddyDict objectForKey:@"email"]; // process invite methods
+        tmpData = [NSString stringWithFormat:@"%d", btn.tag];
     }else{
         tmpData = [NSString stringWithFormat:@"%d", btn.tag];
         alert.tag = userId;
@@ -506,7 +512,7 @@
             [self.loadingIndicator startAnimating];
             [self performSelector:@selector(processAddBuddy:) withObject:[NSNumber numberWithInt:alertView.tag] afterDelay:0];
         }else{
-            [self performSelector:@selector(processInviteBuddy:) withObject:tmpData afterDelay:0];
+            [self performSelector:@selector(processInviteBuddy:) withObject:[NSNumber numberWithInt:[tmpData intValue]] afterDelay:0];
         }
     
     }
@@ -548,10 +554,13 @@
 
 }
 
-- (void)processInviteBuddy:(NSString *)email
+- (void)processInviteBuddy:(NSNumber *)index
 {
+    NSMutableDictionary *dict = [[inviteTableData objectAtIndex:[index intValue]] mutableCopy];
+//    [[inviteTableData objectAtIndex:[index intValue]] setObject:@"true" forKey:@"invited"];
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_invite.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"email\":\"%@\"}", email];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"email\":\"%@\"}", [dict objectForKey:@"email"]];
     
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"request %@\n%@\n\nresponse data: %@", urlString, dataContent, response);
@@ -567,11 +576,16 @@
 //            NSIndexPath *ip = [NSIndexPath indexPathForRow:[tmpData integerValue] inSection:0];
 //            BuddyCell *cell = (BuddyCell *)[self.tableView cellForRowAtIndexPath:ip];
 //            cell.addButtton.hidden = YES;
-            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:[resultsDictionary objectForKey:@"message"] delegate:nil cancelButtonTitle:@"No" otherButtonTitles:@"Yes", nil];
+            [dict setObject:@"true" forKey:@"invited"];
+            [inviteTableData replaceObjectAtIndex:[index intValue] withObject:dict];
+            
+            CustomAlertView *alert = [[CustomAlertView alloc] initWithTitle:@"J-BUDDY" message:[resultsDictionary objectForKey:@"message"] delegate:nil cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
             [alert show];
         }
         
     }
+    
+    [self.tableView reloadData];
     
     [self.loadingIndicator stopAnimating];
     

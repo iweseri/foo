@@ -26,6 +26,8 @@
     UIImage *currImage;
     BOOL reloadDisabled;
     BOOL showTopEnabled;
+    int filterParameter;
+    NSString *searchParameter;
 }
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;

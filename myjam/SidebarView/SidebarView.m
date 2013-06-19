@@ -720,7 +720,8 @@
         NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",counter], @"counter", nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"updateTotalCartTab" object:self userInfo:d];
     }
-    else{ NSLog(@"counterest");
+    else{
+//        NSLog(@"counterest");
         [mydelegate setCustomBadgeWithText:[NSString stringWithFormat:@"%d",counter]];
         mydelegate.totalCart = counter;
         NSDictionary *d = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d",counter], @"counter", nil];

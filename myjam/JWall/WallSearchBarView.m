@@ -25,7 +25,8 @@
 
 - (void)viewDidLoad
 {
-    self.
+    self.searchBar.delegate = self;
+    self.searchBar.placeholder = @"Search for J-Lites/Keyword";
 //    [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.tableData = [[NSMutableArray alloc] initWithObjects:
@@ -46,7 +47,20 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSDictionary *filterParams = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", indexPath.row+1], @"filterOption", @"", @"searchText", nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showPostsWithFilter" object:nil userInfo:filterParams];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBarWall" object:nil];
+}
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    NSDictionary *filterParams = [NSDictionary dictionaryWithObjectsAndKeys:@"1", @"filterOption", searchBar.text, @"searchText", nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"showPostsWithFilter" object:nil userInfo:filterParams];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBarWall" object:nil];
+    [searchBar setShowsCancelButton:NO animated:YES];
+    [searchBar resignFirstResponder];
 }
 
 - (void)didReceiveMemoryWarning

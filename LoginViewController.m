@@ -340,6 +340,8 @@
                 //NSLog(@"Create counter for newly logged in user");
                 [localData setObject:@"1" forKey:counterKey];
             }
+
+            [localData setObject:@"0" forKey:[NSString stringWithFormat:@"chatBadge%@",token]];
             
             [localData synchronize];
             

@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 //#import "DeliveryOptionViewController.h"
 #import "CoreViewController.h"
-#import "CartItemViewCell.h"
+//#import "CartItemViewCell.h"
 #import "MJModel.h"
 #import "AddressEditViewController.h"
 #import "ConfirmFooterView.h"
