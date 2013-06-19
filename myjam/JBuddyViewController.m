@@ -10,6 +10,7 @@
 //#import "AddBuddyViewController.h"
 #import "OptionAddBuddyViewController.h"
 #import "NewChatViewController.h"
+#import "AppDelegate.h"
 
 #define kNewChat    1
 #define kAddBuddy   2
@@ -95,6 +96,8 @@
 
 - (void)viewDidDisappear:(BOOL)animated
 {
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    mydelegate.pageIndex = kBoxTab;
     // To deselect 3rd button (+)
     int i = 0;
     for (UIButton* b in tabBar.buttons) {

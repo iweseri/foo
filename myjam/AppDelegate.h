@@ -75,6 +75,9 @@
 @property (nonatomic) double currentLong;
 @property (nonatomic) NSInteger withRadius;
 @property (nonatomic) NSInteger currentDecDegree;
+@property (nonatomic) NSInteger balSeed;
+@property (nonatomic,retain) NSMutableArray *seedData;
+@property (nonatomic,retain) UILabel *seedViewLabel;
 
 //For ShopTabbar
 @property (nonatomic) NSInteger totalCart;

@@ -69,6 +69,13 @@
 		612007DE16F80071005227FB /* BottomSwipeViewPromo.m in Sources */ = {isa = PBXBuildFile; fileRef = 612007D916F7FF87005227FB /* BottomSwipeViewPromo.m */; };
 		612007DF16F800C4005227FB /* BottomSwipeViewNews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612007D716F7FF87005227FB /* BottomSwipeViewNews.xib */; };
 		612007E016F800C4005227FB /* BottomSwipeViewPromo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612007DA16F7FF87005227FB /* BottomSwipeViewPromo.xib */; };
+		6123DD7517714B7C00425315 /* BuySeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD7017714B7C00425315 /* BuySeedViewController.m */; };
+		6123DD7617714B7C00425315 /* BuySeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7117714B7C00425315 /* BuySeedViewController.xib */; };
+		6123DD7717714B7C00425315 /* WhatIsSeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */; };
+		6123DD7817714B7C00425315 /* WhatIsSeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */; };
+		6123DD7E177151FB00425315 /* checkout-seed.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7B177151FB00425315 /* checkout-seed.png */; };
+		6123DD7F177151FB00425315 /* seed_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7C177151FB00425315 /* seed_off.png */; };
+		6123DD80177151FB00425315 /* seed_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7D177151FB00425315 /* seed_on.png */; };
 		61266C6116F6F3C60092BB83 /* BottomSwipeViewJShop.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61266C5E16F6F13E0092BB83 /* BottomSwipeViewJShop.xib */; };
 		61266C6216F6F3DB0092BB83 /* BottomSwipeViewJSPurchase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61266C5B16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.xib */; };
 		61266C6316F6F3ED0092BB83 /* BottomSwipeViewJSPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = 61266C5A16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.m */; };
@@ -765,6 +772,15 @@
 		612007D816F7FF87005227FB /* BottomSwipeViewPromo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomSwipeViewPromo.h; sourceTree = "<group>"; };
 		612007D916F7FF87005227FB /* BottomSwipeViewPromo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewPromo.m; sourceTree = "<group>"; };
 		612007DA16F7FF87005227FB /* BottomSwipeViewPromo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSwipeViewPromo.xib; sourceTree = "<group>"; };
+		6123DD6F17714B7C00425315 /* BuySeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuySeedViewController.h; sourceTree = "<group>"; };
+		6123DD7017714B7C00425315 /* BuySeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuySeedViewController.m; sourceTree = "<group>"; };
+		6123DD7117714B7C00425315 /* BuySeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuySeedViewController.xib; sourceTree = "<group>"; };
+		6123DD7217714B7C00425315 /* WhatIsSeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatIsSeedViewController.h; sourceTree = "<group>"; };
+		6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhatIsSeedViewController.m; sourceTree = "<group>"; };
+		6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WhatIsSeedViewController.xib; sourceTree = "<group>"; };
+		6123DD7B177151FB00425315 /* checkout-seed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkout-seed.png"; sourceTree = "<group>"; };
+		6123DD7C177151FB00425315 /* seed_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = seed_off.png; sourceTree = "<group>"; };
+		6123DD7D177151FB00425315 /* seed_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = seed_on.png; sourceTree = "<group>"; };
 		61266C5916F6F13E0092BB83 /* BottomSwipeViewJShop.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewJShop.m; sourceTree = "<group>"; };
 		61266C5A16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewJSPurchase.m; sourceTree = "<group>"; };
 		61266C5B16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSwipeViewJSPurchase.xib; sourceTree = "<group>"; };
@@ -1750,6 +1766,19 @@
 			path = myjam/TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
+		6123DD6E17714B7C00425315 /* eWallet */ = {
+			isa = PBXGroup;
+			children = (
+				6123DD6F17714B7C00425315 /* BuySeedViewController.h */,
+				6123DD7017714B7C00425315 /* BuySeedViewController.m */,
+				6123DD7117714B7C00425315 /* BuySeedViewController.xib */,
+				6123DD7217714B7C00425315 /* WhatIsSeedViewController.h */,
+				6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */,
+				6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */,
+			);
+			path = eWallet;
+			sourceTree = "<group>";
+		};
 		6139632016EF35C70056B314 /* SidebarView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2666,6 +2695,7 @@
 		61F7A35D17686C15001C9151 /* JShop */ = {
 			isa = PBXGroup;
 			children = (
+				6123DD6E17714B7C00425315 /* eWallet */,
 				61F7A35E17686C16001C9151 /* AllProductDetailViewController.h */,
 				61F7A35F17686C16001C9151 /* AllProductDetailViewController.m */,
 				61F7A36017686C16001C9151 /* AllProductDetailViewController.xib */,
@@ -2732,6 +2762,9 @@
 		61F7A3AA17686E1C001C9151 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6123DD7B177151FB00425315 /* checkout-seed.png */,
+				6123DD7C177151FB00425315 /* seed_off.png */,
+				6123DD7D177151FB00425315 /* seed_on.png */,
 				610FF081176B0ED900C17102 /* img-cart-tab.png */,
 				61F7A3AB17686E1C001C9151 /* ad4.png */,
 				61F7A3AC17686E1C001C9151 /* addBuddy.png */,
@@ -3565,6 +3598,11 @@
 				61F7A62E17686E40001C9151 /* WriteReviewViewController.xib in Resources */,
 				61F7A6341768722C001C9151 /* JShopViewController.xib in Resources */,
 				610FF082176B0EDA00C17102 /* img-cart-tab.png in Resources */,
+				6123DD7617714B7C00425315 /* BuySeedViewController.xib in Resources */,
+				6123DD7817714B7C00425315 /* WhatIsSeedViewController.xib in Resources */,
+				6123DD7E177151FB00425315 /* checkout-seed.png in Resources */,
+				6123DD7F177151FB00425315 /* seed_off.png in Resources */,
+				6123DD80177151FB00425315 /* seed_on.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3835,6 +3873,8 @@
 				61F7A62D17686E40001C9151 /* WriteReviewViewController.m in Sources */,
 				61F7A6331768722C001C9151 /* JShopViewController.m in Sources */,
 				610FF07E176B0D2600C17102 /* WallSearchBarView.m in Sources */,
+				6123DD7517714B7C00425315 /* BuySeedViewController.m in Sources */,
+				6123DD7717714B7C00425315 /* WhatIsSeedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

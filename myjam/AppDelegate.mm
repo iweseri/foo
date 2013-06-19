@@ -29,6 +29,7 @@
 #import "SocketIOPacket.h"
 #import "JBuddyViewController.h"
 #import "JWallViewController.h"
+#import "BuySeedViewController.h"
 
 #define kCloseSwipeBottom   1
 #define kCloseSideBar       2
@@ -516,7 +517,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
          bannerView.frame = CGRectMake(-260, self.window.frame.size.height-39-bannerHeight, self.window.frame.size.width, bannerHeight);
          sidebarController.view.frame = CGRectMake(60.0f, 0.0f, sidebarController.view.frame.size.width, self.window.frame.size.height);
          if (self.pageIndex == kShopTab) {
-             self.pageIndex = nil;
+//             self.pageIndex = nil;
              CGPoint bottomOffset = CGPointMake(0,0);
              [sidebarController.tableView setContentOffset:bottomOffset animated:YES];
          }
@@ -1273,7 +1274,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     {
         if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
         {
-            self.isReturnFromPayment = YES;
+//            self.isReturnFromPayment = YES;
             [[NSNotificationCenter defaultCenter]  postNotificationName:@"PurchaseVerification" object:self];
         }
         
@@ -1327,6 +1328,72 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     [FBSession.activeSession closeAndClearTokenInformation];
 }
+
+#pragma mark -
+#pragma seed
+
+- (void)setupSeed
+{
+    self.seedData = [[NSMutableArray alloc] init];
+    NSString *urlString = [NSString stringWithFormat:@"%@/api/jambu_seed_topup.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]copy]];
+    NSString *dataContent = @"";
+    NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
+    NSLog(@"dataContent: %@\nresponse listing: %@|%@", dataContent,response,urlString);
+    NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
+    NSString *status = nil;
+    NSMutableArray* list = nil;
+    
+    if([resultsDictionary count])
+    {
+        status = [resultsDictionary objectForKey:@"status"];
+        list = [resultsDictionary objectForKey:@"messages"];
+        
+        if ([status isEqualToString:@"ok"] && [list count]) {
+            self.balSeed = [[resultsDictionary objectForKey:@"current_seed"] integerValue];
+            for (id row in list) {
+                [self.seedData addObject:row];
+            }
+        }
+    }
+    [self.seedViewLabel removeFromSuperview];
+    [self setupSeedLabel];
+    NSLog(@"seedata:%@",self.seedData);
+}
+
+- (void)setupSeedLabel {
+    self.seedViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(220, 31, 100, 20)];
+    [self.seedViewLabel setBackgroundColor:[UIColor clearColor]];
+    NSString *bal = [NSString stringWithFormat:@"♦ %@",[NSNumberFormatter localizedStringFromNumber:@(self.balSeed) numberStyle:NSNumberFormatterDecimalStyle]];
+    if (self.balSeed == 0) {
+        bal = [NSString stringWithFormat:@"♦ %d seeds",self.balSeed];
+    }
+    CGSize expectedLabelSize  = [bal sizeWithFont:[UIFont fontWithName:@"Verdana" size:8.0] constrainedToSize:CGSizeMake(150.0, MAXFLOAT) lineBreakMode:self.seedViewLabel.lineBreakMode];
+    self.seedViewLabel.text = bal;
+    self.seedViewLabel.textColor = [UIColor yellowColor];
+    self.seedViewLabel.frame = CGRectMake(320-expectedLabelSize.width-41, 31, expectedLabelSize.width+41, 20);
+    UITapGestureRecognizer *infoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goBuySeed)];
+    [self.seedViewLabel setUserInteractionEnabled:YES];
+    [self.seedViewLabel addGestureRecognizer:infoTap];
+    [self.window addSubview:self.seedViewLabel];
+    [self.seedViewLabel release];
+    [infoTap release];
+}
+
+- (void)goBuySeed {
+    [self.tabView activateController:4];
+    // Manually change the selected tabButton
+    for (int i = 0; i < [self.tabView.tabItemsArray count]; i++) {
+        if (i == 4) {
+            [[self.tabView.tabItemsArray objectAtIndex:i] toggleOn:YES];
+        } else {
+            [[self.tabView.tabItemsArray objectAtIndex:i] toggleOn:NO];
+        }
+    }
+    BuySeedViewController *buy = [[BuySeedViewController alloc] init];
+    [self.otherNavController pushViewController:buy animated:YES];
+    [buy release];
+}
+
 
 #pragma mark -
 #pragma mark update profile
@@ -1470,10 +1537,23 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     
+    
     if ([ConnectionClass connected]) {
+        
+        if ([[[[self otherNavController] topViewController] class] isEqual:[BuySeedViewController class]])
+        {
+            //self.isReturnFromPayment = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"buySeedVerification" object:self];
+        }
+        if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
+        {
+            //self.isReturnFromPayment = YES;
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"PurchaseVerification" object:self];
+        }
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
         NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
-        //NSLog(@"get connected!");
+
+        [self setupSeed];
         [self connectNodeJS];
         if ([[localData objectForKey:@"noConnection"] isEqualToString:@"YES"]) {
             [localData setObject:@"NO" forKey:@"noConnection"];

@@ -132,6 +132,9 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    mydelegate.pageIndex = kShopTab;
+    
     NSLog(@"vda-SHOP");
     int i = 0;
     for (UIButton* b in tabBar.buttons) {

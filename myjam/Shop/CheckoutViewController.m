@@ -55,6 +55,9 @@
             footerView.gTotalLabel.text
             = [[[[_cartList objectAtIndex:0] valueForKey:@"grand_total"] componentsSeparatedByString:@":"] objectAtIndex:1];
             self.totalSeed = [[[_cartList objectAtIndex:0] valueForKey:@"grand_total_seed"] intValue];
+            //for update checkout button value
+            NSString *seedTitle = [NSString stringWithFormat:@"CHECKOUT WITH  ♦ %@",[NSString stringWithFormat:@"%@",[NSNumberFormatter localizedStringFromNumber:@(self.totalSeed) numberStyle:NSNumberFormatterDecimalStyle]]];
+            [footerView.seedButton setTitle:seedTitle forState:UIControlStateNormal];
             NSLog(@"SEED:%d",self.totalSeed);
         }
     }
@@ -80,11 +83,12 @@
 
     
     self.shopName.text = [[_cartList objectAtIndex:0] valueForKey:@"shop_name"];
+    [self updatePage];
     if ([self.footerType isEqual:@"1"]){
         [footerView.checkOutButton setTag:checkoutTag];
         [footerView.checkOutButton addTarget:self action:@selector(checkOutPressed:) forControlEvents:UIControlEventTouchUpInside];
         [footerView.seedButton setTag:seedTag];
-        NSString *seedTitle = [NSString stringWithFormat:@"CHECKOUT WITH  ♦ %d",500];
+        NSString *seedTitle = [NSString stringWithFormat:@"CHECKOUT WITH  ♦ %@",[NSString stringWithFormat:@"%@",[NSNumberFormatter localizedStringFromNumber:@(self.totalSeed) numberStyle:NSNumberFormatterDecimalStyle]]];
         [footerView.seedButton setTitle:seedTitle forState:UIControlStateNormal];
         [footerView.seedButton addTarget:self action:@selector(checkOutPressed:) forControlEvents:UIControlEventTouchUpInside];
         footerView.jambuFeePrice.text = [[_cartList objectAtIndex:0] valueForKey:@"admin_fee"];
@@ -92,7 +96,7 @@
     self.tableView.tableFooterView=footerView;
     [self.shopLogo setImageWithURL:[NSURL URLWithString:[[_cartList objectAtIndex:0] valueForKey:@"shop_logo"]]
                   placeholderImage:[UIImage imageNamed:@"default_icon.png"]];
-    [self updatePage];
+//    [self updatePage];
     [footerView.deliveryButton addTarget:self action:@selector(deliveryOptions:) forControlEvents:UIControlEventTouchUpInside];
     
     
@@ -127,7 +131,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
-    static NSString *CellIdentifier = @"CellIdentifier";
+    static NSString *CellIdentifier = @"Cell";
     
     CartItemViewCell *cell = (CartItemViewCell*)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil)
@@ -297,13 +301,16 @@
 {
     NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
     [self removeBlackView];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     if (popupView.tag == checkoutTag) {
         if (index == 1) {
-            [self checkoutProcess];
+            //[self checkoutProcess];
+            [self performSelector:@selector(checkoutProcess) withObject:nil afterDelay:0.0];
         }
     } else {
         if (index == 1) {
-            [self seedProcess];
+            //[self seedProcess];
+            [self performSelector:@selector(seedProcess) withObject:nil afterDelay:0.0];
         }
     }
 }
@@ -367,28 +374,35 @@
             balanceSeed = [list valueForKey:@"balance_seed"];
             
             AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            mydelegate.balSeed = [balanceSeed integerValue];
+            [mydelegate.seedViewLabel setText:[NSString stringWithFormat:@"♦ %@",[NSNumberFormatter localizedStringFromNumber:@(mydelegate.balSeed) numberStyle:NSNumberFormatterDecimalStyle]]];
+            [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
+            [[NSNotificationCenter defaultCenter ] postNotificationName:@"refreshPurchaseHistory" object:self];
             SuccessfulViewController *success = [[SuccessfulViewController alloc] init];
+            [mydelegate.shopNavController popToRootViewControllerAnimated:NO];
             [mydelegate.shopNavController pushViewController:success animated:YES];
             success.isShowSeeds = YES;
             success.balanceSeed = balanceSeed;
             [success release];
         }
     }
+    [DejalBezelActivityView removeViewAnimated:YES];
 }
 
 -(void)checkoutProcess {
     NSDictionary *respond = [[MJModel sharedInstance]getCheckoutUrlForId:[[_cartList objectAtIndex:0]valueForKey:@"cart_id"]];
     if ([[respond valueForKey:@"status" ] isEqual:@"ok"]){
         self.paymentStatus = @"processing";
-        if (![[UIApplication sharedApplication] openURL:[NSURL URLWithString:[respond valueForKey:@"url"] ]]){
-            
+        if ([[UIApplication sharedApplication] openURL:[NSURL URLWithString:[respond valueForKey:@"url"] ]]){
+            AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+            mydelegate.isReturnFromPayment = YES;
         }
     }
 }
 
 -(void)PurchaseVerification:(NSNotification *) notification{
     
-    
+    [DejalBezelActivityView removeViewAnimated:YES];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if (mydelegate.isReturnFromPayment == NO) {
         return;
@@ -406,6 +420,7 @@
 //        [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
 //        [sv1.tabBar showViewControllerAtIndex:1];
         SuccessfulViewController *success = [[SuccessfulViewController alloc] init];
+        [mydelegate.shopNavController popToRootViewControllerAnimated:NO];
         [mydelegate.shopNavController pushViewController:success animated:YES];
         success.isShowSeeds = NO;
         [success release];

@@ -7,6 +7,7 @@
 //
 
 #import "SuccessfulViewController.h"
+#import "BuySeedViewController.h"
 #import "AppDelegate.h"
 
 @interface SuccessfulViewController ()
@@ -20,6 +21,15 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.title = @"JAM-BU Shop";
+        FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:22];
+        titleView.text = self.title;
+        titleView.textAlignment = NSTextAlignmentCenter;
+        titleView.backgroundColor = [UIColor clearColor];
+        titleView.textColor = [UIColor whiteColor];
+        [titleView sizeToFit];
+        self.navigationItem.titleView = titleView;
+        [titleView release];
     }
     return self;
 }
@@ -57,6 +67,16 @@
     mydelegate.isShowPurchaseHistory = YES;
     [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
     [sv1.tabBar showViewControllerAtIndex:1];
+}
+-(IBAction)goBuySeed:(id)sender
+{
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    BuySeedViewController *topup = [[BuySeedViewController alloc]init];
+//    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
+    mydelegate.isShowPurchaseHistory = YES;
+    [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
+    [mydelegate.shopNavController pushViewController:topup animated:YES];
+//    [sv1.tabBar showViewControllerAtIndex:1];
 }
 
 - (void)didReceiveMemoryWarning
