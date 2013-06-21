@@ -7,6 +7,7 @@
 //
 
 #import "ShopAddressViewController.h"
+#import "ProductShopViewController.h"
 
 @interface ShopAddressViewController ()
 
@@ -97,26 +98,19 @@
 }
 - (IBAction)visitShop:(id)sender {
     
-    
+    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
+    gotoShop.shopId = self.shopId;
+    gotoShop.shopName = self.shopName;
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    for (int i=0 ; i< [mydelegate.shopNavController.viewControllers count]; i++){
-        //NSLog(@"%@",[[mydelegate.shopNavController.viewControllers objectAtIndex:i] class] );
-        
-        if( [[[mydelegate.shopNavController.viewControllers objectAtIndex:i] class] isEqual:[ShopDetailListingViewController class]])
-        {
-            //NSLog(@"ok");
-            
-            [mydelegate.shopNavController popToViewController:[mydelegate.shopNavController.viewControllers objectAtIndex:i] animated:YES];
-            break;
-            
-        }
-        
-        
-    }
-    
-    
-    
+    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
+    [gotoShop release];
+//    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    for (int i=0 ; i< [mydelegate.shopNavController.viewControllers count]; i++){
+//        if( [[[mydelegate.shopNavController.viewControllers objectAtIndex:i] class] isEqual:[ShopDetailListingViewController class]]) {
+//            [mydelegate.shopNavController popToViewController:[mydelegate.shopNavController.viewControllers objectAtIndex:i] animated:YES];
+//            break;
+//        }
+//    }
 }
 
 - (IBAction)facebookPressed:(id)sender {

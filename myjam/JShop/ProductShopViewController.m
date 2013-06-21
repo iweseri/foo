@@ -321,6 +321,7 @@
 #pragma mark - Table view delegate
 
 -(void)viewAll:(id)sender{
+    [self.loadingIndicator setHidden:NO];
     //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     NSLog(@"VM :%@",[[productShopData objectAtIndex:[sender tag]] valueForKey:@"category_name"]);
     [self performSelector:@selector(viewMoreProduct:) withObject:sender afterDelay:0.3];
@@ -364,7 +365,6 @@
     detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
-    //[self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
 }
 

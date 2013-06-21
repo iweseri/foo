@@ -12,6 +12,7 @@
 
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *tableData;
+@property (retain, nonatomic) NSMutableArray *shopData;
 @property (retain, nonatomic) IBOutlet UISearchBar *searchBar;
 
 - (NSString *)returnAPIURL;

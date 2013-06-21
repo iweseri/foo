@@ -8,6 +8,9 @@
 
 #import "SearchBarView.h"
 #import "FilterProductViewController.h"
+#import "ProductShopViewController.h"
+#import "SearchProductViewController.h"
+#import "SearchBarHeaderCell.h"
 #import "SearchBarCell.h"
 #import "AppDelegate.h"
 #import "ASIWrapper.h"
@@ -41,46 +44,82 @@
     [self loadData];
 }
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return ([self.tableData count] > 0) ? [self.tableData count] : 0;
-    //return [self.tableData count];
+    if (section == 0) { NSLog(@"row1:%d",[self.tableData count]+1);
+        return [self.tableData count]+1;
+    } else { NSLog(@"row2:%d",[self.shopData count]+1);
+        return [self.shopData count]+1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
     
-    SearchBarCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-    {
-        cell  = [[[NSBundle mainBundle] loadNibNamed:@"SearchBarCell" owner:nil options:nil]  objectAtIndex:0];
+    if (indexPath.row == 0) {
+        SearchBarHeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell) {
+            cell  = [[[NSBundle mainBundle] loadNibNamed:@"SearchBarHeaderCell" owner:nil options:nil]  objectAtIndex:0];
+        }
+        (indexPath.section == 0) ? [cell.titleLabel setText:@"CATEGORIES"] : [cell.titleLabel setText:@"MERCHANTS"];
+        NSLog(@"CNT1:%d-%d",indexPath.row,indexPath.section);
+        return cell;
+    } else {
+        SearchBarCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if (!cell)
+        {
+            cell  = [[[NSBundle mainBundle] loadNibNamed:@"SearchBarCell" owner:nil options:nil]  objectAtIndex:0];
+        }
+        if (indexPath.section == 0) {
+            [cell.catLabel setText:[[self.tableData objectAtIndex:indexPath.row-1] valueForKey:@"category_name"]];
+        } else {
+            [cell.catLabel setText:[[self.shopData objectAtIndex:indexPath.row-1] valueForKey:@"shop_name"]];
+        }
+        NSLog(@"CNT:%d-%d",indexPath.row,indexPath.section);
+        return cell;
     }
-    [cell.catLabel setText:[[self.tableData objectAtIndex:indexPath.row] valueForKey:@"category_name"]];
-    return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.row == 0) {
+        return 50;
+    }
     return 44;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"row :%@ n %@",[[self.tableData objectAtIndex:indexPath.row]objectForKey:@"category_id"],[[self.tableData objectAtIndex:indexPath.row]objectForKey:@"category_name"]);
-    FilterProductViewController *filter = [[FilterProductViewController alloc] init];
-    filter.catId = [[self.tableData objectAtIndex:indexPath.row]objectForKey:@"category_id"];
-    filter.catTitle = [[self.tableData objectAtIndex:indexPath.row]objectForKey:@"category_name"];
+    NSLog(@"section:%d n row:%d",indexPath.section,indexPath.row);
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.shopNavController pushViewController:filter animated:YES];
-    [filter release];
+    if (indexPath.section == 0) {
+        NSLog(@"row :%@ n %@",[[self.tableData objectAtIndex:indexPath.row-1]objectForKey:@"category_id"],[[self.tableData objectAtIndex:indexPath.row-1]objectForKey:@"category_name"]);
+        FilterProductViewController *filter = [[FilterProductViewController alloc] init];
+        filter.catId = [[self.tableData objectAtIndex:indexPath.row-1]objectForKey:@"category_id"];
+        filter.catTitle = [[self.tableData objectAtIndex:indexPath.row-1]objectForKey:@"category_name"];
+        [mydelegate.shopNavController pushViewController:filter animated:YES];
+        [filter release];
+    } else {
+        ProductShopViewController *shop = [[ProductShopViewController alloc] init];
+        shop.shopId = [[self.shopData objectAtIndex:indexPath.row-1]objectForKey:@"shop_id"];
+        shop.shopName = [[self.shopData objectAtIndex:indexPath.row-1]objectForKey:@"shop_name"];
+        [mydelegate.shopNavController pushViewController:shop animated:YES];
+        [shop release];
+    }
     [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBar" object:nil];
 }
 
 - (void)loadData
 {
     self.tableData = [[NSMutableArray alloc] init];
+    self.shopData = [[NSMutableArray alloc] init];
     BOOL success = [self retrieveData];
     
     if (!success) {
@@ -98,6 +137,7 @@
     }else{
         // Reload tableView
         NSLog(@"DATA :%@",self.tableData);
+        NSLog(@"SHOP :%@",self.shopData);
         [self.tableView setHidden:NO];
         [self.tableView reloadData];
     }
@@ -122,14 +162,19 @@
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     NSString *status = nil;
     NSMutableArray* list = nil;
+    NSMutableArray* sList = nil;
     
     if([resultsDictionary count])
     {
         status = [resultsDictionary objectForKey:@"status"];
         list = [resultsDictionary objectForKey:@"list"];
+        sList = [resultsDictionary objectForKey:@"shop_list"];
         
-        if ([status isEqualToString:@"ok"] && [list count]) {
-            [self.tableData addObjectsFromArray:list];
+        if ([status isEqualToString:@"ok"]) {
+            if([list count])
+                [self.tableData addObjectsFromArray:list];
+            if ([sList count])
+                [self.shopData addObjectsFromArray:sList];
             return YES;
         }
         return NO;
@@ -164,6 +209,12 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar setShowsCancelButton:NO animated:YES];
     [searchBar resignFirstResponder];
+    SearchProductViewController *search = [[SearchProductViewController alloc] initWithNibName:@"AllProductViewController" bundle:nil];
+    search.searchText = searchBar.text;
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [mydelegate.shopNavController pushViewController:search animated:YES];
+    [search release];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBar" object:nil];
 }
 
 - (void)searchBar:(UISearchBar *)theSearchBar textDidChange:(NSString *)searchText {
@@ -180,6 +231,7 @@
     [_searchBar release];
     [super dealloc];
     [_tableData release];
+    [_shopData release];
     [self.tableView release];
 }
 

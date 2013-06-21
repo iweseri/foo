@@ -435,11 +435,11 @@
     [asiRequest setShouldContinueWhenAppEntersBackground:YES];
     
     
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [asiRequest startSynchronous];
 
         
-//        dispatch_async(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             NSError *error = [asiRequest error];
             if (!error) {
                 [self clearImageCache];
@@ -450,19 +450,20 @@
                     NSString *status = [resultsDictionary objectForKey:@"status"];
                     if ([status isEqualToString:@"ok"]) {
                         
-                        if ([[self parentViewController] isEqual:[DetailPostViewController class]]) {
+//                        if ([[self parentViewController] isEqual:[DetailPostViewController class]]) {
+//                            [[NSNotificationCenter defaultCenter] postNotificationName:@"updateCommentList" object:nil];
+//                            
+////                            NSLog(@"GEt in");
+//                        }
+//                        else{
+                        if ([typePost isEqualToString:@"postStatus"]) {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWall" object:self];
+                        } else {
+                            [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWallPost" object:self];
                             [[NSNotificationCenter defaultCenter] postNotificationName:@"updateCommentList" object:nil];
-                            
-                            NSLog(@"GEt in");
                         }
-                        else{
-                            if ([typePost isEqualToString:@"postStatus"]) {
-                                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWall" object:self];
-                            } else {
-                                [[NSNotificationCenter defaultCenter] postNotificationName:@"reloadWallPost" object:self];
-                            }
-                        }
-                        
+//                        }
+                    
                         
                         [self.navigationController popViewControllerAnimated:YES];
                     } else {
@@ -482,8 +483,8 @@
             }
             [url release];
             [self.loadingIndicator stopAnimating];
-//        });
-//    });
+        });
+    });
 }
 
 - (void)presentAlert:(NSString*)msg

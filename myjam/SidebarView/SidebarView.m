@@ -19,7 +19,8 @@
 #import "SettingsViewController.h"
 //#import "JBuddyViewController.h"
 #import "BoxViewController.h"
-#import "JWallViewController.h"
+//#import "JWallViewController.h"
+#import "PurchasedHistoryViewController.h"
 
 #define kTableCellHeightA 110
 @interface SidebarView ()
@@ -71,6 +72,8 @@
     
     [super viewDidLoad];
     
+    [self.nameLabel setTextColor:[UIColor colorWithHex:@"#96c13e"]];
+    
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 260, 40)];
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(260/2-240/2, 0, 240, 40)];
     imageView.image = [UIImage imageNamed:@"shopping_cart"];
@@ -78,7 +81,6 @@
     self.tableView.tableHeaderView = headerView;
     [imageView release];
     [headerView release];
-    
     
     UISwipeGestureRecognizer *swipeRightRecognizer;
     swipeRightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRight)];
@@ -140,6 +142,11 @@
     UITapGestureRecognizer *tapAboutRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleAbout)];
     [self.aboutLabel addGestureRecognizer:tapAboutRecognizer];
     [tapAboutRecognizer release];
+    
+    self.purchaseHistoryLabel.userInteractionEnabled = YES;
+    UITapGestureRecognizer *tapPHRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handlePurchaseHistory)];
+    [self.purchaseHistoryLabel addGestureRecognizer:tapPHRecognizer];
+    [tapPHRecognizer release];
     
     self.logoutLabel.userInteractionEnabled = YES;
     UITapGestureRecognizer *tapLogoutRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleLogout)];
@@ -242,6 +249,7 @@
     [self setJBuddyLabel:nil];
     [self setJWallLabel:nil];
     [self setJboxLabel:nil];
+    [self setPurchaseHistoryLabel:nil];
     [super viewDidUnload];
     self.contentView = nil;
     
@@ -338,14 +346,14 @@
     [boxVC release];
 }
 
-- (void)handleWall
-{
-    NSLog(@"handleWall");
-    
-    JWallViewController *jWall = [[JWallViewController alloc] init];
-    [self showViewControllerWithLoadingView:jWall];
-    [jWall release];
-}
+//- (void)handleWall
+//{
+//    NSLog(@"handleWall");
+//    
+//    JWallViewController *jWall = [[JWallViewController alloc] init];
+//    [self showViewControllerWithLoadingView:jWall];
+//    [jWall release];
+//}
 
 - (void)handleSwipeRight
 {
@@ -425,6 +433,12 @@
     [about release];
 }
 
+- (void)handlePurchaseHistory
+{
+    PurchasedHistoryViewController *ph = [[PurchasedHistoryViewController alloc] init];
+    [self showViewControllerWithLoadingView:ph];
+    [ph release];
+}
 
 - (void)handleLogout
 {
@@ -488,6 +502,7 @@
     [_jBuddyLabel release];
     [_jWallLabel release];
     [_jboxLabel release];
+    [_purchaseHistoryLabel release];
     [super dealloc];
 }
 

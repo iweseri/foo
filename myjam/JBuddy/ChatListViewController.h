@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ChatListViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
-
+{
+    BOOL refreshDisabled;
+}
 @property (nonatomic,retain) NSMutableArray *tableData;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) IBOutlet UILabel *recordLabel;

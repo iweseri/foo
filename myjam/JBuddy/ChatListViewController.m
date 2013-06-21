@@ -41,7 +41,7 @@
     self.tableData = [[NSMutableArray alloc] init];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(viewDidAppear:)
+                                             selector:@selector(setupData)
                                                  name:@"reloadChatList"
                                                object:nil];
     
@@ -59,32 +59,47 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-    [mydelegate removeChatBadge];
+    if (!refreshDisabled) {
+        AppDelegate *mydelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+        [mydelegate removeChatBadge];
+        [self setupData];
+        NSLog(@"vwa-chatList");
+    }
+    refreshDisabled = NO;
+
     
-    [self.tableData removeAllObjects];
+}
+
+- (void)setupData
+{
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self retrieveDataFromAPI];
+        BOOL success = [self retrieveDataFromAPI];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-            [self.loadingLabel setHidden:YES];
-            [self.loadingIndicator setHidden:YES];
+            
+            if (success) {
+                [self.tableView reloadData];
+                [self.loadingLabel setHidden:YES];
+                [self.loadingIndicator setHidden:YES];
+                [self.tableView setHidden:NO];
+                [self.recordLabel setHidden:YES];
+                
+            }
+            else{
+                [self.tableView setHidden:YES];
+                [self.recordLabel setHidden:NO];
+            }
+            
+            
         });
     });
-
-    NSLog(@"vwa-chatList");
 }
 
 
-- (void)viewWillDisappear:(BOOL)animated
+- (BOOL)retrieveDataFromAPI
 {
 
-}
-
-- (void)retrieveDataFromAPI
-{
     NSString *urlString = [NSString stringWithFormat:@"%@/api/buddy_chat_list.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]mutableCopy]];
     NSString *dataContent = @"";
     
@@ -97,28 +112,21 @@
         NSString *status = [resultsDictionary objectForKey:@"status"];
         if ([status isEqualToString:@"ok"])
         {
-
+            [self.tableData removeAllObjects];
             for (id data in [resultsDictionary objectForKey:@"list"])
             {
                 [self.tableData addObject:data];
 
             }
-                 
+            [resultsDictionary release];
+            return YES;
         }
         
     }
     
-    if ([self.tableData count])
-    {
-        [self.tableView setHidden:NO];
-        [self.recordLabel setHidden:YES];
-    }else{
-        [self.tableView setHidden:YES];
-        [self.recordLabel setHidden:NO];
-    }
-    
     [resultsDictionary release];
 
+    return NO;
 }
 
 #pragma mark -
@@ -138,6 +146,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+     NSLog(@"rowsz %d",[self.tableData count]);
     static NSString *simpleTableIdentifier = @"BuddyCell";
     
     BuddyCell *cell = (BuddyCell *)[tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
@@ -172,6 +181,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    refreshDisabled = YES;
+    
     NSLog(@"tapped at index %d",indexPath.row);
     NSDictionary *buddy = [self.tableData objectAtIndex:indexPath.row];
     
@@ -199,7 +210,7 @@
 }
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tableData release];
     [_tableView release];
     [_recordLabel release];

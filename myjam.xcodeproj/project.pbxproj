@@ -69,13 +69,56 @@
 		612007DE16F80071005227FB /* BottomSwipeViewPromo.m in Sources */ = {isa = PBXBuildFile; fileRef = 612007D916F7FF87005227FB /* BottomSwipeViewPromo.m */; };
 		612007DF16F800C4005227FB /* BottomSwipeViewNews.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612007D716F7FF87005227FB /* BottomSwipeViewNews.xib */; };
 		612007E016F800C4005227FB /* BottomSwipeViewPromo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 612007DA16F7FF87005227FB /* BottomSwipeViewPromo.xib */; };
-		6123DD7517714B7C00425315 /* BuySeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD7017714B7C00425315 /* BuySeedViewController.m */; };
-		6123DD7617714B7C00425315 /* BuySeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7117714B7C00425315 /* BuySeedViewController.xib */; };
-		6123DD7717714B7C00425315 /* WhatIsSeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */; };
-		6123DD7817714B7C00425315 /* WhatIsSeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */; };
 		6123DD7E177151FB00425315 /* checkout-seed.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7B177151FB00425315 /* checkout-seed.png */; };
 		6123DD7F177151FB00425315 /* seed_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7C177151FB00425315 /* seed_off.png */; };
 		6123DD80177151FB00425315 /* seed_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD7D177151FB00425315 /* seed_on.png */; };
+		6123DD8D17729DA400425315 /* icon_qr_map.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8217729DA400425315 /* icon_qr_map.png */; };
+		6123DD8E17729DA400425315 /* icon_qr_calendar.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8317729DA400425315 /* icon_qr_calendar.png */; };
+		6123DD8F17729DA400425315 /* icon_qr_social.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8417729DA400425315 /* icon_qr_social.png */; };
+		6123DD9017729DA400425315 /* icon_qr_contact.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8517729DA400425315 /* icon_qr_contact.png */; };
+		6123DD9117729DA400425315 /* icon_about.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8617729DA400425315 /* icon_about.png */; };
+		6123DD9217729DA400425315 /* icon_purchase_history.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8717729DA400425315 /* icon_purchase_history.png */; };
+		6123DD9317729DA400425315 /* icon_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8817729DA400425315 /* icon_settings.png */; };
+		6123DD9417729DA400425315 /* icon_share_jambu.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8917729DA400425315 /* icon_share_jambu.png */; };
+		6123DD9517729DA400425315 /* icon_feedback.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8A17729DA400425315 /* icon_feedback.png */; };
+		6123DD9617729DA400425315 /* icon_faq.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8B17729DA400425315 /* icon_faq.png */; };
+		6123DD9717729DA400425315 /* icon_box.png in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD8C17729DA400425315 /* icon_box.png */; };
+		6123DDD71772FFFF00425315 /* AllProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD9C1772FFFF00425315 /* AllProductDetailViewController.m */; };
+		6123DDD81772FFFF00425315 /* AllProductDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DD9D1772FFFF00425315 /* AllProductDetailViewController.xib */; };
+		6123DDD91772FFFF00425315 /* AllProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DD9F1772FFFF00425315 /* AllProductViewController.m */; };
+		6123DDDA1772FFFF00425315 /* AllProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDA01772FFFF00425315 /* AllProductViewController.xib */; };
+		6123DDDB1772FFFF00425315 /* HeaderProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDA31772FFFF00425315 /* HeaderProductCell.m */; };
+		6123DDDC1772FFFF00425315 /* HeaderProductCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDA41772FFFF00425315 /* HeaderProductCell.xib */; };
+		6123DDDD1772FFFF00425315 /* ListPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDA61772FFFF00425315 /* ListPopupView.m */; };
+		6123DDDE1772FFFF00425315 /* ProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDA81772FFFF00425315 /* ProductCell.m */; };
+		6123DDDF1772FFFF00425315 /* ProductCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDA91772FFFF00425315 /* ProductCell.xib */; };
+		6123DDE01772FFFF00425315 /* ProductWithHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDAB1772FFFF00425315 /* ProductWithHeaderCell.m */; };
+		6123DDE11772FFFF00425315 /* ProductWithHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDAC1772FFFF00425315 /* ProductWithHeaderCell.xib */; };
+		6123DDE21772FFFF00425315 /* SearchBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDAE1772FFFF00425315 /* SearchBarCell.m */; };
+		6123DDE31772FFFF00425315 /* SearchBarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDAF1772FFFF00425315 /* SearchBarCell.xib */; };
+		6123DDE41772FFFF00425315 /* SearchBarHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDB11772FFFF00425315 /* SearchBarHeaderCell.m */; };
+		6123DDE51772FFFF00425315 /* SearchBarHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDB21772FFFF00425315 /* SearchBarHeaderCell.xib */; };
+		6123DDE61772FFFF00425315 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDB51772FFFF00425315 /* DescriptionCell.m */; };
+		6123DDE71772FFFF00425315 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDB61772FFFF00425315 /* DescriptionCell.xib */; };
+		6123DDE81772FFFF00425315 /* BuySeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDB91772FFFF00425315 /* BuySeedViewController.m */; };
+		6123DDE91772FFFF00425315 /* BuySeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDBA1772FFFF00425315 /* BuySeedViewController.xib */; };
+		6123DDEA1772FFFF00425315 /* WhatIsSeedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDBC1772FFFF00425315 /* WhatIsSeedViewController.m */; };
+		6123DDEB1772FFFF00425315 /* WhatIsSeedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDBD1772FFFF00425315 /* WhatIsSeedViewController.xib */; };
+		6123DDEC1772FFFF00425315 /* FilterProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDBF1772FFFF00425315 /* FilterProductViewController.m */; };
+		6123DDED1772FFFF00425315 /* FilterProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDC01772FFFF00425315 /* FilterProductViewController.xib */; };
+		6123DDEE1772FFFF00425315 /* ProductShopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDC21772FFFF00425315 /* ProductShopDetailViewController.m */; };
+		6123DDEF1772FFFF00425315 /* ProductShopDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDC31772FFFF00425315 /* ProductShopDetailViewController.xib */; };
+		6123DDF01772FFFF00425315 /* ProductShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDC51772FFFF00425315 /* ProductShopViewController.m */; };
+		6123DDF11772FFFF00425315 /* ProductShopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDC61772FFFF00425315 /* ProductShopViewController.xib */; };
+		6123DDF21772FFFF00425315 /* SearchProductMoreViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDC91772FFFF00425315 /* SearchProductMoreViewController.m */; };
+		6123DDF31772FFFF00425315 /* SearchProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDCB1772FFFF00425315 /* SearchProductViewController.m */; };
+		6123DDF41772FFFF00425315 /* SearchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDCD1772FFFF00425315 /* SearchBarView.m */; };
+		6123DDF51772FFFF00425315 /* SearchBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDCE1772FFFF00425315 /* SearchBarView.xib */; };
+		6123DDF61772FFFF00425315 /* ShopClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDD01772FFFF00425315 /* ShopClass.m */; };
+		6123DDF71772FFFF00425315 /* ShopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDD21772FFFF00425315 /* ShopDetailViewController.m */; };
+		6123DDF81772FFFF00425315 /* ShopDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDD31772FFFF00425315 /* ShopDetailViewController.xib */; };
+		6123DDF91772FFFF00425315 /* StarBuyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6123DDD51772FFFF00425315 /* StarBuyViewController.m */; };
+		6123DDFA1772FFFF00425315 /* StarBuyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6123DDD61772FFFF00425315 /* StarBuyViewController.xib */; };
 		61266C6116F6F3C60092BB83 /* BottomSwipeViewJShop.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61266C5E16F6F13E0092BB83 /* BottomSwipeViewJShop.xib */; };
 		61266C6216F6F3DB0092BB83 /* BottomSwipeViewJSPurchase.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61266C5B16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.xib */; };
 		61266C6316F6F3ED0092BB83 /* BottomSwipeViewJSPurchase.m in Sources */ = {isa = PBXBuildFile; fileRef = 61266C5A16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.m */; };
@@ -314,34 +357,6 @@
 		61F0B42E172917B80075054F /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 61F0B42D172917B80075054F /* libicucore.dylib */; };
 		61F0B430172917C30075054F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 61F0B42F172917C30075054F /* Security.framework */; };
 		61F0B43B172921440075054F /* JBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F0B3C0172916300075054F /* JBuddyViewController.m */; };
-		61F7A38B17686C16001C9151 /* AllProductDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A35F17686C16001C9151 /* AllProductDetailViewController.m */; };
-		61F7A38C17686C16001C9151 /* AllProductDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A36017686C16001C9151 /* AllProductDetailViewController.xib */; };
-		61F7A38D17686C16001C9151 /* AllProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A36217686C16001C9151 /* AllProductViewController.m */; };
-		61F7A38E17686C16001C9151 /* AllProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A36317686C16001C9151 /* AllProductViewController.xib */; };
-		61F7A38F17686C16001C9151 /* HeaderProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A36617686C16001C9151 /* HeaderProductCell.m */; };
-		61F7A39017686C16001C9151 /* HeaderProductCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A36717686C16001C9151 /* HeaderProductCell.xib */; };
-		61F7A39117686C16001C9151 /* ListPopupView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A36917686C16001C9151 /* ListPopupView.m */; };
-		61F7A39217686C16001C9151 /* ProductCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A36B17686C16001C9151 /* ProductCell.m */; };
-		61F7A39317686C16001C9151 /* ProductCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A36C17686C16001C9151 /* ProductCell.xib */; };
-		61F7A39417686C16001C9151 /* ProductWithHeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A36E17686C16001C9151 /* ProductWithHeaderCell.m */; };
-		61F7A39517686C16001C9151 /* ProductWithHeaderCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A36F17686C16001C9151 /* ProductWithHeaderCell.xib */; };
-		61F7A39617686C16001C9151 /* SearchBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A37117686C16001C9151 /* SearchBarCell.m */; };
-		61F7A39717686C16001C9151 /* SearchBarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A37217686C16001C9151 /* SearchBarCell.xib */; };
-		61F7A39817686C16001C9151 /* DescriptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A37517686C16001C9151 /* DescriptionCell.m */; };
-		61F7A39917686C16001C9151 /* DescriptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A37617686C16001C9151 /* DescriptionCell.xib */; };
-		61F7A39A17686C16001C9151 /* FilterProductViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A37817686C16001C9151 /* FilterProductViewController.m */; };
-		61F7A39B17686C16001C9151 /* FilterProductViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A37917686C16001C9151 /* FilterProductViewController.xib */; };
-		61F7A39C17686C16001C9151 /* ProductShopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A37B17686C16001C9151 /* ProductShopDetailViewController.m */; };
-		61F7A39D17686C16001C9151 /* ProductShopDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A37C17686C16001C9151 /* ProductShopDetailViewController.xib */; };
-		61F7A39E17686C16001C9151 /* ProductShopViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A37E17686C16001C9151 /* ProductShopViewController.m */; };
-		61F7A39F17686C16001C9151 /* ProductShopViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A37F17686C16001C9151 /* ProductShopViewController.xib */; };
-		61F7A3A017686C16001C9151 /* SearchBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A38117686C16001C9151 /* SearchBarView.m */; };
-		61F7A3A117686C16001C9151 /* SearchBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A38217686C16001C9151 /* SearchBarView.xib */; };
-		61F7A3A217686C16001C9151 /* ShopClass.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A38417686C16001C9151 /* ShopClass.m */; };
-		61F7A3A317686C16001C9151 /* ShopDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A38617686C16001C9151 /* ShopDetailViewController.m */; };
-		61F7A3A417686C16001C9151 /* ShopDetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A38717686C16001C9151 /* ShopDetailViewController.xib */; };
-		61F7A3A517686C16001C9151 /* StarBuyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 61F7A38917686C16001C9151 /* StarBuyViewController.m */; };
-		61F7A3A617686C16001C9151 /* StarBuyViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A38A17686C16001C9151 /* StarBuyViewController.xib */; };
 		61F7A46517686E1D001C9151 /* ad4.png in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A3AB17686E1C001C9151 /* ad4.png */; };
 		61F7A46617686E1D001C9151 /* addBuddy.png in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A3AC17686E1C001C9151 /* addBuddy.png */; };
 		61F7A46717686E1D001C9151 /* added_cart.png in Resources */ = {isa = PBXBuildFile; fileRef = 61F7A3AD17686E1C001C9151 /* added_cart.png */; };
@@ -772,15 +787,76 @@
 		612007D816F7FF87005227FB /* BottomSwipeViewPromo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BottomSwipeViewPromo.h; sourceTree = "<group>"; };
 		612007D916F7FF87005227FB /* BottomSwipeViewPromo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewPromo.m; sourceTree = "<group>"; };
 		612007DA16F7FF87005227FB /* BottomSwipeViewPromo.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSwipeViewPromo.xib; sourceTree = "<group>"; };
-		6123DD6F17714B7C00425315 /* BuySeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuySeedViewController.h; sourceTree = "<group>"; };
-		6123DD7017714B7C00425315 /* BuySeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuySeedViewController.m; sourceTree = "<group>"; };
-		6123DD7117714B7C00425315 /* BuySeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuySeedViewController.xib; sourceTree = "<group>"; };
-		6123DD7217714B7C00425315 /* WhatIsSeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatIsSeedViewController.h; sourceTree = "<group>"; };
-		6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhatIsSeedViewController.m; sourceTree = "<group>"; };
-		6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WhatIsSeedViewController.xib; sourceTree = "<group>"; };
 		6123DD7B177151FB00425315 /* checkout-seed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkout-seed.png"; sourceTree = "<group>"; };
 		6123DD7C177151FB00425315 /* seed_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = seed_off.png; sourceTree = "<group>"; };
 		6123DD7D177151FB00425315 /* seed_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = seed_on.png; sourceTree = "<group>"; };
+		6123DD8217729DA400425315 /* icon_qr_map.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_qr_map.png; path = sidebar/icon_qr_map.png; sourceTree = "<group>"; };
+		6123DD8317729DA400425315 /* icon_qr_calendar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_qr_calendar.png; path = sidebar/icon_qr_calendar.png; sourceTree = "<group>"; };
+		6123DD8417729DA400425315 /* icon_qr_social.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_qr_social.png; path = sidebar/icon_qr_social.png; sourceTree = "<group>"; };
+		6123DD8517729DA400425315 /* icon_qr_contact.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_qr_contact.png; path = sidebar/icon_qr_contact.png; sourceTree = "<group>"; };
+		6123DD8617729DA400425315 /* icon_about.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_about.png; path = sidebar/icon_about.png; sourceTree = "<group>"; };
+		6123DD8717729DA400425315 /* icon_purchase_history.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_purchase_history.png; path = sidebar/icon_purchase_history.png; sourceTree = "<group>"; };
+		6123DD8817729DA400425315 /* icon_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_settings.png; path = sidebar/icon_settings.png; sourceTree = "<group>"; };
+		6123DD8917729DA400425315 /* icon_share_jambu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_share_jambu.png; path = sidebar/icon_share_jambu.png; sourceTree = "<group>"; };
+		6123DD8A17729DA400425315 /* icon_feedback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_feedback.png; path = sidebar/icon_feedback.png; sourceTree = "<group>"; };
+		6123DD8B17729DA400425315 /* icon_faq.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_faq.png; path = sidebar/icon_faq.png; sourceTree = "<group>"; };
+		6123DD8C17729DA400425315 /* icon_box.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_box.png; path = sidebar/icon_box.png; sourceTree = "<group>"; };
+		6123DD9B1772FFFF00425315 /* AllProductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllProductDetailViewController.h; sourceTree = "<group>"; };
+		6123DD9C1772FFFF00425315 /* AllProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllProductDetailViewController.m; sourceTree = "<group>"; };
+		6123DD9D1772FFFF00425315 /* AllProductDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllProductDetailViewController.xib; sourceTree = "<group>"; };
+		6123DD9E1772FFFF00425315 /* AllProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllProductViewController.h; sourceTree = "<group>"; };
+		6123DD9F1772FFFF00425315 /* AllProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllProductViewController.m; sourceTree = "<group>"; };
+		6123DDA01772FFFF00425315 /* AllProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllProductViewController.xib; sourceTree = "<group>"; };
+		6123DDA21772FFFF00425315 /* HeaderProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderProductCell.h; sourceTree = "<group>"; };
+		6123DDA31772FFFF00425315 /* HeaderProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderProductCell.m; sourceTree = "<group>"; };
+		6123DDA41772FFFF00425315 /* HeaderProductCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderProductCell.xib; sourceTree = "<group>"; };
+		6123DDA51772FFFF00425315 /* ListPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopupView.h; sourceTree = "<group>"; };
+		6123DDA61772FFFF00425315 /* ListPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopupView.m; sourceTree = "<group>"; };
+		6123DDA71772FFFF00425315 /* ProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductCell.h; sourceTree = "<group>"; };
+		6123DDA81772FFFF00425315 /* ProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductCell.m; sourceTree = "<group>"; };
+		6123DDA91772FFFF00425315 /* ProductCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductCell.xib; sourceTree = "<group>"; };
+		6123DDAA1772FFFF00425315 /* ProductWithHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductWithHeaderCell.h; sourceTree = "<group>"; };
+		6123DDAB1772FFFF00425315 /* ProductWithHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductWithHeaderCell.m; sourceTree = "<group>"; };
+		6123DDAC1772FFFF00425315 /* ProductWithHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductWithHeaderCell.xib; sourceTree = "<group>"; };
+		6123DDAD1772FFFF00425315 /* SearchBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarCell.h; sourceTree = "<group>"; };
+		6123DDAE1772FFFF00425315 /* SearchBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarCell.m; sourceTree = "<group>"; };
+		6123DDAF1772FFFF00425315 /* SearchBarCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBarCell.xib; sourceTree = "<group>"; };
+		6123DDB01772FFFF00425315 /* SearchBarHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarHeaderCell.h; sourceTree = "<group>"; };
+		6123DDB11772FFFF00425315 /* SearchBarHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarHeaderCell.m; sourceTree = "<group>"; };
+		6123DDB21772FFFF00425315 /* SearchBarHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBarHeaderCell.xib; sourceTree = "<group>"; };
+		6123DDB41772FFFF00425315 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
+		6123DDB51772FFFF00425315 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
+		6123DDB61772FFFF00425315 /* DescriptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DescriptionCell.xib; sourceTree = "<group>"; };
+		6123DDB81772FFFF00425315 /* BuySeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuySeedViewController.h; sourceTree = "<group>"; };
+		6123DDB91772FFFF00425315 /* BuySeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuySeedViewController.m; sourceTree = "<group>"; };
+		6123DDBA1772FFFF00425315 /* BuySeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BuySeedViewController.xib; sourceTree = "<group>"; };
+		6123DDBB1772FFFF00425315 /* WhatIsSeedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WhatIsSeedViewController.h; sourceTree = "<group>"; };
+		6123DDBC1772FFFF00425315 /* WhatIsSeedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WhatIsSeedViewController.m; sourceTree = "<group>"; };
+		6123DDBD1772FFFF00425315 /* WhatIsSeedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WhatIsSeedViewController.xib; sourceTree = "<group>"; };
+		6123DDBE1772FFFF00425315 /* FilterProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterProductViewController.h; sourceTree = "<group>"; };
+		6123DDBF1772FFFF00425315 /* FilterProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterProductViewController.m; sourceTree = "<group>"; };
+		6123DDC01772FFFF00425315 /* FilterProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterProductViewController.xib; sourceTree = "<group>"; };
+		6123DDC11772FFFF00425315 /* ProductShopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductShopDetailViewController.h; sourceTree = "<group>"; };
+		6123DDC21772FFFF00425315 /* ProductShopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductShopDetailViewController.m; sourceTree = "<group>"; };
+		6123DDC31772FFFF00425315 /* ProductShopDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductShopDetailViewController.xib; sourceTree = "<group>"; };
+		6123DDC41772FFFF00425315 /* ProductShopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductShopViewController.h; sourceTree = "<group>"; };
+		6123DDC51772FFFF00425315 /* ProductShopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductShopViewController.m; sourceTree = "<group>"; };
+		6123DDC61772FFFF00425315 /* ProductShopViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductShopViewController.xib; sourceTree = "<group>"; };
+		6123DDC81772FFFF00425315 /* SearchProductMoreViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchProductMoreViewController.h; sourceTree = "<group>"; };
+		6123DDC91772FFFF00425315 /* SearchProductMoreViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchProductMoreViewController.m; sourceTree = "<group>"; };
+		6123DDCA1772FFFF00425315 /* SearchProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchProductViewController.h; sourceTree = "<group>"; };
+		6123DDCB1772FFFF00425315 /* SearchProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchProductViewController.m; sourceTree = "<group>"; };
+		6123DDCC1772FFFF00425315 /* SearchBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarView.h; sourceTree = "<group>"; };
+		6123DDCD1772FFFF00425315 /* SearchBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarView.m; sourceTree = "<group>"; };
+		6123DDCE1772FFFF00425315 /* SearchBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBarView.xib; sourceTree = "<group>"; };
+		6123DDCF1772FFFF00425315 /* ShopClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopClass.h; sourceTree = "<group>"; };
+		6123DDD01772FFFF00425315 /* ShopClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopClass.m; sourceTree = "<group>"; };
+		6123DDD11772FFFF00425315 /* ShopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopDetailViewController.h; sourceTree = "<group>"; };
+		6123DDD21772FFFF00425315 /* ShopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopDetailViewController.m; sourceTree = "<group>"; };
+		6123DDD31772FFFF00425315 /* ShopDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShopDetailViewController.xib; sourceTree = "<group>"; };
+		6123DDD41772FFFF00425315 /* StarBuyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarBuyViewController.h; sourceTree = "<group>"; };
+		6123DDD51772FFFF00425315 /* StarBuyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarBuyViewController.m; sourceTree = "<group>"; };
+		6123DDD61772FFFF00425315 /* StarBuyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StarBuyViewController.xib; sourceTree = "<group>"; };
 		61266C5916F6F13E0092BB83 /* BottomSwipeViewJShop.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewJShop.m; sourceTree = "<group>"; };
 		61266C5A16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BottomSwipeViewJSPurchase.m; sourceTree = "<group>"; };
 		61266C5B16F6F13E0092BB83 /* BottomSwipeViewJSPurchase.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BottomSwipeViewJSPurchase.xib; sourceTree = "<group>"; };
@@ -1170,49 +1246,6 @@
 		61F0B3FB172916750075054F /* SRWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRWebSocket.m; sourceTree = "<group>"; };
 		61F0B42D172917B80075054F /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		61F0B42F172917C30075054F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		61F7A35E17686C16001C9151 /* AllProductDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllProductDetailViewController.h; sourceTree = "<group>"; };
-		61F7A35F17686C16001C9151 /* AllProductDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllProductDetailViewController.m; sourceTree = "<group>"; };
-		61F7A36017686C16001C9151 /* AllProductDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllProductDetailViewController.xib; sourceTree = "<group>"; };
-		61F7A36117686C16001C9151 /* AllProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AllProductViewController.h; sourceTree = "<group>"; };
-		61F7A36217686C16001C9151 /* AllProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AllProductViewController.m; sourceTree = "<group>"; };
-		61F7A36317686C16001C9151 /* AllProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AllProductViewController.xib; sourceTree = "<group>"; };
-		61F7A36517686C16001C9151 /* HeaderProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeaderProductCell.h; sourceTree = "<group>"; };
-		61F7A36617686C16001C9151 /* HeaderProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeaderProductCell.m; sourceTree = "<group>"; };
-		61F7A36717686C16001C9151 /* HeaderProductCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeaderProductCell.xib; sourceTree = "<group>"; };
-		61F7A36817686C16001C9151 /* ListPopupView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListPopupView.h; sourceTree = "<group>"; };
-		61F7A36917686C16001C9151 /* ListPopupView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ListPopupView.m; sourceTree = "<group>"; };
-		61F7A36A17686C16001C9151 /* ProductCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductCell.h; sourceTree = "<group>"; };
-		61F7A36B17686C16001C9151 /* ProductCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductCell.m; sourceTree = "<group>"; };
-		61F7A36C17686C16001C9151 /* ProductCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductCell.xib; sourceTree = "<group>"; };
-		61F7A36D17686C16001C9151 /* ProductWithHeaderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductWithHeaderCell.h; sourceTree = "<group>"; };
-		61F7A36E17686C16001C9151 /* ProductWithHeaderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductWithHeaderCell.m; sourceTree = "<group>"; };
-		61F7A36F17686C16001C9151 /* ProductWithHeaderCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductWithHeaderCell.xib; sourceTree = "<group>"; };
-		61F7A37017686C16001C9151 /* SearchBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarCell.h; sourceTree = "<group>"; };
-		61F7A37117686C16001C9151 /* SearchBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarCell.m; sourceTree = "<group>"; };
-		61F7A37217686C16001C9151 /* SearchBarCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBarCell.xib; sourceTree = "<group>"; };
-		61F7A37417686C16001C9151 /* DescriptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DescriptionCell.h; sourceTree = "<group>"; };
-		61F7A37517686C16001C9151 /* DescriptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DescriptionCell.m; sourceTree = "<group>"; };
-		61F7A37617686C16001C9151 /* DescriptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DescriptionCell.xib; sourceTree = "<group>"; };
-		61F7A37717686C16001C9151 /* FilterProductViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterProductViewController.h; sourceTree = "<group>"; };
-		61F7A37817686C16001C9151 /* FilterProductViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterProductViewController.m; sourceTree = "<group>"; };
-		61F7A37917686C16001C9151 /* FilterProductViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterProductViewController.xib; sourceTree = "<group>"; };
-		61F7A37A17686C16001C9151 /* ProductShopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductShopDetailViewController.h; sourceTree = "<group>"; };
-		61F7A37B17686C16001C9151 /* ProductShopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductShopDetailViewController.m; sourceTree = "<group>"; };
-		61F7A37C17686C16001C9151 /* ProductShopDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductShopDetailViewController.xib; sourceTree = "<group>"; };
-		61F7A37D17686C16001C9151 /* ProductShopViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProductShopViewController.h; sourceTree = "<group>"; };
-		61F7A37E17686C16001C9151 /* ProductShopViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProductShopViewController.m; sourceTree = "<group>"; };
-		61F7A37F17686C16001C9151 /* ProductShopViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProductShopViewController.xib; sourceTree = "<group>"; };
-		61F7A38017686C16001C9151 /* SearchBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchBarView.h; sourceTree = "<group>"; };
-		61F7A38117686C16001C9151 /* SearchBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SearchBarView.m; sourceTree = "<group>"; };
-		61F7A38217686C16001C9151 /* SearchBarView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBarView.xib; sourceTree = "<group>"; };
-		61F7A38317686C16001C9151 /* ShopClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopClass.h; sourceTree = "<group>"; };
-		61F7A38417686C16001C9151 /* ShopClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopClass.m; sourceTree = "<group>"; };
-		61F7A38517686C16001C9151 /* ShopDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShopDetailViewController.h; sourceTree = "<group>"; };
-		61F7A38617686C16001C9151 /* ShopDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShopDetailViewController.m; sourceTree = "<group>"; };
-		61F7A38717686C16001C9151 /* ShopDetailViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ShopDetailViewController.xib; sourceTree = "<group>"; };
-		61F7A38817686C16001C9151 /* StarBuyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StarBuyViewController.h; sourceTree = "<group>"; };
-		61F7A38917686C16001C9151 /* StarBuyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StarBuyViewController.m; sourceTree = "<group>"; };
-		61F7A38A17686C16001C9151 /* StarBuyViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StarBuyViewController.xib; sourceTree = "<group>"; };
 		61F7A3AB17686E1C001C9151 /* ad4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ad4.png; sourceTree = "<group>"; };
 		61F7A3AC17686E1C001C9151 /* addBuddy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = addBuddy.png; sourceTree = "<group>"; };
 		61F7A3AD17686E1C001C9151 /* added_cart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = added_cart.png; sourceTree = "<group>"; };
@@ -1766,17 +1799,99 @@
 			path = myjam/TTTAttributedLabel;
 			sourceTree = "<group>";
 		};
-		6123DD6E17714B7C00425315 /* eWallet */ = {
+		6123DD9A1772FFFE00425315 /* JShop */ = {
 			isa = PBXGroup;
 			children = (
-				6123DD6F17714B7C00425315 /* BuySeedViewController.h */,
-				6123DD7017714B7C00425315 /* BuySeedViewController.m */,
-				6123DD7117714B7C00425315 /* BuySeedViewController.xib */,
-				6123DD7217714B7C00425315 /* WhatIsSeedViewController.h */,
-				6123DD7317714B7C00425315 /* WhatIsSeedViewController.m */,
-				6123DD7417714B7C00425315 /* WhatIsSeedViewController.xib */,
+				6123DD9B1772FFFF00425315 /* AllProductDetailViewController.h */,
+				6123DD9C1772FFFF00425315 /* AllProductDetailViewController.m */,
+				6123DD9D1772FFFF00425315 /* AllProductDetailViewController.xib */,
+				6123DD9E1772FFFF00425315 /* AllProductViewController.h */,
+				6123DD9F1772FFFF00425315 /* AllProductViewController.m */,
+				6123DDA01772FFFF00425315 /* AllProductViewController.xib */,
+				6123DDA11772FFFF00425315 /* CustomCell */,
+				6123DDB71772FFFF00425315 /* eWallet */,
+				6123DDBE1772FFFF00425315 /* FilterProductViewController.h */,
+				6123DDBF1772FFFF00425315 /* FilterProductViewController.m */,
+				6123DDC01772FFFF00425315 /* FilterProductViewController.xib */,
+				6123DDC11772FFFF00425315 /* ProductShopDetailViewController.h */,
+				6123DDC21772FFFF00425315 /* ProductShopDetailViewController.m */,
+				6123DDC31772FFFF00425315 /* ProductShopDetailViewController.xib */,
+				6123DDC41772FFFF00425315 /* ProductShopViewController.h */,
+				6123DDC51772FFFF00425315 /* ProductShopViewController.m */,
+				6123DDC61772FFFF00425315 /* ProductShopViewController.xib */,
+				6123DDC71772FFFF00425315 /* Search */,
+				6123DDCC1772FFFF00425315 /* SearchBarView.h */,
+				6123DDCD1772FFFF00425315 /* SearchBarView.m */,
+				6123DDCE1772FFFF00425315 /* SearchBarView.xib */,
+				6123DDCF1772FFFF00425315 /* ShopClass.h */,
+				6123DDD01772FFFF00425315 /* ShopClass.m */,
+				6123DDD11772FFFF00425315 /* ShopDetailViewController.h */,
+				6123DDD21772FFFF00425315 /* ShopDetailViewController.m */,
+				6123DDD31772FFFF00425315 /* ShopDetailViewController.xib */,
+				6123DDD41772FFFF00425315 /* StarBuyViewController.h */,
+				6123DDD51772FFFF00425315 /* StarBuyViewController.m */,
+				6123DDD61772FFFF00425315 /* StarBuyViewController.xib */,
+			);
+			path = JShop;
+			sourceTree = "<group>";
+		};
+		6123DDA11772FFFF00425315 /* CustomCell */ = {
+			isa = PBXGroup;
+			children = (
+				6123DDA21772FFFF00425315 /* HeaderProductCell.h */,
+				6123DDA31772FFFF00425315 /* HeaderProductCell.m */,
+				6123DDA41772FFFF00425315 /* HeaderProductCell.xib */,
+				6123DDA51772FFFF00425315 /* ListPopupView.h */,
+				6123DDA61772FFFF00425315 /* ListPopupView.m */,
+				6123DDA71772FFFF00425315 /* ProductCell.h */,
+				6123DDA81772FFFF00425315 /* ProductCell.m */,
+				6123DDA91772FFFF00425315 /* ProductCell.xib */,
+				6123DDAA1772FFFF00425315 /* ProductWithHeaderCell.h */,
+				6123DDAB1772FFFF00425315 /* ProductWithHeaderCell.m */,
+				6123DDAC1772FFFF00425315 /* ProductWithHeaderCell.xib */,
+				6123DDAD1772FFFF00425315 /* SearchBarCell.h */,
+				6123DDAE1772FFFF00425315 /* SearchBarCell.m */,
+				6123DDAF1772FFFF00425315 /* SearchBarCell.xib */,
+				6123DDB01772FFFF00425315 /* SearchBarHeaderCell.h */,
+				6123DDB11772FFFF00425315 /* SearchBarHeaderCell.m */,
+				6123DDB21772FFFF00425315 /* SearchBarHeaderCell.xib */,
+				6123DDB31772FFFF00425315 /* ShopViewCell */,
+			);
+			path = CustomCell;
+			sourceTree = "<group>";
+		};
+		6123DDB31772FFFF00425315 /* ShopViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				6123DDB41772FFFF00425315 /* DescriptionCell.h */,
+				6123DDB51772FFFF00425315 /* DescriptionCell.m */,
+				6123DDB61772FFFF00425315 /* DescriptionCell.xib */,
+			);
+			path = ShopViewCell;
+			sourceTree = "<group>";
+		};
+		6123DDB71772FFFF00425315 /* eWallet */ = {
+			isa = PBXGroup;
+			children = (
+				6123DDB81772FFFF00425315 /* BuySeedViewController.h */,
+				6123DDB91772FFFF00425315 /* BuySeedViewController.m */,
+				6123DDBA1772FFFF00425315 /* BuySeedViewController.xib */,
+				6123DDBB1772FFFF00425315 /* WhatIsSeedViewController.h */,
+				6123DDBC1772FFFF00425315 /* WhatIsSeedViewController.m */,
+				6123DDBD1772FFFF00425315 /* WhatIsSeedViewController.xib */,
 			);
 			path = eWallet;
+			sourceTree = "<group>";
+		};
+		6123DDC71772FFFF00425315 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				6123DDC81772FFFF00425315 /* SearchProductMoreViewController.h */,
+				6123DDC91772FFFF00425315 /* SearchProductMoreViewController.m */,
+				6123DDCA1772FFFF00425315 /* SearchProductViewController.h */,
+				6123DDCB1772FFFF00425315 /* SearchProductViewController.m */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 		6139632016EF35C70056B314 /* SidebarView */ = {
@@ -2048,7 +2163,7 @@
 		6180D8481649F24600D9C74D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				61F7A35D17686C15001C9151 /* JShop */,
+				6123DD9A1772FFFE00425315 /* JShop */,
 				61E37E8C173B3DB300C9F0F7 /* JWall */,
 				61E37F131740C7A100C9F0F7 /* JBuddy */,
 				21426ED317179AD500B766BE /* Shop > NearMe */,
@@ -2692,76 +2807,20 @@
 			path = SocketRocket;
 			sourceTree = "<group>";
 		};
-		61F7A35D17686C15001C9151 /* JShop */ = {
-			isa = PBXGroup;
-			children = (
-				6123DD6E17714B7C00425315 /* eWallet */,
-				61F7A35E17686C16001C9151 /* AllProductDetailViewController.h */,
-				61F7A35F17686C16001C9151 /* AllProductDetailViewController.m */,
-				61F7A36017686C16001C9151 /* AllProductDetailViewController.xib */,
-				61F7A36117686C16001C9151 /* AllProductViewController.h */,
-				61F7A36217686C16001C9151 /* AllProductViewController.m */,
-				61F7A36317686C16001C9151 /* AllProductViewController.xib */,
-				61F7A36417686C16001C9151 /* CustomCell */,
-				61F7A37717686C16001C9151 /* FilterProductViewController.h */,
-				61F7A37817686C16001C9151 /* FilterProductViewController.m */,
-				61F7A37917686C16001C9151 /* FilterProductViewController.xib */,
-				61F7A37A17686C16001C9151 /* ProductShopDetailViewController.h */,
-				61F7A37B17686C16001C9151 /* ProductShopDetailViewController.m */,
-				61F7A37C17686C16001C9151 /* ProductShopDetailViewController.xib */,
-				61F7A37D17686C16001C9151 /* ProductShopViewController.h */,
-				61F7A37E17686C16001C9151 /* ProductShopViewController.m */,
-				61F7A37F17686C16001C9151 /* ProductShopViewController.xib */,
-				61F7A38017686C16001C9151 /* SearchBarView.h */,
-				61F7A38117686C16001C9151 /* SearchBarView.m */,
-				61F7A38217686C16001C9151 /* SearchBarView.xib */,
-				61F7A38317686C16001C9151 /* ShopClass.h */,
-				61F7A38417686C16001C9151 /* ShopClass.m */,
-				61F7A38517686C16001C9151 /* ShopDetailViewController.h */,
-				61F7A38617686C16001C9151 /* ShopDetailViewController.m */,
-				61F7A38717686C16001C9151 /* ShopDetailViewController.xib */,
-				61F7A38817686C16001C9151 /* StarBuyViewController.h */,
-				61F7A38917686C16001C9151 /* StarBuyViewController.m */,
-				61F7A38A17686C16001C9151 /* StarBuyViewController.xib */,
-			);
-			path = JShop;
-			sourceTree = "<group>";
-		};
-		61F7A36417686C16001C9151 /* CustomCell */ = {
-			isa = PBXGroup;
-			children = (
-				61F7A36517686C16001C9151 /* HeaderProductCell.h */,
-				61F7A36617686C16001C9151 /* HeaderProductCell.m */,
-				61F7A36717686C16001C9151 /* HeaderProductCell.xib */,
-				61F7A36817686C16001C9151 /* ListPopupView.h */,
-				61F7A36917686C16001C9151 /* ListPopupView.m */,
-				61F7A36A17686C16001C9151 /* ProductCell.h */,
-				61F7A36B17686C16001C9151 /* ProductCell.m */,
-				61F7A36C17686C16001C9151 /* ProductCell.xib */,
-				61F7A36D17686C16001C9151 /* ProductWithHeaderCell.h */,
-				61F7A36E17686C16001C9151 /* ProductWithHeaderCell.m */,
-				61F7A36F17686C16001C9151 /* ProductWithHeaderCell.xib */,
-				61F7A37017686C16001C9151 /* SearchBarCell.h */,
-				61F7A37117686C16001C9151 /* SearchBarCell.m */,
-				61F7A37217686C16001C9151 /* SearchBarCell.xib */,
-				61F7A37317686C16001C9151 /* ShopViewCell */,
-			);
-			path = CustomCell;
-			sourceTree = "<group>";
-		};
-		61F7A37317686C16001C9151 /* ShopViewCell */ = {
-			isa = PBXGroup;
-			children = (
-				61F7A37417686C16001C9151 /* DescriptionCell.h */,
-				61F7A37517686C16001C9151 /* DescriptionCell.m */,
-				61F7A37617686C16001C9151 /* DescriptionCell.xib */,
-			);
-			path = ShopViewCell;
-			sourceTree = "<group>";
-		};
 		61F7A3AA17686E1C001C9151 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				6123DD8217729DA400425315 /* icon_qr_map.png */,
+				6123DD8317729DA400425315 /* icon_qr_calendar.png */,
+				6123DD8417729DA400425315 /* icon_qr_social.png */,
+				6123DD8517729DA400425315 /* icon_qr_contact.png */,
+				6123DD8617729DA400425315 /* icon_about.png */,
+				6123DD8717729DA400425315 /* icon_purchase_history.png */,
+				6123DD8817729DA400425315 /* icon_settings.png */,
+				6123DD8917729DA400425315 /* icon_share_jambu.png */,
+				6123DD8A17729DA400425315 /* icon_feedback.png */,
+				6123DD8B17729DA400425315 /* icon_faq.png */,
+				6123DD8C17729DA400425315 /* icon_box.png */,
 				6123DD7B177151FB00425315 /* checkout-seed.png */,
 				6123DD7C177151FB00425315 /* seed_off.png */,
 				6123DD7D177151FB00425315 /* seed_on.png */,
@@ -3351,19 +3410,6 @@
 				61E3813F1746103600C9F0F7 /* UnblockUsersViewController.xib in Resources */,
 				6163AB29174E1BDC00AF6A27 /* PostTaggedCell.xib in Resources */,
 				610C1AB31761C4720016B703 /* ShareCell.xib in Resources */,
-				61F7A38C17686C16001C9151 /* AllProductDetailViewController.xib in Resources */,
-				61F7A38E17686C16001C9151 /* AllProductViewController.xib in Resources */,
-				61F7A39017686C16001C9151 /* HeaderProductCell.xib in Resources */,
-				61F7A39317686C16001C9151 /* ProductCell.xib in Resources */,
-				61F7A39517686C16001C9151 /* ProductWithHeaderCell.xib in Resources */,
-				61F7A39717686C16001C9151 /* SearchBarCell.xib in Resources */,
-				61F7A39917686C16001C9151 /* DescriptionCell.xib in Resources */,
-				61F7A39B17686C16001C9151 /* FilterProductViewController.xib in Resources */,
-				61F7A39D17686C16001C9151 /* ProductShopDetailViewController.xib in Resources */,
-				61F7A39F17686C16001C9151 /* ProductShopViewController.xib in Resources */,
-				61F7A3A117686C16001C9151 /* SearchBarView.xib in Resources */,
-				61F7A3A417686C16001C9151 /* ShopDetailViewController.xib in Resources */,
-				61F7A3A617686C16001C9151 /* StarBuyViewController.xib in Resources */,
 				61F7A46517686E1D001C9151 /* ad4.png in Resources */,
 				61F7A46617686E1D001C9151 /* addBuddy.png in Resources */,
 				61F7A46717686E1D001C9151 /* added_cart.png in Resources */,
@@ -3598,11 +3644,36 @@
 				61F7A62E17686E40001C9151 /* WriteReviewViewController.xib in Resources */,
 				61F7A6341768722C001C9151 /* JShopViewController.xib in Resources */,
 				610FF082176B0EDA00C17102 /* img-cart-tab.png in Resources */,
-				6123DD7617714B7C00425315 /* BuySeedViewController.xib in Resources */,
-				6123DD7817714B7C00425315 /* WhatIsSeedViewController.xib in Resources */,
 				6123DD7E177151FB00425315 /* checkout-seed.png in Resources */,
 				6123DD7F177151FB00425315 /* seed_off.png in Resources */,
 				6123DD80177151FB00425315 /* seed_on.png in Resources */,
+				6123DD8D17729DA400425315 /* icon_qr_map.png in Resources */,
+				6123DD8E17729DA400425315 /* icon_qr_calendar.png in Resources */,
+				6123DD8F17729DA400425315 /* icon_qr_social.png in Resources */,
+				6123DD9017729DA400425315 /* icon_qr_contact.png in Resources */,
+				6123DD9117729DA400425315 /* icon_about.png in Resources */,
+				6123DD9217729DA400425315 /* icon_purchase_history.png in Resources */,
+				6123DD9317729DA400425315 /* icon_settings.png in Resources */,
+				6123DD9417729DA400425315 /* icon_share_jambu.png in Resources */,
+				6123DD9517729DA400425315 /* icon_feedback.png in Resources */,
+				6123DD9617729DA400425315 /* icon_faq.png in Resources */,
+				6123DD9717729DA400425315 /* icon_box.png in Resources */,
+				6123DDD81772FFFF00425315 /* AllProductDetailViewController.xib in Resources */,
+				6123DDDA1772FFFF00425315 /* AllProductViewController.xib in Resources */,
+				6123DDDC1772FFFF00425315 /* HeaderProductCell.xib in Resources */,
+				6123DDDF1772FFFF00425315 /* ProductCell.xib in Resources */,
+				6123DDE11772FFFF00425315 /* ProductWithHeaderCell.xib in Resources */,
+				6123DDE31772FFFF00425315 /* SearchBarCell.xib in Resources */,
+				6123DDE51772FFFF00425315 /* SearchBarHeaderCell.xib in Resources */,
+				6123DDE71772FFFF00425315 /* DescriptionCell.xib in Resources */,
+				6123DDE91772FFFF00425315 /* BuySeedViewController.xib in Resources */,
+				6123DDEB1772FFFF00425315 /* WhatIsSeedViewController.xib in Resources */,
+				6123DDED1772FFFF00425315 /* FilterProductViewController.xib in Resources */,
+				6123DDEF1772FFFF00425315 /* ProductShopDetailViewController.xib in Resources */,
+				6123DDF11772FFFF00425315 /* ProductShopViewController.xib in Resources */,
+				6123DDF51772FFFF00425315 /* SearchBarView.xib in Resources */,
+				6123DDF81772FFFF00425315 /* ShopDetailViewController.xib in Resources */,
+				6123DDFA1772FFFF00425315 /* StarBuyViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3798,21 +3869,6 @@
 				6163AB25174E184800AF6A27 /* PostTaggedCell.m in Sources */,
 				610C1AAA17605B050016B703 /* TTTAttributedLabel.m in Sources */,
 				610C1AAF1761C0750016B703 /* ShareCell.m in Sources */,
-				61F7A38B17686C16001C9151 /* AllProductDetailViewController.m in Sources */,
-				61F7A38D17686C16001C9151 /* AllProductViewController.m in Sources */,
-				61F7A38F17686C16001C9151 /* HeaderProductCell.m in Sources */,
-				61F7A39117686C16001C9151 /* ListPopupView.m in Sources */,
-				61F7A39217686C16001C9151 /* ProductCell.m in Sources */,
-				61F7A39417686C16001C9151 /* ProductWithHeaderCell.m in Sources */,
-				61F7A39617686C16001C9151 /* SearchBarCell.m in Sources */,
-				61F7A39817686C16001C9151 /* DescriptionCell.m in Sources */,
-				61F7A39A17686C16001C9151 /* FilterProductViewController.m in Sources */,
-				61F7A39C17686C16001C9151 /* ProductShopDetailViewController.m in Sources */,
-				61F7A39E17686C16001C9151 /* ProductShopViewController.m in Sources */,
-				61F7A3A017686C16001C9151 /* SearchBarView.m in Sources */,
-				61F7A3A217686C16001C9151 /* ShopClass.m in Sources */,
-				61F7A3A317686C16001C9151 /* ShopDetailViewController.m in Sources */,
-				61F7A3A517686C16001C9151 /* StarBuyViewController.m in Sources */,
 				61F7A5C617686E40001C9151 /* AddressEditViewController.m in Sources */,
 				61F7A5C817686E40001C9151 /* checkOutFooterView.m in Sources */,
 				61F7A5CA17686E40001C9151 /* CheckoutPopupView.m in Sources */,
@@ -3873,8 +3929,26 @@
 				61F7A62D17686E40001C9151 /* WriteReviewViewController.m in Sources */,
 				61F7A6331768722C001C9151 /* JShopViewController.m in Sources */,
 				610FF07E176B0D2600C17102 /* WallSearchBarView.m in Sources */,
-				6123DD7517714B7C00425315 /* BuySeedViewController.m in Sources */,
-				6123DD7717714B7C00425315 /* WhatIsSeedViewController.m in Sources */,
+				6123DDD71772FFFF00425315 /* AllProductDetailViewController.m in Sources */,
+				6123DDD91772FFFF00425315 /* AllProductViewController.m in Sources */,
+				6123DDDB1772FFFF00425315 /* HeaderProductCell.m in Sources */,
+				6123DDDD1772FFFF00425315 /* ListPopupView.m in Sources */,
+				6123DDDE1772FFFF00425315 /* ProductCell.m in Sources */,
+				6123DDE01772FFFF00425315 /* ProductWithHeaderCell.m in Sources */,
+				6123DDE21772FFFF00425315 /* SearchBarCell.m in Sources */,
+				6123DDE41772FFFF00425315 /* SearchBarHeaderCell.m in Sources */,
+				6123DDE61772FFFF00425315 /* DescriptionCell.m in Sources */,
+				6123DDE81772FFFF00425315 /* BuySeedViewController.m in Sources */,
+				6123DDEA1772FFFF00425315 /* WhatIsSeedViewController.m in Sources */,
+				6123DDEC1772FFFF00425315 /* FilterProductViewController.m in Sources */,
+				6123DDEE1772FFFF00425315 /* ProductShopDetailViewController.m in Sources */,
+				6123DDF01772FFFF00425315 /* ProductShopViewController.m in Sources */,
+				6123DDF21772FFFF00425315 /* SearchProductMoreViewController.m in Sources */,
+				6123DDF31772FFFF00425315 /* SearchProductViewController.m in Sources */,
+				6123DDF41772FFFF00425315 /* SearchBarView.m in Sources */,
+				6123DDF61772FFFF00425315 /* ShopClass.m in Sources */,
+				6123DDF71772FFFF00425315 /* ShopDetailViewController.m in Sources */,
+				6123DDF91772FFFF00425315 /* StarBuyViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

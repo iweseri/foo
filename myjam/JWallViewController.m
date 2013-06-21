@@ -230,14 +230,17 @@
 #pragma mark SearchBar
 - (void)handleSearchBar
 {
+    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     if (isSearchBarOpen) {
         NSLog(@"close");
+//        [mydelegate.seedViewLabel setHidden:NO];
         [self closeSearchBar];
     } else {
         NSLog(@"open");
         //setup searchBar view.
         
-        AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        
+        [mydelegate.seedViewLabel setHidden:YES];
         searchBar.view.frame = CGRectMake(-260.0f, 0.0f, searchBar.view.frame.size.width, mydelegate.window.frame.size.height);
         [mydelegate.window addSubview:searchBar.view];
         [self openSearchBar];
@@ -274,7 +277,9 @@
          searchBar.view.frame = CGRectMake(-260.0f, 0.0f, searchBar.view.frame.size.width, mydelegate.window.frame.size.height);
          
      }
-                     completion:^(BOOL finished){}];
+                     completion:^(BOOL finished){
+                         [mydelegate.seedViewLabel setHidden:NO];
+                     }];
     [mydelegate.bannerView setUserInteractionEnabled:YES];
     [frontLayerView removeFromSuperview];
 }

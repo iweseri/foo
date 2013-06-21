@@ -58,24 +58,14 @@
                                       style:UIBarButtonItemStyleBordered
                                      target:nil
                                      action:nil] autorelease];
-    productData = [[NSMutableArray alloc] init];
-    pageCounter = 1;
-    [self loadMoreData];
-    refreshDisabled = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     NSLog(@"vda");
-    if (!refreshDisabled) {
-        pageCounter = 1;
-        
-//        [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
-        [productData removeAllObjects];
-        [self loadMoreData];
-    }
-    
-    refreshDisabled = NO;
+    pageCounter = 1;
+    productData = [[NSMutableArray alloc] init];
+    [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
 }
 
 - (void)didReceiveMemoryWarning
@@ -255,49 +245,24 @@
 {
     NSLog(@"Page now is %d",pageCounter);
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL success = [self retrieveData];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!success) {
-                // Hide loading cell
-                [UIView animateWithDuration:0.5 animations:^{
-                    CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
-                    
-                    [self.tableView setContentOffset:bottomOffset animated:YES];
-                }];
-            }else if([productData count]==0) {
-                NSLog(@"DATA EMPTY :%@",productData);
-                [self.tableView setHidden:YES];
-            }else{
-                // Reload tableView
-                [self.tableView setHidden:NO];
-                NSLog(@"DATA :%@",productData);
-                [self.tableView reloadData];
-            }
-            NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
-        });
-    });
+    BOOL success = [self retrieveData];
     
-//    BOOL success = [self retrieveData];
-//    
-//    if (!success) {
-//        // Hide loading cell
-//        [UIView animateWithDuration:0.5 animations:^{
-//            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
-//            
-//            [self.tableView setContentOffset:bottomOffset animated:YES];
-//        }];
-//    }else if([productData count]==0) {
-//        NSLog(@"DATA EMPTY :%@",productData);
-//        [self.tableView setHidden:YES];
-//    }else{
-//        // Reload tableView
-//        [self.tableView setHidden:NO];
-//        NSLog(@"DATA :%@",productData);
-//        [self.tableView reloadData];
-//    }
-//    NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
+    if (!success) {
+        // Hide loading cell
+        [UIView animateWithDuration:0.5 animations:^{
+            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+            
+            [self.tableView setContentOffset:bottomOffset animated:YES];
+        }];
+    }else if([productData count]==0) {
+        NSLog(@"DATA EMPTY :%@",productData);
+        [self.tableView setHidden:YES];
+    }else{
+        // Reload tableView
+        NSLog(@"DATA-more :%@",productData);
+        [self.tableView reloadData];
+    }
+    NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
     
 }
 
@@ -353,9 +318,7 @@
 #pragma mark - Table view delegate
 
 -(void)viewAll:(id)sender{
-    //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
-    
-    //  [detailViewController release];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     [self performSelector:@selector(viewMoreProduct:) withObject:sender afterDelay:0.3];
 }
 
@@ -371,19 +334,27 @@
 }
 
 -(void)viewShop:(UITapGestureRecognizer*)sender {
-    //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     UILabel *currTag = (UILabel *)sender.view;
     NSLog(@"GTS:%d,%@,%@",[currTag tag],[NSString stringWithFormat:@"%d",[currTag tag]], [currTag text]);
     [self performSelector:@selector(showShopProduct:) withObject:sender afterDelay:0.3];
 }
 - (void)showShopProduct:(UITapGestureRecognizer*)sender {
     UILabel *currTag = (UILabel *)sender.view;
-    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
-    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
-    gotoShop.shopName = [currTag text];
+    ShopAddressViewController *detailViewController = [[ShopAddressViewController alloc] init];
+    detailViewController.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+    detailViewController.shopName = [currTag text];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
-    [gotoShop release];
+    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+//    //for directly to list product by shop
+//    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
+//    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+//    gotoShop.shopName = [currTag text];
+//    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
+//    [gotoShop release];
+//    //for directly to shop location (new)
 //    ShopDetailViewController *detailViewController = [[ShopDetailViewController alloc] init];
 //    detailViewController.shopID = [NSString stringWithFormat:@"%d",[currentTag tag]];
 //    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -393,7 +364,7 @@
 
 -(void)tapAction:(id)sender{
     
-    //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     NSLog(@"TAG:%d",[sender tag]);
     NSLog(@"Name :%@",[[[[productData objectAtIndex:[sender tag]/2] valueForKey:@"list"] objectAtIndex:[sender tag]%2] valueForKey:@"product_name"]);
     [self performSelector:@selector(showProduct:) withObject:sender afterDelay:0.3];
@@ -409,7 +380,6 @@
     detailViewController.buyButton =  [[NSString alloc] initWithString:@"ok"];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
-    //[self.navigationController pushViewController:detailViewController animated:YES];
     [detailViewController release];
 }
 

@@ -22,6 +22,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //TITLE
+    FontLabel *titleView = [[FontLabel alloc] initWithFrame:CGRectZero fontName:@"jambu-font.otf" pointSize:18];
+    titleView.text = @"Purchase History";
+    titleView.textAlignment = NSTextAlignmentCenter;
+    titleView.backgroundColor = [UIColor clearColor];
+    titleView.textColor = [UIColor whiteColor];
+    [titleView sizeToFit];
+    self.navigationItem.titleView = titleView;
+    [titleView release];
+    
+    self.navigationItem.backBarButtonItem =
+    [[[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                      style:UIBarButtonItemStyleBordered
+                                     target:nil
+                                     action:nil] autorelease];
+    
     self.selectedCategories = @"";
     self.searchedText = @"";
     self.selectedStatus = @"";
@@ -356,7 +373,7 @@
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
 //    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [mydelegate.otherNavController pushViewController:detailViewController animated:YES];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {

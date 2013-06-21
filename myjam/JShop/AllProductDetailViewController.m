@@ -196,7 +196,7 @@
     [cell.button1 setBackgroundImageWithURL:[NSURL URLWithString:[[productData objectAtIndex:(indexPath.row-1)*2+0] valueForKey:@"product_image"]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_icon.png"]];
     [cell.buttonTap1 addTarget:self action:@selector(tapAction:) forControlEvents:UIControlEventTouchUpInside];
     UIView *leftPrice = [[ShopClass sharedInstance] priceViewFor:[[productData objectAtIndex:(indexPath.row-1)*2+0] valueForKey:@"product_price"] and:[[productData objectAtIndex:(indexPath.row-1)*2+0] valueForKey:@"product_discounted_price"]];
-    [leftPrice setFrame:CGRectMake(154-leftPrice.frame.size.width, 179, leftPrice.frame.size.width, 20)];
+    [leftPrice setFrame:CGRectMake(154-leftPrice.frame.size.width, 139, leftPrice.frame.size.width, 20)];
     [cell addSubview:leftPrice];
     [leftPrice release];
     
@@ -231,7 +231,7 @@
         [cell.button2 setBackgroundImageWithURL:[NSURL URLWithString:[[productData objectAtIndex:(indexPath.row-1)*2+1] valueForKey:@"product_image"]] forState:UIControlStateNormal placeholderImage:[UIImage imageNamed:@"default_icon.png"]];
         
         UIView *rightPrice = [[ShopClass sharedInstance] priceViewFor:[[productData objectAtIndex:2*(indexPath.row-1)+1] valueForKey:@"product_price"] and:[[productData objectAtIndex:2*(indexPath.row-1)+1] valueForKey:@"product_discounted_price"]];
-        [rightPrice setFrame:CGRectMake(310-rightPrice.frame.size.width, 179, rightPrice.frame.size.width, 20)];
+        [rightPrice setFrame:CGRectMake(310-rightPrice.frame.size.width, 139, rightPrice.frame.size.width, 20)];
         [cell addSubview:rightPrice];
         [rightPrice release];
     }
@@ -299,7 +299,6 @@
 - (NSString *)returnAPIDataContent
 {
     return [NSString stringWithFormat:@"{\"category_id\":%d}",self.catId];
-    //[NSString stringWithFormat:@"{\"category_id\":%d,\"page\":%d,\"perpage\":%d}",self.catId,pageCounter, 5];
 }
 
 - (BOOL)retrieveData
@@ -322,7 +321,6 @@
             for (id row in list) {
                 [newData addObject:row];
             }
-            NSLog(@"DATAs :%@ | %d",newData,self.catId);
         }
     }
     NSArray *newList = [NSArray arrayWithArray:newData];
@@ -339,20 +337,28 @@
 -(void)viewShop:(UITapGestureRecognizer*)sender {
     UILabel *currTag = (UILabel *)sender.view;
     NSLog(@"GTS:%d",[currTag tag]);
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     [self performSelector:@selector(showShopProduct:) withObject:sender afterDelay:0.3];
 }
 - (void)showShopProduct:(UITapGestureRecognizer*)sender {
     UILabel *currTag = (UILabel *)sender.view;
-    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
-    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
-    gotoShop.shopName = [currTag text];
+    ShopAddressViewController *detailViewController = [[ShopAddressViewController alloc] init];
+    detailViewController.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+    detailViewController.shopName = [currTag text];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
-    [gotoShop release];
+    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+//    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
+//    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+//    gotoShop.shopName = [currTag text];
+//    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
+//    [gotoShop release];
 }
 
 -(void)tapAction:(id)sender{
     [self.loadingIndicator setHidden:NO];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     NSLog(@"TAG:%d | %@",[sender tag],[[productData objectAtIndex:[sender tag]] valueForKey:@"product_id"]);
     [self performSelector:@selector(showProduct:) withObject:sender afterDelay:0.3];
 }
@@ -375,6 +381,7 @@
 
 - (void)viewDidDisappear:(BOOL)animated {
     [self.loadingIndicator stopAnimating];
+    [DejalBezelActivityView removeViewAnimated:YES];
 }
 
 @end

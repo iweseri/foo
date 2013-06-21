@@ -36,6 +36,11 @@
             [[mydelegate.tabView.tabItemsArray objectAtIndex:i] toggleOn:NO];
         }
     }
+//    if (!mydelegate.isShowPurchaseHistory) {
+//        [mydelegate handleTab5];
+//        mydelegate.isShowPurchaseHistory = NO;
+//    }
+
 }
 
 - (void)viewDidLoad

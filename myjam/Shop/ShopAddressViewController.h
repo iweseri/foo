@@ -18,6 +18,7 @@
 @property (retain, nonatomic) NSDictionary *shopAddInfo;
 @property (retain, nonatomic) IBOutlet UIButton *visitButton;
 @property (retain, nonatomic) NSString *shopId;
+@property (retain, nonatomic) NSString *shopName;
 @property (retain, nonatomic) IBOutlet UIView *socialView;
 @property (retain, nonatomic) IBOutlet UIScrollView *scroller;
 - (IBAction)visitShop:(id)sender;

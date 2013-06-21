@@ -337,19 +337,27 @@
 }
 
 -(void)viewShop:(UITapGestureRecognizer*)sender {
-    
     UILabel *currTag = (UILabel *)sender.view;
     NSLog(@"GTS:%d,%@,%@",[currTag tag],[NSString stringWithFormat:@"%d",[currTag tag]], [currTag text]);
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     [self performSelector:@selector(showShopProduct:) withObject:sender afterDelay:0.3];
 }
 - (void)showShopProduct:(UITapGestureRecognizer*)sender {
     UILabel *currTag = (UILabel *)sender.view;
-    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
-    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
-    gotoShop.shopName = [currTag text];
+    ShopAddressViewController *detailViewController = [[ShopAddressViewController alloc] init];
+    detailViewController.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+    detailViewController.shopName = [currTag text];
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
-    [gotoShop release];
+    [mydelegate.shopNavController pushViewController:detailViewController animated:YES];
+    [detailViewController release];
+//    //for directly to list product by shop
+//    ProductShopViewController *gotoShop = [[ProductShopViewController alloc] init];
+//    gotoShop.shopId = [NSString stringWithFormat:@"%d",[currTag tag]];
+//    gotoShop.shopName = [currTag text];
+//    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+//    [mydelegate.shopNavController pushViewController:gotoShop animated:YES];
+//    [gotoShop release];
+//    //for directly to shop location (new)
 //    ShopDetailViewController *detailViewController = [[ShopDetailViewController alloc] init];
 //    detailViewController.shopID = [NSString stringWithFormat:@"%d",[currentTag tag]];
 //    AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -359,7 +367,7 @@
 
 -(void)tapAction:(id)sender{
     
-    //[DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
+    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     NSLog(@"TAG:%d",[sender tag]);
     NSLog(@"Name :%@",[[[[productData objectAtIndex:[sender tag]/2] valueForKey:@"list"] objectAtIndex:[sender tag]%2] valueForKey:@"product_name"]);
     [self performSelector:@selector(showProduct:) withObject:sender afterDelay:0.3];

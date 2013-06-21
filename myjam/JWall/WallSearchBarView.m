@@ -41,13 +41,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 3;
 }
 
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *filterParams = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", indexPath.row+1], @"filterOption", @"", @"searchText", nil];
+    NSDictionary *filterParams = [NSDictionary dictionaryWithObjectsAndKeys:[NSString stringWithFormat:@"%d", indexPath.row ], @"filterOption", @"", @"searchText", nil];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"showPostsWithFilter" object:nil userInfo:filterParams];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBarWall" object:nil];

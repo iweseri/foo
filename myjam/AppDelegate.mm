@@ -115,6 +115,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     // local cache dictionaries
     NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
     
+    
     [localData setObject:@"NO" forKey:@"connectedToNodeJS"];
     // if internetconnection is good
     if ([ConnectionClass connected])
@@ -175,15 +176,16 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         [localData setObject:@"YES" forKey:@"noConnection"];
     }
     
-    UIImage *nearMeIco = [UIImage imageNamed:@"near_me_icon.png"];
-    self.nearMeBtn = [[UIButton alloc]initWithFrame:CGRectMake(280, 28, nearMeIco.size.width-2, nearMeIco.size.height-2)];
-    [self.nearMeBtn setHidden:YES];
-    [self.nearMeBtn setBackgroundImage:nearMeIco forState:UIControlStateNormal];
-    [self.nearMeBtn addTarget:self action:@selector(gotoNM) forControlEvents:UIControlEventTouchUpInside];
-    
-    //UIBarButtonItem *nearMeBarBtnItem = [[UIBarButtonItem alloc]initWithCustomView:self.nearMeBtn];
-    [self.window addSubview:self.nearMeBtn];
-    [self.nearMeBtn release];
+//    UIImage *nearMeIco = [UIImage imageNamed:@"near_me_icon.png"];
+//    self.nearMeBtn = [[UIButton alloc]initWithFrame:CGRectMake(280, 28, nearMeIco.size.width-2, nearMeIco.size.height-2)];
+//    [self.nearMeBtn setHidden:YES];
+//    [self.nearMeBtn setBackgroundImage:nearMeIco forState:UIControlStateNormal];
+//    [self.nearMeBtn addTarget:self action:@selector(gotoNM) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    //UIBarButtonItem *nearMeBarBtnItem = [[UIBarButtonItem alloc]initWithCustomView:self.nearMeBtn];
+//    [self.window addSubview:self.nearMeBtn];
+//    [self.nearMeBtn release];
+
 }
 
 - (void)gotoNM //NEAR ME VC
@@ -394,6 +396,20 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     bannerView = [[Banner alloc] initWithFrame:CGRectMake(0, self.window.frame.size.height-39-bannerHeight, self.window.frame.size.width, bannerHeight)];
     [self.window insertSubview:bannerView aboveSubview:tabView.view];
     
+    // Seed setup
+    self.seedViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(220, 20, 100, 44)];
+    [self.seedViewLabel setFont:[UIFont systemFontOfSize:13]];
+    [self.seedViewLabel setBackgroundColor:[UIColor clearColor]];
+    
+    self.seedViewLabel.textColor = [UIColor yellowColor];
+    UITapGestureRecognizer *infoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goBuySeed)];
+    [self.seedViewLabel setUserInteractionEnabled:YES];
+    [self.seedViewLabel addGestureRecognizer:infoTap];
+    [self.window addSubview:self.seedViewLabel];
+    [self.seedViewLabel release];
+    [infoTap release];
+    [self setupSeed];
+    
     // Setup Tutorial View
     tutorial = [[TutorialView alloc] initWithFrame:self.window.frame];
     [tutorial setAlpha:0.6];
@@ -422,7 +438,6 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     [self.window addGestureRecognizer:swipeDown];
     [swipeDown release];
     
-    
     [self.window addSubview:tutorial];
 }
 
@@ -439,6 +454,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 - (void)closeSidebar
 {
+
     if (showCamera && screenBounds.size.height != 568) {
         [self.tabView activateController:kScannerTab];
         showCamera = NO;
@@ -471,7 +487,9 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
          sidebarController.view.frame = CGRectMake(320.0f, 0.0f, sidebarController.view.frame.size.width, self.window.frame.size.height);
          
      }
-                     completion:^(BOOL finished){}];
+                     completion:^(BOOL finished){
+                         [self.seedViewLabel setHidden:NO];
+                     }];
     
     [frontLayerView removeFromSuperview];
     [DejalBezelActivityView removeViewAnimated:YES];
@@ -479,7 +497,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 
 - (void)openSidebar
 {
-    
+    [self.seedViewLabel setHidden:YES];
     if (self.pageIndex == kScannerTab && screenBounds.size.height != 568) {
         [self.tabView activateController:kHomeTab];
         
@@ -1330,11 +1348,11 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 }
 
 #pragma mark -
-#pragma seed
+#pragma mark seed
 
 - (void)setupSeed
 {
-    self.seedData = [[NSMutableArray alloc] init];
+    [self.seedData removeAllObjects];
     NSString *urlString = [NSString stringWithFormat:@"%@/api/jambu_seed_topup.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]copy]];
     NSString *dataContent = @"";
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
@@ -1355,28 +1373,20 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
             }
         }
     }
-    [self.seedViewLabel removeFromSuperview];
+//    [self.seedViewLabel removeFromSuperview];
     [self setupSeedLabel];
     NSLog(@"seedata:%@",self.seedData);
 }
 
 - (void)setupSeedLabel {
-    self.seedViewLabel = [[UILabel alloc] initWithFrame:CGRectMake(220, 31, 100, 20)];
-    [self.seedViewLabel setBackgroundColor:[UIColor clearColor]];
+    
     NSString *bal = [NSString stringWithFormat:@"♦ %@",[NSNumberFormatter localizedStringFromNumber:@(self.balSeed) numberStyle:NSNumberFormatterDecimalStyle]];
     if (self.balSeed == 0) {
         bal = [NSString stringWithFormat:@"♦ %d seeds",self.balSeed];
     }
-    CGSize expectedLabelSize  = [bal sizeWithFont:[UIFont fontWithName:@"Verdana" size:8.0] constrainedToSize:CGSizeMake(150.0, MAXFLOAT) lineBreakMode:self.seedViewLabel.lineBreakMode];
+    CGSize expectedLabelSize  = [bal sizeWithFont:[UIFont systemFontOfSize:14] constrainedToSize:CGSizeMake(150.0, MAXFLOAT) lineBreakMode:self.seedViewLabel.lineBreakMode];
     self.seedViewLabel.text = bal;
-    self.seedViewLabel.textColor = [UIColor yellowColor];
-    self.seedViewLabel.frame = CGRectMake(320-expectedLabelSize.width-41, 31, expectedLabelSize.width+41, 20);
-    UITapGestureRecognizer *infoTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(goBuySeed)];
-    [self.seedViewLabel setUserInteractionEnabled:YES];
-    [self.seedViewLabel addGestureRecognizer:infoTap];
-    [self.window addSubview:self.seedViewLabel];
-    [self.seedViewLabel release];
-    [infoTap release];
+    self.seedViewLabel.frame = CGRectMake(320-expectedLabelSize.width, 20, expectedLabelSize.width+41, 44);
 }
 
 - (void)goBuySeed {
@@ -1540,21 +1550,31 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
     
     if ([ConnectionClass connected]) {
         
-        if ([[[[self otherNavController] topViewController] class] isEqual:[BuySeedViewController class]])
-        {
-            //self.isReturnFromPayment = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"buySeedVerification" object:self];
+        NSString *isLogin = [[[NSUserDefaults standardUserDefaults] objectForKey:@"islogin"]copy];
+        //NSLog(@"login is %@",isLogin);
+        
+        // check if login is remembered in local cache
+        if ([isLogin isEqualToString:@"YES"]) {
+            if ([[[[self otherNavController] topViewController] class] isEqual:[BuySeedViewController class]])
+            {
+                //self.isReturnFromPayment = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"buySeedVerification" object:self];
+            }
+            if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
+            {
+                //self.isReturnFromPayment = YES;
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"PurchaseVerification" object:self];
+            }
+            [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
+            
+            [self setupSeed];
+            [self connectNodeJS];
+            
+            [self setChatBadgeUpdate:NO]; // show chat notif
         }
-        if ([[[[self shopNavController] topViewController] class] isEqual:[CheckoutViewController class]])
-        {
-            //self.isReturnFromPayment = YES;
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"PurchaseVerification" object:self];
-        }
-        [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
+        
+//        [self connectNodeJS];
         NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
-
-        [self setupSeed];
-        [self connectNodeJS];
         if ([[localData objectForKey:@"noConnection"] isEqualToString:@"YES"]) {
             [localData setObject:@"NO" forKey:@"noConnection"];
             [localData synchronize];
@@ -1563,8 +1583,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
         
         [FBSettings publishInstall:kAppID];
         [FBSession.activeSession handleDidBecomeActive]; //fb login
-        
-        [self setChatBadgeUpdate:NO]; // show chat notif
+    
     }
     
     

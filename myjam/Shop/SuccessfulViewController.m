@@ -9,6 +9,7 @@
 #import "SuccessfulViewController.h"
 #import "BuySeedViewController.h"
 #import "AppDelegate.h"
+#import "SidebarView.h"
 
 @interface SuccessfulViewController ()
 
@@ -63,10 +64,11 @@
 -(IBAction)gotoPurchaseHistory:(id)sender
 {
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
+    [mydelegate.sidebarController handlePurchaseHistory];
+//    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
     mydelegate.isShowPurchaseHistory = YES;
-    [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
-    [sv1.tabBar showViewControllerAtIndex:1];
+//    [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
+//    [sv1.tabBar showViewControllerAtIndex:1];
 }
 -(IBAction)goBuySeed:(id)sender
 {

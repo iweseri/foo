@@ -24,4 +24,6 @@
 @property (nonatomic, retain) NSMutableArray *productData;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
+- (void)createCellForIndex:(NSIndexPath *)indexPath cell:(ProductWithHeaderCell *)cell;
+
 @end

@@ -36,8 +36,10 @@
 @property (retain, nonatomic) NSMutableArray *cartItems;
 @property (retain, nonatomic) IBOutlet UILabel *jWallLabel;
 @property (retain, nonatomic) IBOutlet UILabel *jboxLabel;
+@property (retain, nonatomic) IBOutlet UILabel *purchaseHistoryLabel;
 
 - (void) reloadImage;
 - (void)pushProfileViewController;
+- (void)handlePurchaseHistory;
 
 @end
