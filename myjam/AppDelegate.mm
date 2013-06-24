@@ -114,7 +114,7 @@ NSString *const FBSessionStateChangedNotification = @"com.threezquare.jambu:FBSe
 {
     // local cache dictionaries
     NSUserDefaults *localData = [NSUserDefaults standardUserDefaults];
-    
+    self.seedData = [[NSMutableArray alloc] init];
     
     [localData setObject:@"NO" forKey:@"connectedToNodeJS"];
     // if internetconnection is good

@@ -103,6 +103,11 @@
                 [self.tableData addObject:data];
             }
             
+        }else{
+            if (![self.tableData count]) {
+                self.recordLabel.text = [resultsDictionary objectForKey:@"message"];
+//                [self.recordLabel sizeToFit];
+            }
         }
         
     }
@@ -215,6 +220,8 @@
         [self.tableView setHidden:NO];
         [self.recordLabel setHidden:YES];
     }else{
+        self.recordLabel.text = @"No records.";
+//        [self.recordLabel sizeToFit];
         [self.tableView setHidden:YES];
         [self.recordLabel setHidden:NO];
     }

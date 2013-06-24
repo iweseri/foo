@@ -9,7 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @interface SearchBarView : UITableViewController<UISearchBarDelegate>
+{
+    NSString *message;
+}
 
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (retain, nonatomic) IBOutlet UITableView *tableView;
 @property (retain, nonatomic) NSMutableArray *tableData;
 @property (retain, nonatomic) NSMutableArray *shopData;

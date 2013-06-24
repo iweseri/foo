@@ -116,31 +116,52 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"handleSearchBar" object:nil];
 }
 
+- (void)reloadPage {
+    [self.loadingIndicator setFrame:CGRectMake(260/2-10, self.view.frame.size.height/2-30, 20, 20)];
+    [self.view addSubview:self.loadingIndicator];
+    [self.loadingIndicator startAnimating];
+    [self performSelector:@selector(loadData) withObject:nil afterDelay:1.0f];
+}
+
 - (void)loadData
 {
     self.tableData = [[NSMutableArray alloc] init];
     self.shopData = [[NSMutableArray alloc] init];
     BOOL success = [self retrieveData];
     
+    for (UILabel *v in [self.view subviews]) {
+        if (v.tag == 505)
+            [v removeFromSuperview];
+    }
+    
     if (!success) {
-        NSLog(@"Request time out");
-        UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-75, self.view.frame.size.height/2-10, 200, 20)];
-        [labelMsg setText:@"Request time out"];
-        [labelMsg setBackgroundColor:[UIColor clearColor]];
-        [labelMsg setTextColor:[UIColor whiteColor]];
-        [self.view addSubview:labelMsg];
-        [labelMsg release];
-        //[self.tableView setHidden:YES];
-    }else if([self.tableData count]==0) {
-        NSLog(@"DATA EMPTY :%@",self.tableData);
-        [self.tableView setHidden:YES];
+        if (message != nil) {
+            UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height/2-10, 260, 40)];
+            [labelMsg setUserInteractionEnabled:YES];
+            [labelMsg setText:[NSString stringWithFormat:@"%@\nTap to reload.",message]];
+            [labelMsg setBackgroundColor:[UIColor clearColor]];
+            [labelMsg setTextColor:[UIColor whiteColor]];
+            [labelMsg setTextAlignment:NSTextAlignmentCenter];
+            [labelMsg setNumberOfLines:2];
+            [labelMsg setTag:505];
+            [self.view addSubview:labelMsg];
+            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reloadPage)];
+            [labelMsg addGestureRecognizer:tap];
+            [labelMsg release];
+            [tap release];
+            message = nil;
+        }
     }else{
         // Reload tableView
-        NSLog(@"DATA :%@",self.tableData);
-        NSLog(@"SHOP :%@",self.shopData);
-        [self.tableView setHidden:NO];
+//        if (message == nil) {
+//            for (UILabel *v in [self.view subviews]) {
+//                if (v.tag == 505)
+//                    [v removeFromSuperview];
+//            }
+//        }
         [self.tableView reloadData];
     }
+    [self.loadingIndicator stopAnimating];
 }
 
 - (NSString *)returnAPIURL
@@ -176,8 +197,10 @@
             if ([sList count])
                 [self.shopData addObjectsFromArray:sList];
             return YES;
+        } else {
+            message = [resultsDictionary objectForKey:@"message"];
+            return NO;
         }
-        return NO;
     }
     else
         return NO;

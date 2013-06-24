@@ -109,9 +109,14 @@ static CGFloat kCommentImageViewHeight = 120;
                                              selector:@selector(updateCommentList)
                                                  name:@"updateCommentList"
                                                object:nil];
-//    [self setup];
-    reloadDisabled = YES;
+    
+    UITapGestureRecognizer *tapToReload = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setup)];
+    [self.view addGestureRecognizer:tapToReload];
+    [tapToReload release];
+
     [self setup];
+    reloadDisabled = YES;
+
 }
 
 - (void)updateCommentList
@@ -142,14 +147,21 @@ static CGFloat kCommentImageViewHeight = 120;
 {
     [favArray removeAllObjects];
     [commentArray removeAllObjects];
+    [self.tableLoadingLabel setHidden:NO];
+    self.tableLoadingLabel.text = @"Loading ...";
+    [self.tableLoadingIndicator setHidden:NO];
     
-    BOOL success = [self retrieveData];
-    if (success) {
-        [self.tableLoadingLabel setHidden:YES];
-        [self.tableLoadingIndicator setHidden:YES];
-        [self.tableView setHidden:NO];
-        [self.tableView reloadData];
-    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL success = [self retrieveData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (success) {
+                [self.tableLoadingLabel setHidden:YES];
+                [self.tableLoadingIndicator setHidden:YES];
+                [self.tableView setHidden:NO];
+                [self.tableView reloadData];
+            }
+        });
+    });
 }
 
 -(void)onClickedFav
@@ -216,7 +228,7 @@ static CGFloat kCommentImageViewHeight = 120;
         data.type = [postDetails objectForKey:@"post_type"];
         data.userId = [postDetails objectForKey:@"user_id"];
         data.username = [postDetails objectForKey:@"user_name"];
-        data.datetime = [postDetails objectForKey:@"datetime"];
+        data.datetime = [postDetails objectForKey:@"formatted_time"];
         data.avatarURL = [postDetails objectForKey:@"avatar_url"];
         data.isFavourite = [postDetails objectForKey:@"is_fav"];
         data.totalFavourite = [postDetails objectForKey:@"fav_count"];
@@ -263,6 +275,8 @@ static CGFloat kCommentImageViewHeight = 120;
         
     }else{
         // If status error
+        [self.tableLoadingIndicator setHidden:YES];
+        self.tableLoadingLabel.text = [NSString stringWithFormat:@"%@\nTap to reload.", [resultsDictionary objectForKey:@"message"]];
         return NO;
     }
     
@@ -473,6 +487,10 @@ static CGFloat kCommentImageViewHeight = 120;
     // Uiview to be return as header view contains top header, content view (text and image post) & counting (favs and comments)
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, kHeaderHeight)];
     
+    NSLog(@"text = %d", data.postId);
+    if (!data.postId) {
+        return nil;
+    }
     // Create top header with user's thumbs, time post and status
     PostHeaderView *header = [[PostHeaderView alloc] init];
     header.tag = section;
@@ -496,7 +514,8 @@ static CGFloat kCommentImageViewHeight = 120;
         
     }
     
-    [header setBoldText:data.username withFullText:fullText boldPostfix:shareUsername andTime:@"About 1 minute ago"];
+    
+    [header setBoldText:data.username withFullText:fullText boldPostfix:shareUsername andTime:data.datetime];
     
     [header.imageView setImageWithURL:[NSURL URLWithString:data.avatarURL]
                      placeholderImage:[UIImage imageNamed:@"blank_avatar"]

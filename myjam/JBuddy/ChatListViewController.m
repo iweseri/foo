@@ -45,7 +45,7 @@
                                                  name:@"reloadChatList"
                                                object:nil];
     
-    [self.recordLabel setHidden:YES];
+//    [self.recordLabel setHidden:YES];
     self.loadingIndicator.frame = CGRectMake(self.view.frame.size.width/2-self.loadingIndicator.frame.size.width/2,
                                              self.view.frame.size.height/2-self.loadingIndicator.frame.size.height/2-100,
                                              self.loadingIndicator.frame.size.width,
@@ -55,6 +55,9 @@
                                          self.loadingIndicator.frame.origin.y+self.loadingIndicator.frame.size.height+10,
                                          200,
                                          55);
+    UITapGestureRecognizer *tapToReload = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setupData)];
+    [self.view addGestureRecognizer:tapToReload];
+    [tapToReload release];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -66,8 +69,6 @@
         NSLog(@"vwa-chatList");
     }
     refreshDisabled = NO;
-
-    
 }
 
 - (void)setupData
@@ -83,12 +84,15 @@
                 [self.loadingLabel setHidden:YES];
                 [self.loadingIndicator setHidden:YES];
                 [self.tableView setHidden:NO];
-                [self.recordLabel setHidden:YES];
+//                [self.recordLabel setHidden:YES];
                 
             }
             else{
                 [self.tableView setHidden:YES];
-                [self.recordLabel setHidden:NO];
+                [self.loadingLabel setHidden:NO];
+                self.loadingLabel.text = @"Connection problem occured.\nTap to reload";
+                [self.loadingIndicator setHidden:YES];
+//                [self.recordLabel setHidden:NO];
             }
             
             
@@ -213,7 +217,7 @@
 //    [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_tableData release];
     [_tableView release];
-    [_recordLabel release];
+//    [_recordLabel release];
     [_loadingIndicator release];
     [_loadingLabel release];
     [super dealloc];
@@ -221,7 +225,7 @@
 - (void)viewDidUnload {
     [self setTableData:nil];
     [self setTableView:nil];
-    [self setRecordLabel:nil];
+//    [self setRecordLabel:nil];
     [self setLoadingIndicator:nil];
     [self setLoadingLabel:nil];
     [super viewDidUnload];

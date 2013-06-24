@@ -301,15 +301,16 @@
 {
     NSLog(@"Clicked at post %d and selected option %d", popupView.tag, index);
     [self removeBlackView];
-    [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
     if (popupView.tag == checkoutTag) {
         if (index == 1) {
             //[self checkoutProcess];
+            [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
             [self performSelector:@selector(checkoutProcess) withObject:nil afterDelay:0.0];
         }
     } else {
         if (index == 1) {
             //[self seedProcess];
+            [DejalBezelActivityView activityViewForView:self.view withLabel:@"Loading ..." width:100];
             [self performSelector:@selector(seedProcess) withObject:nil afterDelay:0.0];
         }
     }
@@ -359,7 +360,7 @@
 
 -(void)seedProcess {
     NSString *urlString = [NSString stringWithFormat:@"%@/api/shop_cart_checkout_deduct_seed_v2.php?token=%@",APP_API_URL,[[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]copy]];
-    NSString *dataContent = [NSString stringWithFormat:@"{\"seed_value\":%d}",self.totalSeed];
+    NSString *dataContent = [NSString stringWithFormat:@"{\"seed_value\":%d,\"cart_id\":\"%@\"}",self.totalSeed,[[_cartList objectAtIndex:0]valueForKey:@"cart_id"]];
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
     NSLog(@"dataContent: %@\nresponse listing: %@", dataContent,response);
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
@@ -410,15 +411,9 @@
     
     mydelegate.isReturnFromPayment = NO;
     NSDictionary *purchaseStatus = [[MJModel sharedInstance] getPurchaseStatus:[[_cartList objectAtIndex:0] valueForKey:@"cart_id"]];
-    //NSLog(@"PurchaseVerification get called!");
     if ([[purchaseStatus valueForKey:@"status"] isEqualToString:@"Paid"]){
-//        ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"cartChanged" object:self];
         [[NSNotificationCenter defaultCenter ] postNotificationName:@"refreshPurchaseHistory" object:self];
-//        mydelegate.isShowPurchaseHistory = YES;
-        //        [sv1 switchViewController:sv1.vc3];
-//        [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
-//        [sv1.tabBar showViewControllerAtIndex:1];
         SuccessfulViewController *success = [[SuccessfulViewController alloc] init];
         [mydelegate.shopNavController popToRootViewControllerAnimated:NO];
         [mydelegate.shopNavController pushViewController:success animated:YES];

@@ -246,6 +246,11 @@
     }
 }
 
+- (void)reloadPage {
+    [self.loadingIndicator setHidden:NO];
+    [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:1.0f];
+}
+
 - (void)loadMoreData
 {
     NSLog(@"Page now is %d",pageCounter);
@@ -254,15 +259,22 @@
     
     if (!success) {
         if([productData count]==0) {
-            [self.tableView setHidden:YES];
-            UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2-65, self.view.frame.size.height/2-50, 250, 20)];
-            [labelMsg setText:@"Request time out."];
-            [labelMsg setBackgroundColor:[UIColor clearColor]];
-            [labelMsg setTextColor:[UIColor darkGrayColor]];
-            [labelMsg sizeToFit];
-            [self.view addSubview:labelMsg];
-            [labelMsg release];
-            
+            if (![self.tableView isHidden]) {
+                [self.tableView setHidden:YES];
+                UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(0, self.tableView.bounds.size.height/2, 320, 40)];
+                [labelMsg setUserInteractionEnabled:YES];
+                [labelMsg setText:[NSString stringWithFormat:@"%@\nTap to reload.",message]];
+                [labelMsg setBackgroundColor:[UIColor clearColor]];
+                [labelMsg setTextColor:[UIColor darkGrayColor]];
+                [labelMsg setTextAlignment:NSTextAlignmentCenter];
+                [labelMsg setNumberOfLines:2];
+                [labelMsg setTag:505];
+                [self.view addSubview:labelMsg];
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reloadPage)];
+                [labelMsg addGestureRecognizer:tap];
+                [labelMsg release];
+                [tap release];
+            }
         } else {
             // Hide loading cell
             [UIView animateWithDuration:0.5 animations:^{
@@ -273,6 +285,13 @@
         }
     }else{
         // Reload tableView
+        if ([self.tableView isHidden]) {
+            [self.tableView setHidden:NO];
+            for (UILabel *v in [self.view subviews]) {
+                if (v.tag == 505)
+                    [v removeFromSuperview];
+            }
+        }
         NSLog(@"DATA :%@",productData);
         [self.tableView reloadData];
     }
@@ -321,6 +340,8 @@
                     [newData addObject:row];
             }
             NSLog(@"DATAs :%@ | %@ | %@",newData,self.catId,catName);
+        }else{
+            message = [resultsDictionary objectForKey:@"message"];
         }
     }
     NSArray *newList = [NSArray arrayWithArray:newData];

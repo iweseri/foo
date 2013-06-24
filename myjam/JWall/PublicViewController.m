@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "PostClass.h"
 #import "PostTaggedCell.h"
+#import "ConnectionClass.h"
 #import "ShareCell.h"
 #import <Twitter/Twitter.h>
 #import <SDWebImage/UIImageView+WebCache.h>
@@ -94,6 +95,10 @@ static CGFloat kImageShareHeight = 200;
                                                  name:@"showPostsWithFilter"
                                                object:nil];
     
+    UITapGestureRecognizer *tapToReload = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(setup)];
+    [self.view addGestureRecognizer:tapToReload];
+    [tapToReload release];
+    
     showTopEnabled = NO;
 }
 
@@ -103,7 +108,7 @@ static CGFloat kImageShareHeight = 200;
     showTopEnabled = YES;
     filterParameter = [[n.userInfo objectForKey:@"filterOption"] intValue];
     searchParameter = [[n.userInfo objectForKey:@"searchText"] copy];
-    [tableData removeAllObjects];
+//    [tableData removeAllObjects];
     [self setup];
 //    [tableData]
     NSLog(@"reloadwithfilter");
@@ -112,14 +117,14 @@ static CGFloat kImageShareHeight = 200;
 - (void)reloadTableData
 {
     showTopEnabled = YES;
-    [tableData removeAllObjects];
+//    [tableData removeAllObjects];
     [self setup];
     NSLog(@"reloadwall");
 }
 
 - (void)reloadTableRow
 {
-    [tableData removeAllObjects];
+//    [tableData removeAllObjects];
     
     [self setup];
     
@@ -151,7 +156,7 @@ static CGFloat kImageShareHeight = 200;
         NSLog(@"Vda");
         filterParameter = @"";
         searchParameter = @"";
-        [tableData removeAllObjects];
+//        [tableData removeAllObjects];
         [self setup];
         
         
@@ -183,6 +188,9 @@ static CGFloat kImageShareHeight = 200;
                     showTopEnabled = NO;
                 }
                 
+            }else{
+                self.loadingLabel.text = [NSString stringWithFormat:@"Connection problem occured.\nTap to reload."];
+                [self.loadingIndicator setHidden:YES];
             }
         });
     });
@@ -190,6 +198,9 @@ static CGFloat kImageShareHeight = 200;
 
 - (BOOL)retrieveData:(NSUInteger)page
 {
+    self.loadingLabel.text = @"Loading ...";
+//    self.view.userInteractionEnabled = NO;
+    
     NSString *urlString = [NSString stringWithFormat:@"%@/api/wall_post_list.php?token=%@",APP_API_URL,[[NSUserDefaults standardUserDefaults] objectForKey:@"tokenString"]];
     
     NSString *dataContent = [NSString stringWithFormat: @"{\"page\":%d,\"perpage\":%d,\"filter_option\":\"%d\",\"filter_search\":\"%@\"}", page, kDisplayPerPage, filterParameter, searchParameter];
@@ -261,11 +272,16 @@ static CGFloat kImageShareHeight = 200;
         
     }else{
         // If status error
+        
         [newData release];
         return NO;
     }
     
     if ([newData count]) {
+        if ([tableData count] && page == 1) {
+            [tableData removeAllObjects];
+        }
+        
         [tableData addObjectsFromArray:newData];
         [newData release];
     }else{
@@ -809,7 +825,7 @@ static CGFloat kImageShareHeight = 200;
             
             if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"])
             {
-                [tableData removeAllObjects];
+//                [tableData removeAllObjects];
                 [self setup];
             }
             
@@ -854,6 +870,15 @@ static CGFloat kImageShareHeight = 200;
 
 - (void)popView:(MyPopupView *)popupView didSelectOptionAtIndex:(NSInteger)index
 {
+    if (index < 5 && ![ConnectionClass connected]) {
+        UIAlertView *alert = [[UIAlertView alloc]initWithTitle:@"J-ROOM" message:@"Connection problem occured." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [alert show];
+        [alert release];
+        [self removeBlackView];
+        return;
+    }
+    
     NSLog(@"Clicked at post index %d and selected option %d", popupView.tag, index);
     
     PostClass *data = [tableData objectAtIndex:popupView.tag];
@@ -919,7 +944,7 @@ static CGFloat kImageShareHeight = 200;
             NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
 
             if ([[resultsDictionary valueForKey:@"status"] isEqualToString:@"ok"]) {
-                [tableData removeAllObjects];
+//                [tableData removeAllObjects];
                 [self setup];
             }
             break;

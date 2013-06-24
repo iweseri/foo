@@ -21,6 +21,7 @@
 @property (retain, nonatomic) IBOutlet UILabel *noRecordLabel;
 @property (retain, nonatomic) IBOutlet UILabel *recordLabel;
 @property (retain, nonatomic) IBOutlet UISearchBar *searchBar;
+@property (retain, nonatomic) IBOutlet UIButton *unblockButton;
 
 
 @end

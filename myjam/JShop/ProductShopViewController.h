@@ -19,6 +19,7 @@
     int pageCounter;
     int rows;
     int kDisplayPerScreen;
+    NSString *message;
 }
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;

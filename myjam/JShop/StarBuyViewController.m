@@ -65,7 +65,12 @@
     NSLog(@"vda");
     pageCounter = 1;
     productData = [[NSMutableArray alloc] init];
-    [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
+    if (message != nil) {
+        [self.loadingIndicator startAnimating];
+        [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:1.0f];
+    }else{
+        [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:0.03f];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -251,20 +256,41 @@
     BOOL success = [self retrieveData];
     
     if (!success) {
-        // Hide loading cell
-        [UIView animateWithDuration:0.5 animations:^{
-            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+        if([productData count]==0) {
             
-            [self.tableView setContentOffset:bottomOffset animated:YES];
-        }];
-    }else if([productData count]==0) {
-        NSLog(@"DATA EMPTY :%@",productData);
-        [self.tableView setHidden:YES];
+            if (![self.tableView isHidden]) {
+                [self.tableView setHidden:YES];
+                UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(0, self.tableView.bounds.size.height/2, 320, 20)];
+                [labelMsg setText:message];
+                [labelMsg setTag:505];
+                [labelMsg setBackgroundColor:[UIColor clearColor]];
+                [labelMsg setTextColor:[UIColor darkGrayColor]];
+                [labelMsg setTextAlignment:NSTextAlignmentCenter];
+                [self.view addSubview:labelMsg];
+                [labelMsg release];
+            }
+        } else {
+            // Hide loading cell
+            [UIView animateWithDuration:0.5 animations:^{
+                CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+                
+                [self.tableView setContentOffset:bottomOffset animated:YES];
+            }];
+        }NSLog(@"DATA EMPTY");
     }else{
         // Reload tableView
-        NSLog(@"DATA :%@",productData);
+        if ([self.tableView isHidden]) {
+            [self.tableView setHidden:NO];
+            for (UIButton *v in [self.view subviews]) {
+                if (v.tag == 505)
+                    [v removeFromSuperview];
+            }
+        }
+        message = nil;
+        NSLog(@"DATA-more :%@",productData);
         [self.tableView reloadData];
     }
+    [self.loadingIndicator stopAnimating];
     NSLog(@"%f : %f",self.tableView.contentSize.height,self.tableView.bounds.size.height);
     
 }
@@ -284,7 +310,7 @@
     NSString *urlString = [self returnAPIURL];
     NSString *dataContent = [self returnAPIDataContent];
     NSString *response = [ASIWrapper requestPostJSONWithStringURL:urlString andDataContent:dataContent];
-    //NSLog(@"dataContent: %@\nresponse listing: %@|%@", dataContent,response,urlString);
+    NSLog(@"dataContent: %@\nresponse listing: %@|%@", dataContent,response,urlString);
     NSMutableArray *newData = [[NSMutableArray alloc] init];
     NSDictionary *resultsDictionary = [[response objectFromJSONString] copy];
     NSString *status = nil;
@@ -304,6 +330,8 @@
                     [newData addObject:row];
                 }
             }
+        }else{
+            message = [resultsDictionary objectForKey:@"message"]; NSLog(@"msg:%@",message);
         }
     }
     NSArray *newList = [NSArray arrayWithArray:newData];

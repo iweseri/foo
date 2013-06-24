@@ -246,6 +246,11 @@
     }
 }
 
+- (void)reloadPage {
+    [self.loadingIndicator setHidden:NO];
+    [self performSelector:@selector(loadMoreData) withObject:nil afterDelay:1.0f];
+}
+
 - (void)loadMoreData
 {
     NSLog(@"Page now is %d",pageCounter);
@@ -253,17 +258,39 @@
     BOOL success = [self retrieveData];
     
     if (!success) {
-        // Hide loading cell
-        [UIView animateWithDuration:0.5 animations:^{
-            CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
-            
-            [self.tableView setContentOffset:bottomOffset animated:YES];
-        }];
-    }else if([productShopData count]==0) {
-        NSLog(@"DATA EMPTY :%@",productShopData);
-        [self.tableView setHidden:YES];
+        if ([productShopData count] == 0) {
+            if (![self.tableView isHidden]) {
+                [self.tableView setHidden:YES];
+                UILabel *labelMsg = [[UILabel alloc]initWithFrame:CGRectMake(0, self.tableView.bounds.size.height/2, 320, 40)];
+                [labelMsg setUserInteractionEnabled:YES];
+                [labelMsg setText:[NSString stringWithFormat:@"%@\nTap to reload.",message]];
+                [labelMsg setBackgroundColor:[UIColor clearColor]];
+                [labelMsg setTextColor:[UIColor darkGrayColor]];
+                [labelMsg setTextAlignment:NSTextAlignmentCenter];
+                [labelMsg setNumberOfLines:2];
+                [labelMsg setTag:505];
+                [self.view addSubview:labelMsg];
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(reloadPage)];
+                [labelMsg addGestureRecognizer:tap];
+                [labelMsg release];
+                [tap release];
+            }
+        } else {
+            // Hide loading cell
+            [UIView animateWithDuration:0.5 animations:^{
+                CGPoint bottomOffset = CGPointMake(0, self.tableView.contentSize.height - self.tableView.bounds.size.height-44);
+                [self.tableView setContentOffset:bottomOffset animated:YES];
+            }];
+        }
     }else{
         // Reload tableView
+        if ([self.tableView isHidden]) {
+            [self.tableView setHidden:NO];
+            for (UILabel *v in [self.view subviews]) {
+                if (v.tag == 505)
+                    [v removeFromSuperview];
+            }
+        }
         NSLog(@"DATA :%@",productShopData);
         [self.tableView reloadData];
     }
@@ -305,6 +332,8 @@
                     [newData addObject:row];
                 }
             }
+        }else{
+            message = [resultsDictionary objectForKey:@"message"];
         }
     }
     NSArray *newList = [NSArray arrayWithArray:newData];

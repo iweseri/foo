@@ -29,7 +29,6 @@
 - (void)dealloc {
     [_productName release];
     [_productImage release];
-    [_productImage release];
     [_priceLabel release];
     [_qtyLabel release];
     [_buttonPlus release];

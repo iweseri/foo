@@ -21,6 +21,7 @@
     int rows;
     int kDisplayPerScreen;
     NSString *catName;
+    NSString *message;
 }
 @property (nonatomic, retain) NSMutableArray *productData;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;

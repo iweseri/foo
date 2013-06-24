@@ -52,6 +52,7 @@
     
     [self.listView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
     [self.footerView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
+    [self.tableView setBackgroundColor:[UIColor colorWithHex:@"#f1ebe4"]];
     [self.selectButton setTitle:@"   *Show All" forState:UIControlStateNormal];
     //[self loadData];
 }
@@ -182,7 +183,7 @@
 
 - (void)loadData
 {
-    if (!list) { NSLog(@"catData");
+    if (!list) {
         categoryData = [[NSMutableArray alloc] init];
         listOption = [[NSMutableArray alloc] init];
         list = [self retrieveListCategory];
@@ -198,7 +199,6 @@
             [self.selectButton setEnabled:NO];
         }
     }
-    //tableData = [[NSMutableArray alloc] init];
     BOOL success = [self retrieveData];
     
     if (!success) {

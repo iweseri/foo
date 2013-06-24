@@ -20,9 +20,11 @@
     int rows;
     int kDisplayPerScreen;
     BOOL refreshDisabled;
+    NSString *message;
 }
 @property (nonatomic, retain) NSMutableArray *productData;
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
+@property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingIndicator;
 
 - (void)createCellForIndex:(NSIndexPath *)indexPath cell:(ProductWithHeaderCell *)cell;
 

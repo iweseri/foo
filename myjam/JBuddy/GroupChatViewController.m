@@ -308,8 +308,10 @@
     self.tableView.frame = tableFrame;
 //    [self.tableView setContentOffset:CGPointMake(self.tableView.frame.size.width,tableHeight)];
 	
-    NSIndexPath* ip = [NSIndexPath indexPathForRow:[self.tableData count]-1 inSection:0];
-    [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    if ([self.tableData count] > 1) {
+        NSIndexPath* ip = [NSIndexPath indexPathForRow:[self.tableData count]-1 inSection:0];
+        [self.tableView scrollToRowAtIndexPath:ip atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+    }
     
 	// commit animations
 	[UIView commitAnimations];

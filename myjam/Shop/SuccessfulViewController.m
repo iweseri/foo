@@ -65,20 +65,18 @@
 {
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [mydelegate.sidebarController handlePurchaseHistory];
-//    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
     mydelegate.isShowPurchaseHistory = YES;
-//    [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
-//    [sv1.tabBar showViewControllerAtIndex:1];
 }
 -(IBAction)goBuySeed:(id)sender
 {
     AppDelegate *mydelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     BuySeedViewController *topup = [[BuySeedViewController alloc]init];
-//    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
-    mydelegate.isShowPurchaseHistory = YES;
-    [mydelegate.shopNavController popToRootViewControllerAnimated:YES];
+    ShopViewController *sv1 =[[mydelegate.shopNavController viewControllers] objectAtIndex:0];
+//    mydelegate.isShowPurchaseHistory = YES;
+    [sv1.tabBar showViewControllerAtIndex:0];
+    [mydelegate.shopNavController popToRootViewControllerAnimated:NO];
     [mydelegate.shopNavController pushViewController:topup animated:YES];
-//    [sv1.tabBar showViewControllerAtIndex:1];
+    
 }
 
 - (void)didReceiveMemoryWarning
